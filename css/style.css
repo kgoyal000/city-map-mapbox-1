@@ -2556,6 +2556,146 @@ body * {
     border-radius: 50%;
 }
 
+/* Photo Management Popup Styles */
+.photo-management-popup {
+   backdrop-filter: blur(5px);
+}
+
+.photo-management-popup button {
+   font-family: "Poppins", sans-serif;
+   font-weight: 500;
+   transition: all 0.3s ease;
+   cursor: pointer;
+}
+
+.photo-management-popup button:hover {
+   transform: translateY(-1px);
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Crop Popup Styles */
+.crop-popup {
+   backdrop-filter: blur(5px);
+}
+
+.crop-popup button {
+   font-family: "Poppins", sans-serif;
+   font-weight: 500;
+   transition: all 0.3s ease;
+   cursor: pointer;
+}
+
+.crop-popup button:hover {
+   transform: translateY(-1px);
+   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.crop-popup h3 {
+   color: #16212c;
+   font-family: "Poppins", sans-serif;
+   font-weight: 600;
+}
+
+.crop-popup p {
+   color: #666;
+   font-family: "Poppins", sans-serif;
+   font-size: 14px;
+   line-height: 1.4;
+}
+
+/* Cropper.js container styling */
+.cropper-container {
+   max-width: 100% !important;
+   margin: 0 auto;
+}
+
+/* Hide Cropper.js default UI elements we don't need */
+.cropper-container .cropper-modal,
+.cropper-container .cropper-dashed,
+.cropper-container .cropper-point,
+.cropper-container .cropper-line,
+.cropper-container .cropper-face,
+.cropper-container .cropper-center {
+   display: none !important;
+}
+
+/* Style the crop area */
+.cropper-container .cropper-crop-box {
+   border-radius: 50% !important;
+   overflow: hidden;
+   border: 3px solid #f77147 !important;
+   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Mobile-specific styles for crop interface */
+@media (max-width: 768px) {
+   .crop-popup .crop-content {
+      padding: 20px;
+   }
+
+   .crop-popup button {
+      min-width: 120px;
+      margin: 5px;
+   }
+
+   .cropper-container {
+      max-width: 300px !important;
+   }
+}
+
+@media (max-width: 480px) {
+   .crop-popup h3 {
+      font-size: 18px;
+   }
+
+   .crop-popup p {
+      font-size: 12px;
+   }
+
+   .cropper-container {
+      max-width: 250px !important;
+   }
+}
+
+.crop-resize-handle {
+   position: absolute;
+   width: 20px;
+   height: 20px;
+   background: #f77147;
+   border-radius: 50%;
+   cursor: pointer;
+   transition: all 0.3s ease;
+}
+
+.crop-resize-handle:hover {
+   transform: scale(1.2);
+   background: #e53422;
+}
+
+.crop-resize-handle.nw {
+   top: calc(50% - 90px);
+   left: calc(50% - 90px);
+   cursor: nw-resize;
+}
+
+.crop-resize-handle.ne {
+   top: calc(50% - 90px);
+   right: calc(50% - 90px);
+   cursor: ne-resize;
+}
+
+.crop-resize-handle.sw {
+   bottom: calc(50% - 90px);
+   left: calc(50% - 90px);
+   cursor: sw-resize;
+}
+
+.crop-resize-handle.se {
+   bottom: calc(50% - 90px);
+   right: calc(50% - 90px);
+   cursor: se-resize;
+}
+
 /* Responsive adjustments for photo preview */
 @media (max-width: 768px) {
     .photo-preview {

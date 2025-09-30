@@ -11,6 +11,9 @@ let customColors = {
 let currentMarkerIcon = null; // Store the current marker icon element
 let currentMarkerColor = '#E53422'; // Default red color
 
+// Cropper.js instance
+let cropper = null;
+
 // Function to load map styles from JSON files
 async function loadMapStyle(styleName) {
     if (loadedStyles[styleName]) {
@@ -1173,6 +1176,11 @@ function showPhotoInTitleArea() {
 		photoPreview.innerHTML = `
 			<img src="${uploadedPhoto}" alt="Uploaded photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
 		`;
+
+		// Add click handler to open photo management popup
+		photoPreview.addEventListener('click', function() {
+			openPhotoManagementPopup(uploadedPhoto);
+		});
 	} else {
 		// Show upload interface
 		photoPreview.innerHTML = `
@@ -1222,13 +1230,13 @@ function handlePhotoUpload(event) {
 	reader.onload = function(e) {
 		const photoData = e.target.result;
 
-		// Save to localStorage
-		localStorage.setItem('uploadedPhoto', photoData);
+		// Save to localStorage temporarily (will be updated after cropping)
+		localStorage.setItem('uploadedPhotoTemp', photoData);
 
-		// Update the interface to show the uploaded photo
-		showPhotoUploadInterface();
+		// Open crop popup immediately after upload
+		openCropPopupAfterUpload(photoData);
 
-		console.log('Photo uploaded successfully');
+		console.log('Photo uploaded successfully, opening crop interface');
 	};
 
 	reader.onerror = function() {
@@ -1246,8 +1254,346 @@ function changePhoto() {
 // Function to remove photo
 function removePhoto() {
 	localStorage.removeItem('uploadedPhoto');
-	showPhotoUploadInterface();
+	showPhotoInTitleArea();
 	console.log('Photo removed');
+}
+
+// Function to open photo management popup
+function openPhotoManagementPopup(currentPhoto) {
+	// Remove existing popup
+	const existingPopup = document.querySelector('.photo-management-popup');
+	if (existingPopup) {
+		existingPopup.remove();
+	}
+
+	// Create popup overlay
+	const popupOverlay = document.createElement('div');
+	popupOverlay.className = 'photo-management-popup';
+	popupOverlay.style.cssText = `
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.8);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 10000;
+	`;
+
+	// Create popup content
+	const popupContent = document.createElement('div');
+	popupContent.style.cssText = `
+		background: white;
+		border-radius: 12px;
+		padding: 30px;
+		max-width: 500px;
+		width: 90%;
+		text-align: center;
+		position: relative;
+	`;
+
+	popupContent.innerHTML = `
+		<div style="margin-bottom: 25px;">
+			<img src="${currentPhoto}" alt="Current photo" style="max-width: 100%; max-height: 200px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+		</div>
+		<div style="margin-bottom: 20px;">
+			<button onclick="changePhotoFromPopup()" style="padding: 12px 24px; margin-right: 10px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px;">Change Photo</button>
+			<button onclick="cropPhotoFromPopup()" style="padding: 12px 24px; margin-right: 10px; background: #4CAF50; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px;">Crop Photo</button>
+			<button onclick="removePhotoFromPopup()" style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px;">Remove</button>
+		</div>
+		<button onclick="closePhotoManagementPopup()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">×</button>
+	`;
+
+	popupOverlay.appendChild(popupContent);
+	document.body.appendChild(popupOverlay);
+
+	// Close popup when clicking outside
+	popupOverlay.addEventListener('click', function(e) {
+		if (e.target === popupOverlay) {
+			closePhotoManagementPopup();
+		}
+	});
+}
+
+// Function to close photo management popup
+function closePhotoManagementPopup() {
+	const popup = document.querySelector('.photo-management-popup');
+	if (popup) {
+		popup.remove();
+	}
+}
+
+// Function to change photo from popup
+function changePhotoFromPopup() {
+	closePhotoManagementPopup();
+	const input = document.createElement('input');
+	input.type = 'file';
+	input.accept = 'image/*';
+	input.style.display = 'none';
+	input.addEventListener('change', handlePhotoUpload);
+	document.body.appendChild(input);
+	input.click();
+	document.body.removeChild(input);
+}
+
+// Function to crop photo from popup
+function cropPhotoFromPopup() {
+	closePhotoManagementPopup();
+	openCropPopup();
+}
+
+// Function to remove photo from popup
+function removePhotoFromPopup() {
+	localStorage.removeItem('uploadedPhoto');
+	closePhotoManagementPopup();
+	showPhotoInTitleArea();
+	console.log('Photo removed from popup');
+}
+
+// Function to open crop popup
+function openCropPopup() {
+	const currentPhoto = localStorage.getItem('uploadedPhoto');
+	if (!currentPhoto) return;
+
+	// Remove existing crop popup
+	const existingCropPopup = document.querySelector('.crop-popup');
+	if (existingCropPopup) {
+		existingCropPopup.remove();
+	}
+
+	// Create crop popup overlay
+	const cropOverlay = document.createElement('div');
+	cropOverlay.className = 'crop-popup';
+	cropOverlay.style.cssText = `
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.8);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 10001;
+	`;
+
+	// Create crop content
+	const cropContent = document.createElement('div');
+	cropContent.style.cssText = `
+		background: white;
+		border-radius: 12px;
+		padding: 30px;
+		max-width: 600px;
+		width: 90%;
+		max-height: 80vh;
+		overflow-y: auto;
+	`;
+
+	cropContent.innerHTML = `
+		<div style="margin-bottom: 20px; text-align: center;">
+			<h3 style="margin: 0 0 20px 0; color: #16212c;">Crop Photo</h3>
+			<div style="position: relative; margin-bottom: 20px;">
+				<img id="crop-image" src="${currentPhoto}" alt="Crop photo" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+			</div>
+			<div style="margin-bottom: 20px;">
+				<label style="display: block; margin-bottom: 10px; font-weight: 500;">Crop Shape:</label>
+				<select id="crop-shape" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px;">
+					<option value="square">Square</option>
+					<option value="circle">Circle</option>
+					<option value="rectangle">Rectangle</option>
+				</select>
+				<button onclick="applyCrop()" style="padding: 10px 20px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer;">Apply Crop</button>
+			</div>
+		</div>
+		<div style="text-align: center;">
+			<button onclick="closeCropPopup()" style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
+		</div>
+	`;
+
+	cropOverlay.appendChild(cropContent);
+	document.body.appendChild(cropOverlay);
+
+	// Close crop popup when clicking outside
+	cropOverlay.addEventListener('click', function(e) {
+		if (e.target === cropOverlay) {
+			closeCropPopup();
+		}
+	});
+}
+
+// Function to close crop popup
+function closeCropPopup() {
+	const popup = document.querySelector('.crop-popup');
+	if (popup) {
+		popup.remove();
+	}
+}
+
+// Function to open crop popup after upload
+function openCropPopupAfterUpload(photoData) {
+	// Remove existing crop popup
+	const existingCropPopup = document.querySelector('.crop-popup');
+	if (existingCropPopup) {
+		existingCropPopup.remove();
+	}
+
+	// Create crop popup overlay
+	const cropOverlay = document.createElement('div');
+	cropOverlay.className = 'crop-popup';
+	cropOverlay.style.cssText = `
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.8);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 10001;
+	`;
+
+	// Create crop content
+	const cropContent = document.createElement('div');
+	cropContent.style.cssText = `
+		background: white;
+		border-radius: 12px;
+		padding: 30px;
+		max-width: 700px;
+		width: 90%;
+		max-height: 90vh;
+		overflow-y: auto;
+	`;
+
+	cropContent.innerHTML = `
+		<div style="margin-bottom: 20px; text-align: center;">
+			<h3 style="margin: 0 0 20px 0; color: #16212c;">Crop Your Photo</h3>
+			<p style="margin: 0 0 20px 0; color: #666; font-size: 14px;">Position and zoom your photo to select the area that will be visible in the circular preview</p>
+
+			<div style="margin-bottom: 20px; display: inline-block; position: relative;">
+				<img id="cropper-image" src="${photoData}" alt="Crop photo" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block; margin: 0 auto;">
+			</div>
+
+			<div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+				<button onclick="zoomCropper(0.1)" style="padding: 8px 16px; background: #f77147; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Zoom In</button>
+				<button onclick="zoomCropper(-0.1)" style="padding: 8px 16px; background: #f77147; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Zoom Out</button>
+				<button onclick="resetCropper()" style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Reset</button>
+			</div>
+
+			<div style="margin-bottom: 20px;">
+				<button onclick="applyCropAfterUpload()" style="padding: 12px 30px; margin-right: 10px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Use This Crop</button>
+				<button onclick="cancelCropAfterUpload()" style="padding: 12px 30px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Cancel</button>
+			</div>
+		</div>
+	`;
+
+	cropOverlay.appendChild(cropContent);
+	document.body.appendChild(cropOverlay);
+
+	// Initialize Cropper.js
+	setTimeout(() => {
+		const cropperImage = document.getElementById('cropper-image');
+		if (cropperImage && typeof Cropper !== 'undefined') {
+			// Destroy existing cropper if it exists
+			if (cropper) {
+				cropper.destroy();
+			}
+
+			// Create new cropper instance with circular crop area
+			cropper = new Cropper(cropperImage, {
+				aspectRatio: 1, // Square aspect ratio for circular crop
+				viewMode: 1,   // Restrict crop area to within canvas
+				dragMode: 'move', // Allow moving the image
+				modal: true,   // Show modal overlay
+				background: false, // Hide background
+				autoCropArea: 0.8, // Auto crop area as 80% of image
+				center: true,  // Center the crop area
+				highlight: false, // Hide highlight
+				cropBoxMovable: true,
+				cropBoxResizable: true,
+				toggleDragModeOnDblclick: false,
+				minCropBoxWidth: 100,
+				minCropBoxHeight: 100,
+				ready() {
+					console.log('Cropper initialized successfully');
+				}
+			});
+		} else {
+			console.error('Cropper.js not loaded or image element not found');
+		}
+	}, 100);
+
+	// Close crop popup when clicking outside
+	cropOverlay.addEventListener('click', function(e) {
+		if (e.target === cropOverlay) {
+			cancelCropAfterUpload();
+		}
+	});
+}
+
+// Function to apply crop after upload
+function applyCropAfterUpload() {
+	if (cropper) {
+		// Get cropped canvas
+		const canvas = cropper.getCroppedCanvas({
+			width: 180,  // Match the preview size
+			height: 180,
+			imageSmoothingEnabled: true,
+			imageSmoothingQuality: 'high'
+		});
+
+		// Convert canvas to blob, then to data URL
+		canvas.toBlob(function(blob) {
+			const reader = new FileReader();
+			reader.onload = function(e) {
+				const croppedDataUrl = e.target.result;
+
+				// Save cropped image
+				localStorage.setItem('uploadedPhoto', croppedDataUrl);
+				localStorage.removeItem('uploadedPhotoTemp');
+
+				// Close crop popup and update interface
+				closeCropPopup();
+				showPhotoInTitleArea();
+
+				console.log('Crop applied and photo saved');
+			};
+			reader.readAsDataURL(blob);
+		}, 'image/jpeg', 0.9);
+	} else {
+		// Fallback if cropper not available
+		const tempPhoto = localStorage.getItem('uploadedPhotoTemp');
+		if (tempPhoto) {
+			localStorage.setItem('uploadedPhoto', tempPhoto);
+			localStorage.removeItem('uploadedPhotoTemp');
+			closeCropPopup();
+			showPhotoInTitleArea();
+		}
+	}
+}
+
+// Function to cancel crop after upload
+function cancelCropAfterUpload() {
+	// Remove temp photo
+	localStorage.removeItem('uploadedPhotoTemp');
+
+	// Close crop popup and update interface
+	closeCropPopup();
+	showPhotoInTitleArea();
+
+	console.log('Crop cancelled');
+}
+
+// Function to apply crop (simplified - just saves the image as-is for now)
+function applyCrop() {
+	const currentPhoto = localStorage.getItem('uploadedPhoto');
+	if (currentPhoto) {
+		// For now, just keep the same image (in a real implementation, you'd use a cropping library)
+		closeCropPopup();
+		console.log('Crop applied (placeholder)');
+	}
 }
 
 function addMapOverlay() {
@@ -2155,6 +2501,34 @@ $(document).ready(function(){
 		console.log('Orientation changed to:', layoutType, 'Aspect ratio:', currentAspectRatio);
 		
 		// Reinitialize map for crisp rendering with new dimensions
-		reinitializeMap();
-	});
+			reinitializeMap();
+		});
+	
+	// Cropper.js control functions
+	function zoomCropper(delta) {
+		if (cropper) {
+			const currentData = cropper.getData();
+			const currentScale = currentData.scaleX; // Cropper.js uses scaleX/scaleY
+			const newScale = Math.min(3, Math.max(0.1, currentScale + delta));
+			cropper.scale(newScale);
+		}
+	}
+	
+	function resetCropper() {
+		if (cropper) {
+			cropper.reset();
+		}
+	}
+	
+	// Cleanup cropper when popup closes
+	function closeCropPopup() {
+		if (cropper) {
+			cropper.destroy();
+			cropper = null;
+		}
+		const popup = document.querySelector('.crop-popup');
+		if (popup) {
+			popup.remove();
+		}
+	}
 });
