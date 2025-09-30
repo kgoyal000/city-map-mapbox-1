@@ -2348,11 +2348,19 @@ body * {
   }
 }
 .map-preview-title {
-  text-align: center;
-  padding: 20px;
-  background-color: #fff;
-  border-top: none;
-  margin-top: 0;
+   text-align: center;
+   padding: 20px;
+   background-color: #fff;
+   border-top: none;
+   margin-top: 0;
+}
+
+.map-preview-title.with-photo {
+    position: relative;
+    min-height: 190px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
 }
 .map-preview-title h3 {
   margin: 0 0 8px 0;
@@ -2431,5 +2439,127 @@ body * {
 }
 
 .map-preview-title {
-  transition: opacity 0.3s ease;
+   transition: opacity 0.3s ease;
+}
+
+/* Photo Upload Overlay Styles (small overlay in center of map) */
+.photo-upload-overlay {
+   background: rgba(255, 255, 255, 0.95);
+   backdrop-filter: blur(10px);
+   border: 2px dashed #e0e0e0;
+   border-radius: 12px;
+   transition: all 0.3s ease;
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.photo-upload-overlay:hover {
+   transform: translate(-50%, -50%) scale(1.05);
+   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+   border-color: #f77147;
+}
+
+.photo-upload-overlay img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   border-radius: 8px;
+}
+
+.photo-upload-overlay .upload-content {
+   text-align: center;
+   padding: 20px;
+}
+
+.photo-upload-overlay .upload-icon {
+   width: 40px;
+   height: 40px;
+   background: linear-gradient(135deg, #f77147 0%, #e53422 100%);
+   border-radius: 50%;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: white;
+   font-size: 20px;
+   margin: 0 auto 10px;
+   transition: transform 0.3s ease;
+}
+
+.photo-upload-overlay:hover .upload-icon {
+   transform: scale(1.1);
+}
+
+.photo-upload-overlay p {
+   margin: 0;
+   color: #666;
+   font-size: 12px;
+   font-weight: 500;
+   font-family: "Poppins", sans-serif;
+}
+
+/* Button styles for photo overlay */
+.photo-upload-overlay button {
+   font-family: "Poppins", sans-serif;
+   font-weight: 500;
+   transition: all 0.3s ease;
+   cursor: pointer;
+   font-size: 12px;
+   padding: 6px 12px;
+   border: none;
+   border-radius: 4px;
+}
+
+.photo-upload-overlay button:first-child {
+   background: #f77147;
+   color: white;
+}
+
+.photo-upload-overlay button:last-child {
+   background: #6c757d;
+   color: white;
+}
+
+.photo-upload-overlay button:hover {
+   transform: translateY(-1px);
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Photo Preview Styles */
+.photo-preview {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180px;
+    height: 180px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: none;
+}
+
+.photo-preview:hover {
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Responsive adjustments for photo preview */
+@media (max-width: 768px) {
+    .photo-preview {
+        width: 140px;
+        height: 140px;
+    }
 }

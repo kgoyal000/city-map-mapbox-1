@@ -1092,8 +1092,13 @@ function updateMapTitle() {
 }
 
 function changeMapLayout(layoutType) {
+	console.log('changeMapLayout called with:', layoutType);
+
 	// Handle different layout shapes (circle, heart, square, puzzle, story)
 	const mapContainer = document.getElementById('map');
+	const photoUploadContainer = document.querySelector('.photo-upload-container');
+
+	console.log('Map container found:', !!mapContainer);
 
 	// Remove existing layout classes
 	mapContainer.className = mapContainer.className.replace(/layout-\w+/g, '');
@@ -1103,22 +1108,146 @@ function changeMapLayout(layoutType) {
 		mapContainer.classList.add(`layout-${layoutType}`);
 	}
 
-	// Apply different clip-paths for different shapes
-	switch(layoutType) {
-		case 'circle':
-			mapContainer.style.clipPath = 'circle(50% at center)';
-			break;
-		case 'heart':
-			mapContainer.style.clipPath = 'path("M128 0C59 0 0 59 0 128c0 69 59 128 128 128s128-59 128-128C256 59 197 0 128 0z")';
-			break;
-		case 'square':
-			mapContainer.style.clipPath = 'none';
-			mapContainer.style.borderRadius = '0';
-			break;
-		default:
-			mapContainer.style.clipPath = 'none';
-			mapContainer.style.borderRadius = '8px';
+	// Handle photo upload interface for "With Photo" layout
+	if (layoutType === 'with-photo') {
+		console.log('Showing photo preview in title area');
+		showPhotoInTitleArea();
+		mapContainer.style.clipPath = 'none';
+		mapContainer.style.borderRadius = '0';
+	} else {
+		console.log('Hiding photo preview for layout:', layoutType);
+		// Hide photo preview for other layouts
+		const photoPreview = document.querySelector('.photo-preview');
+		if (photoPreview) {
+			photoPreview.remove();
+		}
+		// Remove with-photo class from title
+		const previewTitle = document.querySelector('.map-preview-title');
+		if (previewTitle) {
+			previewTitle.classList.remove('with-photo');
+		}
+
+		// Apply different clip-paths for different shapes
+		switch(layoutType) {
+			case 'circle':
+				mapContainer.style.clipPath = 'circle(50% at center)';
+				break;
+			case 'heart':
+				mapContainer.style.clipPath = 'path("M128 0C59 0 0 59 0 128c0 69 59 128 128 128s128-59 128-128C256 59 197 0 128 0z")';
+				break;
+			case 'square':
+				mapContainer.style.clipPath = 'none';
+				mapContainer.style.borderRadius = '0';
+				break;
+			default:
+				mapContainer.style.clipPath = 'none';
+				mapContainer.style.borderRadius = '8px';
+		}
 	}
+}
+
+// Function to show photo in title area
+function showPhotoInTitleArea() {
+	console.log('showPhotoInTitleArea called');
+
+	// Add with-photo class to title area
+	const previewTitle = document.querySelector('.map-preview-title');
+	if (previewTitle) {
+		previewTitle.classList.add('with-photo');
+	}
+
+	// Remove existing photo preview
+	const existingPreview = document.querySelector('.photo-preview');
+	if (existingPreview) {
+		existingPreview.remove();
+	}
+
+	// Create photo preview container
+	const photoPreview = document.createElement('div');
+	photoPreview.className = 'photo-preview';
+
+	// Check if photo is already uploaded
+	const uploadedPhoto = localStorage.getItem('uploadedPhoto');
+	if (uploadedPhoto) {
+		// Show uploaded photo preview
+		photoPreview.innerHTML = `
+			<img src="${uploadedPhoto}" alt="Uploaded photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+		`;
+	} else {
+		// Show upload interface
+		photoPreview.innerHTML = `
+			<div style="text-align: center;">
+				<div style="width: 40px; height: 40px; background: #f77147; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">📷</div>
+				<p style="margin: 0; color: #666; font-size: 12px; font-weight: 500;">Click to add photo</p>
+			</div>
+		`;
+
+		// Add click handler for upload
+		photoPreview.addEventListener('click', function() {
+			const input = document.createElement('input');
+			input.type = 'file';
+			input.accept = 'image/*';
+			input.style.display = 'none';
+			input.addEventListener('change', handlePhotoUpload);
+			document.body.appendChild(input);
+			input.click();
+			document.body.removeChild(input);
+		});
+	}
+
+	// Add to title area
+	if (previewTitle) {
+		previewTitle.appendChild(photoPreview);
+	}
+}
+
+// Function to handle photo upload
+function handlePhotoUpload(event) {
+	const file = event.target.files[0];
+	if (!file) return;
+
+	// Validate file type
+	if (!file.type.startsWith('image/')) {
+		alert('Please select a valid image file.');
+		return;
+	}
+
+	// Validate file size (10MB limit)
+	if (file.size > 10 * 1024 * 1024) {
+		alert('Please select an image smaller than 10MB.');
+		return;
+	}
+
+	const reader = new FileReader();
+	reader.onload = function(e) {
+		const photoData = e.target.result;
+
+		// Save to localStorage
+		localStorage.setItem('uploadedPhoto', photoData);
+
+		// Update the interface to show the uploaded photo
+		showPhotoUploadInterface();
+
+		console.log('Photo uploaded successfully');
+	};
+
+	reader.onerror = function() {
+		alert('Error reading the file. Please try again.');
+	};
+
+	reader.readAsDataURL(file);
+}
+
+// Function to change photo
+function changePhoto() {
+	document.getElementById('photo-input').click();
+}
+
+// Function to remove photo
+function removePhoto() {
+	localStorage.removeItem('uploadedPhoto');
+	showPhotoUploadInterface();
+	console.log('Photo removed');
 }
 
 function addMapOverlay() {
@@ -1498,22 +1627,29 @@ $(document).ready(function(){
 		}
 	});
 
-	// Layout picker functionality
-	$('.elem__picker .layout a').on('click', function(e) {
+	// Layout picker functionality - target layout options specifically
+	$('.design__info .elem__picker:first-child ul li a').on('click', function(e) {
 		e.preventDefault();
+
 		const layoutText = $(this).text().toLowerCase().trim();
+
+		console.log('Layout clicked:', layoutText);
 
 		// Layout mapping
 		const layoutMap = {
+			'square': 'square',
+			'with photo': 'with-photo',
+			'valentine': 'heart',
 			'circle': 'circle',
 			'heart': 'heart',
-			'square': 'square',
-			'puzzle': 'default',
-			'story': 'default'
+			'house': 'default'
 		};
 
 		if (layoutMap[layoutText]) {
+			console.log('Switching to layout:', layoutMap[layoutText]);
 			changeMapLayout(layoutMap[layoutText]);
+		} else {
+			console.log('Layout not found in mapping:', layoutText);
 		}
 	});
 
