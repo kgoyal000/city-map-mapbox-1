@@ -2842,6 +2842,8 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
   aspect-ratio: 1;
   /* clip-path: shape(from 50% 90%, line to 85% 50%, arc to 50% 25% of 1%, arc to 15% 50% of 1%); */
   clip-path: shape( from 50% 96%, line to 86% 52%, arc to 50% 28% of 8%, arc to 14% 52% of 8%, close );
+
+  /* clip-path: shape( from 50% 96%, line to 82% 46%, arc to 50% 28% of 14%, arc to 18% 46% of 14%, close ); */
 }
 
 

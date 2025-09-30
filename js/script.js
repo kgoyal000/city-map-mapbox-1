@@ -1132,8 +1132,13 @@ function changeMapLayout(layoutType) {
 	mapContainer.className = mapContainer.className.replace(/layout-\w+/g, '');
 	const shapeOverLay = document.querySelector('#shape-overlay');
 
+	// Fix for null shape overlay element
+	if (shapeOverLay) {
+		shapeOverLay.innerHTML = '';
+	}
+
 	$("#map canvas, #map").css({
-		"max-height": document.querySelector('#map canvas').clientWidth*100 + "px",
+		"max-height": document.querySelector('#map canvas')?.clientWidth*100 + "px",
 	});
 
 	if (map && map.loaded()) {
@@ -1142,8 +1147,6 @@ function changeMapLayout(layoutType) {
 			console.log('Map resized - Mapbox handling canvas dimensions for crisp rendering');
 		}, 150);
 	}
-
-	shapeOverLay.innerHTML = '';
 	// Add new layout class
 	if (layoutType !== 'default') {
 		mapContainer.classList.add(`layout-${layoutType}`);
