@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+	<!-- Mapbox CSS -->
+	<link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+	<!-- Mapbox JS -->
+	<script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+
+	<!--
+	MAP EDITOR SETUP INSTRUCTIONS:
+
+	1. Get a free Mapbox token from: https://account.mapbox.com/
+	2. Replace the token in js/script.js line 18
+	3. Open index.html in your browser
+	4. The interactive map should load automatically
+
+	If the map doesn't appear, check the browser console (F12) for error messages.
+	-->
+</head>
+<body>
+	<div class="main__wrapper">
+		<div class="container">
+			<div class="outer__main">
+				<div class="main__switcher">
+					<ul>
+						<li><a href="#" class="current" data-tab="design__info"><span><svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1798557786="" aria-hidden="true" style="width: 20px;">
+						  <path d="M10.5 0C15.8011 0 20.1 3.978 20.1 8.889C20.0993 10.3622 19.537 11.7748 18.5369 12.8165C17.5368 13.8581 16.1805 14.4435 14.7663 14.444H12.8789C11.9938 14.444 11.2786 15.189 11.2786 16.111C11.2786 16.533 11.4389 16.922 11.6837 17.211C11.94 17.511 12.1003 17.9 12.1003 18.333C12.1003 19.256 11.364 20 10.5 20C5.1989 20 0.900024 15.522 0.900024 10C0.900024 4.478 5.1989 0 10.5 0ZM9.35858 16.111C9.35821 15.6293 9.449 15.1523 9.62578 14.7072C9.80256 14.2622 10.0619 13.8578 10.3888 13.5172C10.7158 13.1766 11.104 12.9065 11.5313 12.7223C11.9586 12.5382 12.4165 12.4436 12.8789 12.444H14.7663C15.6712 12.4435 16.5389 12.0689 17.1789 11.4026C17.819 10.7363 18.179 9.8326 18.18 8.89C18.18 5.139 14.7893 2 10.5 2C8.51818 1.99812 6.61235 2.79436 5.18103 4.22225C3.7497 5.65014 2.90369 7.59913 2.81989 9.66171C2.73608 11.7243 3.42097 13.7408 4.73135 15.2895C6.04173 16.8383 7.87615 17.7994 9.85106 17.972C9.52962 17.4093 9.35951 16.7668 9.35858 16.112V16.111ZM6.18002 10C5.79811 10 5.43184 9.84196 5.16179 9.56066C4.89174 9.27936 4.74002 8.89782 4.74002 8.5C4.74002 8.10218 4.89174 7.72064 5.16179 7.43934C5.43184 7.15804 5.79811 7 6.18002 7C6.56194 7 6.92821 7.15804 7.19826 7.43934C7.46831 7.72064 7.62002 8.10218 7.62002 8.5C7.62002 8.89782 7.46831 9.27936 7.19826 9.56066C6.92821 9.84196 6.56194 10 6.18002 10ZM14.82 10C14.4381 10 14.0718 9.84196 13.8018 9.56066C13.5317 9.27936 13.38 8.89782 13.38 8.5C13.38 8.10218 13.5317 7.72064 13.8018 7.43934C14.0718 7.15804 14.4381 7 14.82 7C15.2019 7 15.5682 7.15804 15.8383 7.43934C16.1083 7.72064 16.26 8.10218 16.26 8.5C16.26 8.89782 16.1083 9.27936 15.8383 9.56066C15.5682 9.84196 15.2019 10 14.82 10ZM10.5 7C10.1181 7 9.75184 6.84196 9.48179 6.56066C9.21174 6.27936 9.06003 5.89782 9.06002 5.5C9.06002 5.10218 9.21174 4.72064 9.48179 4.43934C9.75184 4.15804 10.1181 4 10.5 4C10.8819 4 11.2482 4.15804 11.5183 4.43934C11.7883 4.72064 11.94 5.10218 11.94 5.5C11.94 5.89782 11.7883 6.27936 11.5183 6.56066C11.2482 6.84196 10.8819 7 10.5 7Z" _ngcontent-ng-c1798557786=""></path>
+						</svg></span>Design</a></li>
+						<li><a href="#" data-tab="details__wrapper"><span><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1798557786="" aria-hidden="true" style="width: 20px;">
+						  <path d="m.1001695642,18.163607603l1.7362261753,1.7362261755c.0667769501.0667794974.1335539001.1001679725.2337218726.1001679725.0667769501,0,.1669449225-.0333910224.2337218726-.1001679725L15.3589331916,6.8447400728c.1335564475-.1335564475.1335564475-.3338898451,0-.4674462926l-1.736227449-1.7362274492c-.1335564475-.1335564475-.3338898451-.1335564475-.4674462926,0L.1001670169,17.6961587631c-.1335564475.1335564475-.1335564475.3338898451.0000025474.4674488399Zm12.0200318754-9.0150283636l-1.2687811565-1.2687811566,2.5375623131-2.5375623129,1.2687811565,1.2687811566-2.5375623131,2.5375623129Zm5.8764594901-1.6360594763l.4674456558-.9682810601.4674456557.9682810602,1.0684477589.1669449226-.7679463889.7679463889.2003340344,1.068447759-.9682804233-.5008347676-.9682804233.5008347676.2003340345-1.0684477589-.7679463889-.767946389,1.0684464853-.1669449225Zm-2.6377290115-6.3772961683l1.0684471221-.1669449225L16.8948246961-.000001751l.4674456557.9682804233,1.0684477589.1669449226-.7679463889.7679463889.2003340344,1.068447759-.9682804233-.5008347676-.9682804233.5008347676.2003340345-1.0684477589-.7679470257-.7679463889Zm-3.839730671,2.7045078722l-.9682810601-.5008347676-.9682810602.5008347676.2003333976-1.0684477589-.7345604612-.7679463889,1.068447759-.1669449225.4674462926-.9682804233.4674462925.9682804233,1.0684477589.1669449226-.7679463889.7679463889.1669474699,1.068447759Z" _ngcontent-ng-c1798557786=""></path>
+						</svg></span>Details</a></li>
+						<li><a href="#" data-tab="format__wrapper"><span><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1798557786="" aria-hidden="true" style="width: 20px;">
+						  <path d="M6.15991 6V14H13.8399V6H6.15991ZM4.2399 4H15.7599V16H4.2399V4ZM4.2399 0H6.15991V3H4.2399V0ZM4.2399 17H6.15991V20H4.2399V17ZM0.399902 4H3.2799V6H0.399902V4ZM0.399902 14H3.2799V16H0.399902V14ZM16.7199 4H19.5999V6H16.7199V4ZM16.7199 14H19.5999V16H16.7199V14ZM13.8399 0H15.7599V3H13.8399V0ZM13.8399 17H15.7599V20H13.8399V17Z" _ngcontent-ng-c1798557786=""></path>
+						</svg></span>Format</a></li>
+					</ul>
+					<div class="design__info">
+						<div class="elem__picker">
+							<p>Layout</p>
+							<ul>
+								<li><a href="#" class="current"><span class="media"><span class="img"><img src="img/asset1.png" alt="asset"></span></span>Square</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/asset2.png" alt="asset"></span></span>With Photo</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/asset3.png" alt="asset"></span></span>Valentine</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/asset4.png" alt="asset"></span></span>Circle</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/asset5.png" alt="asset"></span></span>Heart</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/asset6.png" alt="asset"></span></span>House</a></li>
+								<li class="double">
+									<p>also available as:</p>
+									<div class="dbl">
+										<a href="#"><span class="media"><span class="img"><img src="img/asset8.png" alt="asset"></span></span>Double Map</a>
+										<a href="#"><span class="media"><span class="img"><img src="img/asset9.png" alt="asset"></span></span>Triple Map</a>
+									</div>
+								</li>
+							</ul>
+						</div>
+
+
+						<div class="elem__picker">
+							<div class="top">
+								<p>Style</p>
+								<a href="#" class="info__button" data-id="template1"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2131842148="" aria-hidden="true">
+								  <circle cx="12" cy="12" r="10.25" stroke="#16212C" stroke-width="1.5" _ngcontent-ng-c2131842148=""></circle>
+								  <rect x="11.25" y="10" width="1.5" height="8" fill="#16212C" _ngcontent-ng-c2131842148=""></rect>
+								  <rect x="11.25" y="7" width="1.5" height="1.5" fill="#16212C" _ngcontent-ng-c2131842148=""></rect>
+								</svg></a>
+							</div>
+							<ul>
+								<li><a href="#" class="current"><span class="media"><span class="img"><img src="img/l1.png" alt="asset"></span></span>Minimal</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l2.png" alt="asset"></span></span>Beachglass</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l3.png" alt="asset"></span></span>Carbon</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l4.png" alt="asset"></span></span>Black</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l5.png" alt="asset"></span></span>Custom</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l6.png" alt="asset"></span></span>Vintage</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l7.png" alt="asset"></span></span>Atlas</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l8.png" alt="asset"></span></span>Classic</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l9.png" alt="asset"></span></span>Pink</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l10.png" alt="asset"></span></span>Green</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l11.png" alt="asset"></span></span>Intense</a></li>
+							</ul>
+						</div>
+						<div class="custom__style">
+							<div class="switcher">
+								<a href="#" class="current" data-id="land">LAND <span class="color" style="background-color:rgb(21, 58, 81);"></span></a>
+								<a href="#" data-id="roads">ROADS & RAILWAYS <span class="color" style="background-color:rgb(21, 58, 81);"></span></a>
+								<a href="#" data-id="water">WATER <span class="color" style="background-color:rgb(21, 58, 81);"></span></a>
+								<a href="#" data-id="background">BACKGROUND <span class="color" style="background-color:rgb(21, 58, 81);"></span></a>
+							</div>
+							<div class="box" data-id="land">
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#" class="custom"><span class="color"><img src="img/custom.png" alt="custom"></span><span>CUSTOM</span></a></div>
+							</div>
+
+							<div class="box" data-id="roads" style="display:none;">
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#" class="custom"><span class="color"><img src="img/custom.png" alt="custom"></span><span>CUSTOM</span></a></div>
+							</div>
+
+							<div class="box" data-id="water" style="display:none;">
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#" class="custom"><span class="color"><img src="img/custom.png" alt="custom"></span><span>CUSTOM</span></a></div>
+							</div>
+
+							<div class="box" data-id="background" style="display:none;">
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#" class="custom"><span class="color"><img src="img/custom.png" alt="custom"></span><span>CUSTOM</span></a></div>
+							</div>
+						</div>
+						<div class="details">
+							<a href="#" class="add__details">Add details <span><svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c3263369692="" aria-hidden="true">
+							  <path d="M5.172 7.00026L0.222001 2.05026L1.636 0.636257L8 7.00026L1.636 13.3643L0.222 11.9503L5.172 7.00026Z" fill="#16212C" _ngcontent-ng-c3263369692=""></path>
+							</svg></span></a>
+						</div>
+						
+					</div>
+					<div class="details__wrapper" style="display:none;">
+						<div class="group__input">
+							<p>PLACE *</p>
+							<input type="text" placeholder="For e.g. city, street address or building">
+							<span>minimum 3 characters needed to search</span>
+						</div>
+						<div class="map__marker">
+							<label class="container__checkbox">
+							  <input type="checkbox" >
+							  <span class="checkmark"></span>
+							  <p>Add map marker</p>
+							</label>
+                             <a href="#" class="info__button" data-id="template2"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2131842148="" aria-hidden="true">
+							  <circle cx="12" cy="12" r="10.25" stroke="#16212C" stroke-width="1.5" _ngcontent-ng-c2131842148=""></circle>
+							  <rect x="11.25" y="10" width="1.5" height="8" fill="#16212C" _ngcontent-ng-c2131842148=""></rect>
+							  <rect x="11.25" y="7" width="1.5" height="1.5" fill="#16212C" _ngcontent-ng-c2131842148=""></rect>
+							</svg></a>
+						</div>
+						<div class="marker__info">
+							<div class="btns">
+								<a href="#" class="current" data-id="address">Select by address</a>
+								<a href="#" data-id="gps">Select by GPS</a>
+							</div>
+							
+							<div class="address__info">
+								<div class="group__input">
+									<span>ADDRESS FOR MARKER</span>
+									<input type="text" value="Miami, FL, USA">
+									<span>minimum 3 characters needed to search</span>
+								</div>
+							</div>
+							<div class="address__geo" style="display:none;">
+								<span>Please provide coordinates exclusively in decimal degrees format (e.g., 40.7128, -74.0060), which can be found on Google Maps.</span>
+								<div class="group__input">
+									<span>COORDINATES</span>
+									<div class="double">
+										<div class="group__input">
+											<input type="text" value="25.7616798">
+										</div>
+										<div class="group__input">
+											<input type="text" value="-80.1917902">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="marker__switcher">
+								<div class="elem__picker">
+									<ul>
+										<li><a href="#" class="current"><span class="media">
+											<span class="img"><svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="32.946" viewBox="0 0 35.908 32.946" _ngcontent-ng-c919487964="" aria-hidden="true">
+										  <path class="marker-fill" fill="#E53422" data-name="Path 515" d="M19.954,35.946l-2.6-2.37C8.1,25.191,2,19.661,2,12.875A9.779,
+										  9.779,0,0,1,11.875,3a10.752,10.752,0,0,1,8.079,3.752A10.752,10.752,0,0,1,28.033,3a9.779,9.779,0,0,1,9.875,9.875c0,
+										  6.787-6.1,12.316-15.351,20.719Z" transform="translate(-2 -3)" _ngcontent-ng-c919487964=""></path>
+										</svg></span>
+										</span></a></li>
+										<li><a href="#"><span class="media">
+											<span class="img">
+												<svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="30.522" viewBox="0 0 35.908 30.522" _ngcontent-ng-c919487964="" aria-hidden="true">
+										  <path class="marker-fill" fill="#E53422" d="M30.5,18.1v13.1h-8.9v-9.3h-7.4v9.3H5.4V18.1L18,6.1L30.5,18.1z M18,3.9l-15,14.3c-1.6,1.6-4-0.9-2.4-2.5
+											L16.8,0.5c0.7-0.6,1.7-0.6,2.4,0l7.6,7.2V4.3c0-0.4,0.4-0.8,0.8-0.8h2.2c0.4,0,0.8,0.4,0.8,0.8v6.9l4.8,4.5c1.7,1.6-0.7,4.1-2.4,2.5
+											C28,13.4,23,8.7,18,3.9L18,3.9z" _ngcontent-ng-c919487964=""></path>
+										</svg>
+											</span>
+										</span></a></li>
+										<li><a href="#"><span class="media">
+											<span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24.9 24.9" style="enable-background:new 0 0 24.9 24.9;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+										<style type="text/css" _ngcontent-ng-c919487964="">
+											.st0{fill:#E53422;}
+										</style>
+										  <path class="st0" d="M12.4,24.9C5.6,24.9,0,19.3,0,12.4S5.6,0,12.4,0s12.4,5.6,12.4,12.4S19.3,24.9,12.4,24.9z M12.4,6.2
+											C9,6.2,6.2,9,6.2,12.4s2.8,6.2,6.2,6.2s6.2-2.8,6.2-6.2S15.9,6.2,12.4,6.2z" _ngcontent-ng-c919487964=""></path>
+										</svg></span>
+										</span></a></li>
+										<li><a href="#"><span class="media">
+											<span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 38.91 36.47" style="enable-background:new 0 0 38.91 36.47;" xml:space="preserve" width="35.908" height="32.946" _ngcontent-ng-c919487964="" aria-hidden="true">
+											<path class="marker-stroke" stroke-width="3" d="M19.45,34.45l-2.6-2.37C7.6,23.69,1.5,18.16,1.5,11.38c-0.05-5.4,4.28-9.82,9.68-9.88
+												c0.06,0,0.13,0,0.19,0c3.11,0.02,6.06,1.39,8.08,3.75c2.02-2.36,4.97-3.73,8.08-3.75c5.4-0.05,9.82,4.28,9.87,9.68
+												c0,0.06,0,0.13,0,0.19c0,6.79-6.1,12.32-15.35,20.72L19.45,34.45z" _ngcontent-ng-c919487964=""></path>
+										</svg></span>
+										</span></a></li>
+										<li><a href="#"><span class="media"><span class="img">
+											<svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 980.36 839.49" style="enable-background:new 0 0 980.36 839.49;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+										<path class="marker-fill" fill="#E53422" d="M979.64,451.35c-0.01,0.07-0.01,0.13-0.01,0.18c-0.28,3.18-0.63,6.34-1.18,9.47
+											c-3.85,21.56-9.11,42.72-16.64,63.39c-10.55,28.95-24.71,55.94-41.39,81.73c-16.55,25.6-35.68,49.24-56.6,71.29
+											c-15.18,15.99-31.19,31.3-47.82,45.76c-16.56,14.41-34.16,27.67-51.68,40.94c-32.03,24.28-66.11,45.38-101.59,64.24
+											c-6.74,3.58-13.33,7.42-19.99,11.14h-2c-3.63-2.05-7.27-4.06-10.88-6.14c-23.4-13.52-47.38-26.13-70.01-40.82
+											c-23.33-15.14-45.77-31.75-67.82-48.74c-16.93-13.06-32.92-27.39-48.8-41.75c-9.22-8.33-17.63-17.6-25.97-26.85
+											c-10.8-12-21.55-24.08-31.64-36.68c-18.49-23.08-34.47-47.88-47.67-74.34c-5.83-11.69-10.83-23.84-15.64-36
+											c-12.08-30.51-19.53-62.25-21.18-94.95c-1.56-30.85-0.66-61.72,7.7-91.92c7.09-25.63,18.1-49.28,35.46-69.43
+											c16.66-19.34,36.85-34.16,60.7-43.96c19.61-8.06,39.94-12.71,60.94-14.09c10.7-0.7,21.53,0.37,32.3,0.84
+											c15.82,0.68,31.09,4.27,46.14,8.99c22.48,7.04,43.05,17.82,60.8,33.23c15.89,13.79,28.83,30.1,35.93,50.71
+											c0.61-0.97,1.06-1.48,1.29-2.07c9.64-24.79,26.45-43.88,48.09-58.65c29.93-20.44,63.58-30.72,99.51-33.08
+											c21.13-1.39,42.15,0.47,62.82,5.79c36.54,9.42,67.09,28.34,90.15,58.14c14.79,19.12,24.65,40.34,30.66,63.03
+											C983.07,384.74,979.91,446.35,979.64,451.35z M682.59,194.67c-0.64-11.04-0.52-22.2-2.18-33.09c-2.22-14.66-4.97-29.35-9.02-43.6
+											c-7.14-25.14-20.19-47.23-38.17-66.26c-16.18-17.11-35.46-29.71-57.31-38.41c-11.07-4.42-22.36-7.83-33.93-10.02
+											c0,0-0.09-0.02-0.26-0.05c-0.19-0.04-0.38-0.07-0.57-0.11c-0.86-0.15-1.72-0.31-2.59-0.45c-0.31-0.05-0.64-0.11-0.99-0.16
+											c-0.28-0.05-0.56-0.09-0.84-0.13c-10.4-1.53-35.37-4.09-67.26,0.31c-15.99,2.38-31.53,6.61-46.24,13.4
+											c-11.84,5.47-23.43,11.83-34.25,19.1c-20.81,13.99-36.31,32.67-45.53,56.25c-0.23,0.6-0.68,1.11-0.94,1.53
+											c-4.2-7.56-8.07-15.42-12.74-22.76c-7.08-11.11-15.77-20.48-25.63-28.61c0,0-0.01-0.01-0.03-0.03c-4.88-4.01-10.04-7.73-15.44-11.2
+											c-0.07-0.05-0.14-0.09-0.22-0.14c-2.26-1.46-4.56-2.86-6.89-4.23c-20.18-11.82-42.03-18.81-64.8-23.18
+											c-3.66-0.7-7.37-1.07-11.1-1.37c-3.33-0.28-6.68-0.49-9.99-0.86c-0.25-0.03-0.51-0.07-0.76-0.13h-0.04
+											c-11.59-0.78-24.01-0.64-37.17,0.73c-1.06,0.15-2.12,0.29-3.18,0.4c-2.11,0.22-4.2,0.49-6.29,0.79c-0.05,0-0.09,0.01-0.14,0.02
+											c-14.73,2.14-28.98,6.19-42.66,12.1C85.34,23.18,67.25,34.92,52,50.87C40.55,62.84,31.26,76.11,23.95,90.6c0,0,0,0,0,0.01
+											c-0.01,0.01-0.01,0.01-0.02,0.02c-1.11,1.85-55.59,93.23,3.62,235.49c0.34,0.83,0.69,1.66,1.05,2.5c0.35,0.83,0.71,1.67,1.07,2.51
+											c0.72,1.67,1.46,3.36,2.22,5.05c10.79,24.06,24.24,46.83,39.64,68.64c19.83,28.08,41.78,54.26,66.97,77.63
+											c15.73,14.6,31.4,29.35,48.06,42.85c18.57,15.05,37.87,29.27,57.5,42.92c16.38,11.39,33.62,21.55,50.62,32.02
+											c6.89,4.25,14.15,7.88,21.24,11.79c-4.07-8.83-8.91-16.77-13.13-25.04c-16.03-31.44-28.45-64.25-36.12-98.76
+											c-4.71-21.2-7.61-42.69-7.97-64.41c-0.23-13.1,0.39-26.21,0.96-39.3c0.34-7.72,0.77-15.51,2.13-23.1
+											c3.27-18.32,7.21-36.49,13.8-54.01c8.87-23.56,21.18-45.16,37.74-63.98c19.79-22.51,43.5-40,71.14-52.13
+											c27.03-11.87,55.31-18.29,84.61-19.74c12.8-0.63,25.74,0.94,38.6,1.8c18.73,1.25,36.79,5.88,54.39,12.14
+											c28.43,10.12,54.46,24.4,76.12,45.81c2.32,2.29,3.59,2.07,6.12,0.07c10.03-7.9,20.03-15.93,30.71-22.89
+											C680.54,204.89,682.94,200.84,682.59,194.67z" _ngcontent-ng-c919487964=""></path>
+										</svg>
+										</span></span></a></li>
+										<li><a href="#"><span class="media">
+											<span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 867.2 839.5" style="enable-background:new 0 0 867.2 839.5;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+										<style type="text/css" _ngcontent-ng-c919487964="">
+											.st0{fill:#E53422;}
+										</style>
+										<path class="st0" d="M835.1,119.7c-24.2-27.9-56.6-39.3-91.9-40.6c-8.2-2.8-17.8-3.6-28-1.6c-8.9,1.7-17.5,3.9-25.9,6.5
+											c-54.6,10.9-109.8,37.4-148.8,59.7c-41.1,23.6-77.1,51.5-107.1,82.6c-17.3-40.6-43.6-79.1-78.3-113.5
+											C299.2,57.4,200.1-15.1,95.8,2.8C40.3,12.2,16,46.7,8.9,85.5c-8.8,48-10.9,96.4-7,144.7c7.9,97,38.2,192.4,79.8,284.4
+											c47.8,105.7,109.9,207.5,172.4,308.8c18.9,30.5,73.2,13,76.6-14.8c10,1.7,20.6,0.9,28.7-3.7C551.3,695.6,704.2,553,799.4,388.2
+											C845,309.3,905.4,200.7,835.1,119.7z M540,289.6c29-30.7,59.6-60.6,92-89.4c6.3-5.6,12.6-11.3,19.2-16.9
+											c-55.6,105.9-147.4,200.6-217,302.5c-0.3-11.1-0.6-22.2-0.9-33.3c-0.2-8.9-4.6-15.8-11.2-20.7C457.6,382.9,496.8,335.3,540,289.6z
+											 M188.1,152.6c0.5,0.4,0.8,0.8,1,1c7,7.2,13.7,14.6,20.3,22c3.9,4.4,7.7,8.9,11.5,13.4c-5.2,4.8-8.3,11.2-7.7,19
+											c2.4,31.9,4.5,63.7,6.5,95.5c-0.9-3.3-1.9-6.6-2.8-10c-11.5-41.4-24-82.8-28.9-125C187.6,164,187.9,158.3,188.1,152.6z M439.3,671.5
+											c0.2,0,0.4,0.1,0.5,0.1c-0.2,0.1-0.3,0.2-0.5,0.4C439.3,671.9,439.3,671.7,439.3,671.5z M491.1,559.4
+											c40.5-51.3,85.3-100.4,134.1-147.3C584.8,463,538.7,511.8,491.1,559.4z M782.4,212.7c-13-2.2-27.4-0.2-38.4,7.7
+											c-14.2,10.2-28.1,20.6-41.9,31.1c21.7-33.9,40.6-68.7,54.5-105.2c6.3,4.1,11.2,10,15.4,17.5C780.6,179.3,783.2,195.9,782.4,212.7z
+											 M349.3,235.6c-20-33-43.6-64.7-70.6-94.9C309.6,169.1,333.3,201.3,349.3,235.6z M91.4,94.5c2.5-12.5,4-27.2,22.7-31.2
+											c14.8-3.2,33.7,0.8,48.1,5.1c-12.9,0.8-26,5.4-38.6,15.4c-38.3,30.2-20.3,86.7-13.5,122.8c19.6,103.5,54.5,206.1,83,308.5
+											c8,28.7,14.1,57.5,21,86.1C167,514.3,127,425.5,103.5,333.4C83.7,255.5,75.8,173.2,91.4,94.5z" _ngcontent-ng-c919487964=""></path>
+										</svg></span>
+										</span></a></li>
+										<li><a href="#"><span class="media"><span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 986.4 839.5" style="enable-background:new 0 0 986.4 839.5;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+									      <path class="marker-fill" fill="#E53422" d="M855.3,12.4L711.8,53.1l-23.8,6.8l17.5,17.5l29.3,29.3l-47.7,47c-25.7-14.1-54.8-21.8-83.3-21.8
+									        c-52.4,0-101.5,23-137.4,63.6c-35.9-40.7-85.1-63.6-137.4-63.6c-21.7,0-42.9,4-63.2,12c-20.9,8.2-39.7,20.2-55.7,35.6
+									        c-17,16.4-30.3,36.1-39.6,58.5c-9.9,24-14.9,50.7-14.9,79.5c0,68.2,44.5,146.7,132.3,233.3l-64.3,64.3l-39-14.9l-8.8-3.4l-6.7,6.6
+									        L62.2,709.3l-15.9,15.8l20.9,8.1l56.8,22l20.2,57.8l7.5,21.5l16.3-15.9L276,713.7l6.6-6.4l-3-8.7l-13.4-39.3l66.4-66.4
+									        c58.4,50.5,110.8,85.5,117.1,89.3l10.2,6.1l7.5,4.5l7.5-4.5l10.2-6.1l0.6-0.3l0.5-0.4c0.4-0.3,1.7-1.2,3.2-2.2
+									        c73.3-50.5,125.2-96.9,155.9-126.9c38.7-37.8,69.4-74.7,91.3-109.5c27.6-43.9,41.6-85.4,41.6-123.3c0-28.7-4.9-55.3-14.4-79
+									        c-7.1-17.5-16.7-33.6-28.8-47.8l43-43l29.4,29.4l17.3,17.3l6.9-23.5l41.7-142.5l7.4-25.3L855.3,12.4z M711.4,319.7
+									        c0.2,26.1-10.2,56.1-31,89.2c-17.9,28.5-43.4,59.2-75.7,91.3c-56.1,55.7-116.2,99-138.3,114.2c-22.2-15.4-82.7-58.9-138.4-114
+									        c-32.5-32.1-58-62.9-76-91.6c-21-33.4-31.6-63.8-31.6-90.4c0-37.5,11.9-68.9,34.3-90.9c9.9-9.7,21.6-17.3,34.7-22.4
+									        c12.7-5,26-7.5,39.7-7.5c42.9,0,81.7,24,106.3,65.8c0.8,1.6,1.6,2.7,2.2,3.6c0.4,0.5,0.5,0.8,0.6,1l0,0.1l0.1,0.1l15.3,29.5l12.9,25
+									        l12.9-25l15.3-29.5l0.1-0.1l0-0.1c0.3-0.5,0.7-1.4,1-2l0.6-0.6l0.9-1.5c12.5-20.8,28.2-37.1,46.5-48.4c18.2-11.2,38-16.8,59.1-16.8
+									        c27.6,0,54.7,11,74.3,30.3c22.5,22.1,34.3,53.4,34.3,90.5L711.4,319.7L711.4,319.7z" _ngcontent-ng-c919487964=""></path>
+									</svg></span></span></a></li>
+										<li><a href="#"><span class="media"><span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 576 576" style="enable-background:new 0 0 576 576;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+
+										<path class="marker-fill" d="M295.37,376.38c-4.72,2.14-10.13,2.14-14.85,0l-172.55-77.41V396c0,40.95,92.71,63.01,180.01,63.01
+											S468,436.95,468,396v-97.03L295.37,376.38z M540,323.99v-67.14l12.69-5.67v0c3.21-1.46,5.27-4.66,5.27-8.19s-2.06-6.73-5.27-8.19
+											L291.67,117.79c-2.35-1.06-5.03-1.06-7.38,0L23.27,234.8c-3.21,1.46-5.27,4.66-5.27,8.19s2.06,6.73,5.27,8.19l261.02,117.01
+											c2.35,1.06,5.03,1.06,7.38,0L522,264.95v59.04c-4.77,0-9.35,1.9-12.73,5.27s-5.27,7.96-5.27,12.73v27c0,2.39,0.95,4.68,2.64,6.36
+											c1.69,1.69,3.98,2.64,6.36,2.64h36c2.39,0,4.68-0.95,6.36-2.64c1.69-1.69,2.64-3.98,2.64-6.36v-27c0-4.77-1.9-9.35-5.27-12.73
+											C549.35,325.89,544.77,323.99,540,323.99L540,323.99z" _ngcontent-ng-c919487964=""></path>
+										</svg></span></span></a></li>
+										<li><a href="#"><span class="media"><span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 35.9 31.2" style="enable-background:new 0 0 35.9 31.2;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+										  <g _ngcontent-ng-c919487964="">
+											<path class="marker-fill" d="M14.8,14.6c-1.3,0-2.5,0.6-3.4,1.5c-0.8,0.9-1.3,2.1-1.3,3.3c0,1.2,0.5,2.4,1.4,3.2l5.8,5.8
+												c0.2,0.2,0.4,0.2,0.6,0.2c0.2,0,0.4-0.1,0.6-0.2l5.9-5.9c1.2-1.2,1.6-2.9,1.2-4.5c-0.4-1.6-1.7-2.9-3.3-3.3c-1.5-0.4-3.1,0-4.3,1
+												C17.1,14.9,16,14.6,14.8,14.6z M21.8,16.3c1,0.3,1.9,1.1,2.1,2.1c0.3,1,0,2.2-0.8,2.9l-5.3,5.3l-5.2-5.2c-0.6-0.6-0.9-1.3-0.9-2.1
+												c0-0.8,0.3-1.6,0.9-2.1c0.6-0.6,1.3-0.9,2.1-0.9l0.1,0c0.8,0,1.6,0.3,2.1,0.9l0.3,0.3c0.3,0.3,0.9,0.3,1.2,0l0.4-0.4
+												C19.7,16.3,20.8,16,21.8,16.3z" _ngcontent-ng-c919487964=""></path>
+										    <path class="marker-fill" d="M24.8,6.5L24.8,6.5l-6.1-6.1c-0.4-0.4-1-0.4-1.4,0L1.7,15.9l1.4,1.4L18,2.5l14.8,14.8l1.4-1.4L24.8,6.5z" _ngcontent-ng-c919487964=""></path>
+										    <path class="marker-fill" d="M18.6,4.8c-0.4-0.4-0.9-0.4-1.3,0L6.4,15.7c-0.2,0.2-0.3,0.4-0.3,0.6v13.8c0,0.2,0.1,0.5,0.3,0.7
+												C6.5,31,6.8,31.1,7,31.1h21.9c0.2,0,0.5-0.1,0.6-0.3c0.2-0.2,0.3-0.4,0.3-0.6V16.4c0-0.2-0.1-0.5-0.3-0.6L18.6,4.8z M28,16.8v12.5
+												H7.9V16.8l10-10L28,16.8z" _ngcontent-ng-c919487964=""></path>
+										</g>
+										</svg></span></span></a></li>
+										<li><a href="#"><span class="media"><span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 576 576" style="enable-background:new 0 0 576 576;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+
+										<path class="marker-fill" d="M557.95,75.54c0.4-4.99-1.33-9.93-4.72-13.61c-3.41-3.68-8.2-5.77-13.21-5.77h-72.69
+											c0.4-6.66,0.7-13.36,0.7-20.16c0-9.94-8.08-18-18.01-18H126c-9.94,0-18,8.06-18,18c0,6.8,0.27,13.5,0.69,20.16H36
+											c-5.02,0-9.8,2.08-13.21,5.77c-3.4,3.68-5.13,8.61-4.73,13.61c6.48,84.38,57.85,241.53,204.08,249.85
+											c20.24,29.74,38.87,59.82,38.87,84.12c0,74.45-102.04,112.72-103.08,112.96c-8.89,2.09-14.83,10.53-13.79,19.61
+											c1.05,9.07,8.72,15.93,17.87,15.93H414c0.14-0.01,0.26,0,0.38,0c9.95,0,18.01-8.04,18.01-18c0-9.1-6.74-16.59-15.45-17.81
+											C405.65,519.24,315,480.03,315,409.5c0-24.3,18.63-54.38,38.88-84.12C500.12,317.06,551.48,159.9,557.95,75.54L557.95,75.54z
+											 M56.37,92.16h56.51c12.79,76.38,49.13,141.87,82.45,193.22C93.12,260.63,63.91,140.14,56.37,92.16L56.37,92.16z M519.65,92.16
+											c-7.57,47.98-36.78,168.47-138.99,193.22c33.33-51.35,69.65-116.84,82.43-193.22L519.65,92.16z" _ngcontent-ng-c919487964=""></path>
+										</svg></span></span></a></li>
+										<li><a href="#"><span class="media"><span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 576 576" style="enable-background:new 0 0 576 576;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+										<style type="text/css" _ngcontent-ng-c919487964="">
+
+										</style>
+										  <path class="st0" d="M419.4,19.3H156.3c-74.7,0-135.2,60.5-135.2,135.2v263.1c0,74.6,60.5,135.2,135.2,135.2h263.1
+											c74.7,0,135.2-60.5,135.2-135.2V154.4C554.6,79.8,494.1,19.3,419.4,19.3z M414.4,267.4l-56.2,51.2c-1.7,1.6-3.3,5-1.7,8.3l13.2,74.3
+											c1.6,6.6-5,11.6-11.6,8.3l-66.1-36.3c-3.3-1.7-6.6-1.7-8.3,0l-66.1,36.3c-6.6,3.3-13.2-1.6-13.2-8.3l14.9-74.3c0-3.3,0-6.6-1.6-8.3
+											l-56.2-51.2c-5-5-1.7-14.9,5-14.9l74.3-9.9c3.3,0,6.6-1.7,6.6-5l33-67.7c3.3-6.6,11.6-6.6,14.9,0h0l31.4,67.7c1.7,3.3,5,5,6.6,5
+											l76,9.9C416,252.5,419.3,262.4,414.4,267.4z" _ngcontent-ng-c919487964=""></path>
+										</svg></span></span></a></li>
+									</ul>
+								</div>
+								<div class="marker__color">
+									<p>Marker color</p>
+									<div>
+										<div class="wrap"><a href="#" class="current"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></li></div>
+										<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></li></div>
+										<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></li></div>
+										<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></li></div>
+										<div class="wrap"><a href="#" class="custom"><span class="color"><img src="img/custom.png" alt="custom"></span><span>CUSTOM</span></a></li></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="map__title">
+							<div class="title">
+								<label class="container__checkbox">
+								  <input type="checkbox" >
+								  <span class="checkmark"></span>
+								  <p>Map title</p>
+								</label>
+							</div>
+							<div class="content">
+								<span>The default title and coordinates can be edited</span>
+								<div class="group__input">
+									<div class="top">
+										<p>Large text</p>
+										<a href="#" class="open__popup--ideas">Our ideas for titles</a>
+									</div>
+									<textarea name="" id="">MIAMI, UNITED STATES</textarea>
+									<label class="container__checkbox">
+									  <input type="checkbox" >
+									  <span class="checkmark"></span>
+									  <p>Script font</p>
+									</label>
+								</div>
+
+
+								<div class="group__input">
+									<!-- <div class="top">
+										<p>Small text</p>
+										<a href="#" class="open__popup--ideas">Our ideas for subtitles</a>
+									</div> -->
+									<textarea name="" id="">25.76168°N / 80.19179°W</textarea>
+								</div>
+								<div class="btn">
+									<a href="#" class="select__format">Select format <span><svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c3263369692="" aria-hidden="true">
+									  <path d="M5.172 7.00026L0.222001 2.05026L1.636 0.636257L8 7.00026L1.636 13.3643L0.222 11.9503L5.172 7.00026Z" fill="#16212C" _ngcontent-ng-c3263369692=""></path>
+									</svg></span></a>
+								</div>
+							</div>
+						</div>
+						<div class="inn__box">
+							<div class="group__input">
+								<p>FONT</p>
+								<input type="text">
+							</div>
+							<div class="group__input">
+								<p>COORDINATES</p>
+								<div class="double">
+									<div class="group__input">
+										<input type="text">
+									</div>
+									<div class="group__input">
+										<input type="text">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="format__wrapper" style="display:none;">
+						<div class="elem__picker tab__switcher">
+							<p>Product type</p>
+							<ul class="four">
+								<li><a href="#" class="current" data-id="1"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M14 2H15.5V7H16.25H17.75V8.5V9.25H29.75V8.5V7H31.25H32V2H33.5V7H34.25H35.75V8.5V9.25H38.75H39.5V10V44V44.75H38.75H8.75H8V44V10V9.25H8.75H11.75V8.5V7H13.25H14V2ZM16.25 8.5H13.25V11.5H16.25V8.5ZM29.75 10.75H17.75V11.5V13H16.25H13.25H11.75V11.5V10.75H9.5V43.25H38V10.75H35.75V11.5V13H34.25H31.25H29.75V11.5V10.75ZM31.25 8.5H34.25V11.5H31.25V8.5ZM26.2536 21.4821L26.9029 22.631L33.4029 34.131C33.6067 34.4916 33.4796 34.9491 33.119 35.1529C32.7584 35.3567 32.3009 35.2296 32.0971 34.869L26.2464 24.5179L22.9012 30.3721L22.2788 31.4612L21.614 30.3975L19.7694 27.4462L15.3965 34.8803C15.1864 35.2373 14.7268 35.3565 14.3697 35.1465C14.0127 34.9364 13.8935 34.4768 14.1035 34.1197L19.1035 25.6197L19.7306 24.5538L20.386 25.6025L22.2212 28.5388L25.5988 22.6279L26.2536 21.4821ZM31.25 22C32.0784 22 32.75 21.3284 32.75 20.5C32.75 19.6716 32.0784 19 31.25 19C30.4216 19 29.75 19.6716 29.75 20.5C29.75 21.3284 30.4216 22 31.25 22Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								</svg></span></span>Fine Art Poster</a></li>
+								<li><a href="#" data-id="2"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M35.9393 7L37.4393 5.5L10.5607 5.5L12.0607 7H12.5L35.5 7H35.9393ZM9.5 42.4393L9.5 6.56066L11 8.06066V8.5L11 40.5V40.9393L9.5 42.4393ZM10.5607 43.5H37.4393L35.9393 42H35.5H12.5H12.0607L10.5607 43.5ZM37 40.9393L38.5 42.4393L38.5 6.56066L37 8.06066V8.5L37 40.5V40.9393ZM40 4V5.5L40 43.5V45H38.5H9.5H8V43.5V5.5L8 4H9.5H38.5H40ZM35.5 8.5L35.5 40.5H12.5L12.5 8.5L35.5 8.5ZM26.2536 18.4821L26.9029 19.631L33.4029 31.131C33.6067 31.4916 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8803C15.1864 32.2373 14.7268 32.3565 14.3697 32.1465C14.0127 31.9364 13.8935 31.4768 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 20C32.0784 20 32.75 19.3284 32.75 18.5C32.75 17.6716 32.0784 17 31.25 17C30.4216 17 29.75 17.6716 29.75 18.5C29.75 19.3284 30.4216 20 31.25 20Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								</svg></span></span>Framed Poster</a></li>
+								<li><a href="#" data-id="3"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <path fill="#16212C" d="m33.7982788086,17.8413085938c.8284301758-.0175170898,1.5-.7955932617,1.5-1.7377929688s-.6715698242-1.7059936523-1.5-1.7059936523-1.5.7780151367-1.5,1.7377929688c0,.9597167969.6715698242,1.7235107422,1.5,1.7059936523Z" _ngcontent-ng-c1296751826=""></path>
+								  <path fill="#16212C" d="m15.9873657227,32.2445068359c.1005859375.0458984375.2060546875.0673828125.310546875.0673828125.2841796875,0,.556640625-.1630859375.6826171875-.439453125l4.36328125-9.5859375,2.4921875,4.7709960938,3.984375-8.55078125,5.8056640625,11.6743164062c.1845703125.3701171875.6318359375.5249023438,1.005859375.3374023438.37109375-.1840820312.5224609375-.6342773438.337890625-1.0053710938l-7.1943359375-14.4633789062-4.015625,8.62109375-2.5078125-4.8012695312-5.63671875,12.3818359375c-.171875.376953125-.0048828125.8217773438.3720703125.9931640625Z" _ngcontent-ng-c1296751826=""></path>
+								  <path fill="#16212C" d="m8.5350341797,4.0349731445l-.7700195312-.0100097656-3.5999755859-.0700073242v39.4600219727l3.5999755859.5200195312.7399902344.1099853516.2200317383-.0200195312,35.1099853516-3.3699951172V4.5349731445l-35.299987793-.5Zm-2.8699951172,38.0800170898V5.4749755859l2.0999755859.0399780273v36.9100341797l-2.0999755859-.3099975586Zm36.6699829102-2.8200073242l-33.0700073242,3.1699829102V5.5449829102l33.0700073242.4699707031v33.2800292969Z" _ngcontent-ng-c1296751826=""></path>
+								</svg></span></span>Stretched Canvas</a></li>
+								<li><a href="#" data-id="4"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M8.75 5H8V5.75V43.75V44.5H8.75H38.25H39V43.75V12.25V11.9393L38.7803 11.7197L38.5304 11.4697L38.5303 11.4697L32.5303 5.46967L32.2803 5.21967L32.0607 5H31.75H8.75ZM31.25 6.5H9.5V43H37.5V12.75H32C31.5858 12.75 31.25 12.4142 31.25 12V6.5ZM36.1893 11.25L32.75 7.81066V11.25H36.1893ZM24.4393 19.75H22.9393V28.3713L20.5 25.932L19.4393 26.9926L22.6213 30.1746L23.682 31.2353L24.7426 30.1746L27.9246 26.9926L26.864 25.932L24.4393 28.3566V19.75ZM28.75 31.75H18.75V33.25H28.75V31.75Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								</svg></span></span>Digital Files</a></li>
+							</ul>
+						</div>
+						<div class="el__format" data-id="1" >
+							<div class="estimated">
+							<a href="#">Estimated delivery: <span>Sep 21-27</span></a>
+							<ul>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Printed on museum-quality, thick, matte art paper of 200gsm</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Responsibly sourced FSC certified paper from sustainably managed forests</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Shipped in sturdy packaging protecting the poster</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Frame not included</li>
+							</ul>
+							<div class="show__more">
+								<a href="#">Show more</a>
+							</div>
+						</div>
+						<div class="elem__picker">
+							<p>Size</p>
+							<div class="size__picker">
+								<a href="#" class="current">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>A4</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>M</span>
+											<p>50x70cm</p>
+										</span>
+										<span class="content">
+											<span>93.24$</span>
+											<p>69.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>L</span>
+											<p>70x100cm</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>30x40cm</p>
+										</span>
+										<span class="content">
+											<span>79.73$</span>
+											<p>59.00$</p>
+										</span>
+									</div>
+								</a>
+							</div>
+						</div>
+
+						<div class="elem__picker">
+							<p>Print Layout</p>
+							<ul class="four type__switcher">
+								<li><a href="#" class="current" data-type="portrait"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M37.5 42.5V5.5H36.25H36H12H10.5V42.5H37.5ZM39 42.5V44H37.5H10.5H9V42.5V5.5V4H10.5H12H36H36.25H37.5H39V5.5V42.5ZM26.2536 18.4821L26.9029 19.631L33.4029 31.131C33.6067 31.4916 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8803C15.1864 32.2373 14.7268 32.3565 14.3697 32.1465C14.0127 31.9364 13.8935 31.4768 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								</svg></span></span>Portrait</a></li>
+								<li><a href="#" data-type="square"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1044)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 37.5L37.5 37.5V36.25V36L37.5 12V10.5L10.5 10.5L10.5 37.5ZM10.5 39H9V37.5V10.5L9 9H10.5H37.5H39V10.5V12L39 36V36.25V37.5V39H37.5L10.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1036 31.1197L19.1036 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1044" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Square</a></li>
+								<li><a href="#" data-type="landscape"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1043)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 37.5L42.5 37.5V36.25V36V12V10.5L5.5 10.5L5.5 37.5ZM5.5 39H4V37.5V10.5V9H5.5H42.5L44 9V10.5V12V36V36.25V37.5V39H42.5L5.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3964 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1043" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Landscape</a></li>
+
+							</ul>
+						</div>
+						</div>
+
+
+
+
+
+						<div class="el__format" data-id="2" style="display:none;">
+							<div class="estimated">
+							<a href="#">Estimated delivery: <span>Sep 21-27</span></a>
+							<ul>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Printed on museum-quality, thick, matte art paper of 200gsm</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Responsibly sourced FSC certified paper from sustainably managed forests</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Shipped in sturdy packaging protecting the poster</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Frame not included</li>
+							</ul>
+							<div class="show__more">
+								<a href="#">Show more</a>
+							</div>
+						</div>
+						<div class="elem__picker">
+							<p>Size</p>
+							<div class="size__picker">
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>A4</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>M</span>
+											<p>50x70cm</p>
+										</span>
+										<span class="content">
+											<span>93.24$</span>
+											<p>69.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>L</span>
+											<p>70x100cm</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>30x40cm</p>
+										</span>
+										<span class="content">
+											<span>79.73$</span>
+											<p>59.00$</p>
+										</span>
+									</div>
+								</a>
+							</div>
+						</div>
+
+						<div class="elem__picker">
+							<p>Print Layout</p>
+							<ul class="four type__switcher">
+								<li><a href="#" class="current" data-type="portrait"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M37.5 42.5V5.5H36.25H36H12H10.5V42.5H37.5ZM39 42.5V44H37.5H10.5H9V42.5V5.5V4H10.5H12H36H36.25H37.5H39V5.5V42.5ZM26.2536 18.4821L26.9029 19.631L33.4029 31.131C33.6067 31.4916 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8803C15.1864 32.2373 14.7268 32.3565 14.3697 32.1465C14.0127 31.9364 13.8935 31.4768 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								</svg></span></span>Portrait</a></li>
+								<li><a href="#" data-type="square"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1044)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 37.5L37.5 37.5V36.25V36L37.5 12V10.5L10.5 10.5L10.5 37.5ZM10.5 39H9V37.5V10.5L9 9H10.5H37.5H39V10.5V12L39 36V36.25V37.5V39H37.5L10.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1036 31.1197L19.1036 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1044" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Square</a></li>
+								<li><a href="#" data-type="landscape"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1043)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 37.5L42.5 37.5V36.25V36V12V10.5L5.5 10.5L5.5 37.5ZM5.5 39H4V37.5V10.5V9H5.5H42.5L44 9V10.5V12V36V36.25V37.5V39H42.5L5.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3964 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1043" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Landscape</a></li>
+
+							</ul>
+						</div>
+						<div class="elem__picker image__changer">
+							<p>Select frame color</p>
+							<ul class="four">
+								<li><a href="#" data-src="img/40x30-wood.png"><span class="media"><span class="img"><img src="img/w1.png" alt="w1"></span></span> natural <br> wood <br> frame</a></li>
+								<li><a href="#" data-src="img/40x30-white.png"><span class="media"><span class="img"><img src="img/w2.png" alt="w1"></span></span> white <br> frame</a></li>
+								<li><a href="#" data-src="img/40x30-black.png"><span class="media"><span class="img"><img src="img/w3.png" alt="w1"></span></span> black <br> frame</a></li>
+
+							</ul>
+						</div>
+						</div>
+
+
+
+						<div class="el__format" data-id="3" style="display:none;">
+							<div class="estimated">
+							<a href="#">Estimated delivery: <span>Sep 21-27</span></a>
+							<ul>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Printed on museum-quality, thick, matte art paper of 200gsm</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Responsibly sourced FSC certified paper from sustainably managed forests</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Shipped in sturdy packaging protecting the poster</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Frame not included</li>
+							</ul>
+							<div class="show__more">
+								<a href="#">Show more</a>
+							</div>
+						</div>
+						<div class="elem__picker">
+							<p>Size</p>
+							<div class="size__picker">
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>A4</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>M</span>
+											<p>50x70cm</p>
+										</span>
+										<span class="content">
+											<span>93.24$</span>
+											<p>69.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>L</span>
+											<p>70x100cm</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>30x40cm</p>
+										</span>
+										<span class="content">
+											<span>79.73$</span>
+											<p>59.00$</p>
+										</span>
+									</div>
+								</a>
+							</div>
+						</div>
+
+						<div class="elem__picker">
+							<p>Print Layout</p>
+							<ul class="four type__switcher">
+								<li><a href="#" class="current" data-type="portrait"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M37.5 42.5V5.5H36.25H36H12H10.5V42.5H37.5ZM39 42.5V44H37.5H10.5H9V42.5V5.5V4H10.5H12H36H36.25H37.5H39V5.5V42.5ZM26.2536 18.4821L26.9029 19.631L33.4029 31.131C33.6067 31.4916 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8803C15.1864 32.2373 14.7268 32.3565 14.3697 32.1465C14.0127 31.9364 13.8935 31.4768 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								</svg></span></span>Portrait</a></li>
+								<li><a href="#" data-type="square"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1044)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 37.5L37.5 37.5V36.25V36L37.5 12V10.5L10.5 10.5L10.5 37.5ZM10.5 39H9V37.5V10.5L9 9H10.5H37.5H39V10.5V12L39 36V36.25V37.5V39H37.5L10.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1036 31.1197L19.1036 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1044" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Square</a></li>
+								<li><a href="#" data-type="landscape"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1043)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 37.5L42.5 37.5V36.25V36V12V10.5L5.5 10.5L5.5 37.5ZM5.5 39H4V37.5V10.5V9H5.5H42.5L44 9V10.5V12V36V36.25V37.5V39H42.5L5.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3964 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1043" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Landscape</a></li>
+
+							</ul>
+						</div>
+						</div>
+
+
+
+						<div class="el__format" data-id="4" style="display:none;">
+							<div class="estimated">
+							<a href="#">Estimated delivery: <span>Sep 21-27</span></a>
+							<ul>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Printed on museum-quality, thick, matte art paper of 200gsm</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Responsibly sourced FSC certified paper from sustainably managed forests</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Shipped in sturdy packaging protecting the poster</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Frame not included</li>
+							</ul>
+							<div class="show__more">
+								<a href="#">Show more</a>
+							</div>
+						</div>
+						<div class="elem__picker">
+							<p>Size</p>
+							<div class="size__picker">
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>A4</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>M</span>
+											<p>50x70cm</p>
+										</span>
+										<span class="content">
+											<span>93.24$</span>
+											<p>69.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>L</span>
+											<p>70x100cm</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>30x40cm</p>
+										</span>
+										<span class="content">
+											<span>79.73$</span>
+											<p>59.00$</p>
+										</span>
+									</div>
+								</a>
+							</div>
+						</div>
+
+						<div class="elem__picker">
+							<p>Print Layout</p>
+							<ul class="four type__switcher">
+								<li><a href="#" class="current" data-type="portrait"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M37.5 42.5V5.5H36.25H36H12H10.5V42.5H37.5ZM39 42.5V44H37.5H10.5H9V42.5V5.5V4H10.5H12H36H36.25H37.5H39V5.5V42.5ZM26.2536 18.4821L26.9029 19.631L33.4029 31.131C33.6067 31.4916 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8803C15.1864 32.2373 14.7268 32.3565 14.3697 32.1465C14.0127 31.9364 13.8935 31.4768 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								</svg></span></span>Portrait</a></li>
+								<li><a href="#" data-type="square"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1044)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 37.5L37.5 37.5V36.25V36L37.5 12V10.5L10.5 10.5L10.5 37.5ZM10.5 39H9V37.5V10.5L9 9H10.5H37.5H39V10.5V12L39 36V36.25V37.5V39H37.5L10.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1036 31.1197L19.1036 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1044" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Square</a></li>
+								<li><a href="#" data-type="landscape"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1043)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 37.5L42.5 37.5V36.25V36V12V10.5L5.5 10.5L5.5 37.5ZM5.5 39H4V37.5V10.5V9H5.5H42.5L44 9V10.5V12V36V36.25V37.5V39H42.5L5.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3964 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1043" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Landscape</a></li>
+
+							</ul>
+						</div>
+						</div>
+					</div>
+					<div class="bottom__controls">
+						<div class="desc">
+							<p>Price</p>
+							<div class="include">
+								<span>59.00 $</span>
+								<p>includes 0.00 $ VAT</p>
+							</div>
+							<span class="save">Save 27%</span>
+						</div>
+						<div class="btn-group">
+							<a href="#" class="export-btn" onclick="exportMap('png')">Export PNG</a>
+							<a href="#" class="export-btn" onclick="exportMap('jpg')">Export JPG</a>
+							<a href="#" class="save-btn" onclick="saveMapConfiguration()">Save Config</a>
+							<a href="#" class="load-btn" onclick="loadMapConfiguration()">Load Config</a>
+							<a href="#" class="cart-btn">Add to cart </a>
+						</div>
+					</div>
+				</div>
+
+				<div class="canvas__wrapper">
+					<div class="gallery">
+						<div class="elem current">
+							<img src="img/thumb.webp" alt="thumb">
+							<span>preview</span>
+						</div>
+						<div class="elem">
+							<img src="img/thumb.webp" alt="thumb">
+						</div>
+						<div class="elem">
+							<img src="img/thumb.webp" alt="thumb">
+						</div>
+						<div class="elem">
+							<img src="img/thumb.webp" alt="thumb">
+						</div>
+						<div class="elem">
+							<img src="img/thumb.webp" alt="thumb">
+						</div>
+						<div class="elem">
+							<img src="img/thumb.webp" al								="thumb">
+						</div>
+					</div>
+					<div class="inn">
+						<div class="media">
+							<!-- <img src="img/40x30-black.png" alt="40x30-black"> -->
+						</div>
+						<div id="map" class="map-loading"></div>
+						<div class="map-preview-title">
+							<h3 id="preview-title">MIAMI, UNITED STATES</h3>
+							<p id="preview-subtitle">25.76168°N / 80.19179°W</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="info__popup" data-id="template1" style="display:none;">
+		<div class="inner">
+			<div class="box">
+				<div class="top">
+					<p>Style</p>
+					<a href="#">
+						<img src="img/close.png" alt="close">
+					</a>
+				</div>
+				<p>We are for the freedom of choice! You can choose one of our predesigned styles or create your very own - simply pick the custom scheme and choose the colors for land, water and streets.</p>
+				<p>We are sorry, but we are not able to show street names. <br> Our maps are not 3D.</p>
+				<p>All pictures shown are for illustration purposes only. Colours and line thickness may vary due to the monitor and printer calibrations, the printer itself and the paper you are using.</p>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="info__popup" data-id="template2" style="display:none;">
+		<div class="inner">
+			<div class="box">
+				<div class="top">
+					<p>Add map marker</p>
+					<a href="#">
+						<img src="img/close.png" alt="close">
+					</a>
+				</div>
+				<p>If the marker is not showing, please make sure that the address that you have selected is within the map scope.</p>
+				<p>The marker's placement is determined by the Google Maps address or coordinates in decimal format from Google Maps.</p>
+				<p>If you want to find the coordinates (latitude and longitude) of a specific location on Google Maps that doesn't have a formal address, you can use the following method:</p>
+				<ul>
+					<li>Open the Google Maps website or app.</li>
+					<li>Navigate to the desired location by zooming and dragging the map.</li>
+					<li>Click/Press & hold on the specific location on the map.</li>
+					<li>A small information box will appear, showing the coordinates (latitude and longitude) of the selected location.</li>
+				</ul>
+				<p> We are unable to add any additional marker' shapes or add more than 1 marker.<br> Our Triple map design allows for 3 maps with corresponding 3 markers.</p>
+			</div>
+		</div>
+	</div>
+	<div class="ideas__wrapper" style="display:none;">
+		<div class="inner">
+			<div class="popup">
+				<div class="top">
+					<div class="desc">
+						<p>Inspiration</p>
+						<span>Check out our ideas for personalizing your artwork.</span>
+					</div>
+					<a href="#">
+						<img src="img/close.png" alt="close">
+					</a>
+				</div>
+				<div class="content">
+					<ul>
+						<li><a href="#" data-id="1">Love</a></li>
+						<li><a href="#" data-id="2">Wedding</a></li>
+						<li><a href="#" data-id="3">Home</a></li>
+						<li><a href="#" data-id="4">Grandparents</a></li>
+						<li><a href="#" data-id="5">Travel</a></li>
+					</ul>
+					<span>Found 11 inspirations from category: <span>Love</span></span>
+				</div>
+				<div class="list">
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+
+					<div class="elem" data-id="2" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="2" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+
+
+					<div class="elem" data-id="3" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="3" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+
+					<div class="elem" data-id="4" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="4" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+
+					<div class="elem" data-id="5" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="5" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+				</div>
+				<div class="btn">
+					<a href="#">Select</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script
+  src="https://code.jquery.com/jquery-3.7.1.js"
+  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+  crossorigin="anonymous"></script>
+	<script src="js/script.js"></script>
+</body>
+</html>
