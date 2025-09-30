@@ -14,9 +14,9 @@
 	<!-- Mapbox JS -->
 	<script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
 
-	<!-- Cropper.js CSS and JS -->
-	<link href='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.1/cropper.min.css' rel='stylesheet' />
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/2.0.1/cropper.min.js'></script>
+	<!-- Cropper.js CSS and JS (v1.6.2 - stable version) -->
+	<link href='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css' rel='stylesheet' />
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js'></script>
 
 	<!--
 	MAP EDITOR SETUP INSTRUCTIONS:
@@ -30,6 +30,59 @@
 	-->
 </head>
 <body>
+
+	<textarea name="" id="circle-svg" style="display: none;">
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="svgLayer" x="0px" y="0px" viewBox="0 0 400 400" style="enable-background:new 0 0 400 400;" xml:space="preserve" class="editor-color-53 small-little">
+			<style type="text/css">
+			  .st0{fill:#ffffff;}
+	  
+			  .editor-color-1 .st0{fill:#ffffff;}
+			  .editor-custom-color1-whitewhite .st0{fill:#a9a9a9;}
+			  .editor-color-52 .st0{fill:#ffffff;}
+			  .editor-color-53 .st0{fill:#ffffff;}
+			  .star-editor-gradient-1 .st0{fill:none;}
+			  .star-editor-gradient-2 .st0{fill:none;}
+			  .star-editor-gradient-3 .st0{fill:none;}
+	  
+			  .editor-color-1 .st1{fill:#FFFFFF;}
+			  .editor-custom-color1-whitewhite .st1{fill:#FFFFFF;}
+			  .editor-color-52 .st1{fill:#FFFFFF;}
+			  .editor-color-53 .st1{fill:#FFFFFF;}
+			  .editor-color-11 .st1{fill:#000000;}
+			  .editor-color-47 .st1{fill:#191d29;}
+			  .editor-color-48 .st1{fill:#0f404c;}
+			  .editor-color-26 .st1{fill:#3b4248;}
+			  .editor-color-49 .st1{fill:#280a2e;}
+			  .editor-color-56 .st1{fill:#ffffff;}
+			  .star-editor-gradient-1 .st1{fill:#ffffff;}
+			  .star-editor-gradient-2 .st1{fill:#ffffff;}
+			  .star-editor-gradient-3 .st1{fill:#080327;}
+			</style>
+			<g>
+			  <path class="st1 cust" d="M0,0v400h400V0H0z M199.9,393.7C93,393.7,6.3,307,6.3,200.1S93,6.6,199.9,6.6s193.6,86.7,193.6,193.6   S306.8,393.7,199.9,393.7z" style="fill: rgb(1, 2, 3);"></path>
+			</g>
+			<g>
+			  <path class="st0 bor" d="M199.9,394.9C92.5,394.9,5.1,307.5,5.1,200.1S92.5,5.3,199.9,5.3c107.4,0,194.8,87.4,194.8,194.8   S307.3,394.9,199.9,394.9z M199.9,7.8C93.9,7.8,7.6,94.1,7.6,200.1c0,106,86.3,192.3,192.3,192.3s192.3-86.3,192.3-192.3   C392.2,94.1,305.9,7.8,199.9,7.8z" style="fill: rgb(255, 255, 255);"></path>
+			</g>
+			</svg>
+	</textarea>
+
+	<textarea name="" id="valentine-svg" style="display: none;">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 204.37 185" style="
+    fill: transparent;
+">
+  <defs>
+    <clipPath id="photo-heart">
+      <path d="M197.19,79.91c-12.89,55.16-89.21,97.44-95,100.39-5.78-2.95-82.09-45.23-95-100.39-2.52-10.78-5.65-31.82,6.23-50.08,1.4-2.16,7.5-10.68,18.8-17.44C48.35,2.72,78.73-3.65,102.19,30.51,125.67-3.67,156.03,2.72,172.16,12.39c11.3,6.76,17.4,15.29,18.8,17.44,11.88,18.25,8.75,39.3,6.23,50.08Z"></path>
+    </clipPath>
+  </defs>
+  <image width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clip-path="url(#photo-heart)" href=""></image>
+  <path class="cover" d="M.01,0v185h204.36V0H.01ZM197.19,79.91c-12.89,55.16-89.21,97.44-95,100.39-5.78-2.95-82.09-45.23-95-100.39-2.52-10.78-5.65-31.82,6.23-50.08,1.4-2.16,7.5-10.68,18.8-17.44C48.35,2.72,78.73-3.65,102.19,30.51,125.67-3.67,156.03,2.72,172.16,12.39c11.3,6.76,17.4,15.29,18.8,17.44,11.88,18.25,8.75,39.3,6.23,50.08Z"></path>
+  <path class="outline" d="M203.9,57.21c-.49-11.3-3.6-21.42-9.23-30.08-1.69-2.58-8.15-11.59-20.23-18.81-5.18-3.11-15.87-8.32-29.21-8.32-8.4,0-16.42,2.06-23.86,6.13-6.98,3.81-13.41,9.4-19.18,16.65-5.76-7.24-12.2-12.83-19.18-16.65C75.57,2.07,67.55.01,59.15.01,45.81.01,35.12,5.21,29.94,8.31c-12.47,7.47-19.05,17-20.24,18.83C4.08,35.8.97,45.91.48,57.21c-.05,1.05-.07,2.1-.07,3.17,0,6.44.83,13.25,2.47,20.27,3.1,13.24,9.92,26.78,20.28,40.23,8.27,10.74,18.82,21.49,31.37,31.94,23.67,19.7,45.43,31.04,45.64,31.15l2.02,1.03,2.01-1.03c5.52-2.81,25.74-14.57,45.66-31.15,12.55-10.45,23.1-21.2,31.37-31.94,10.36-13.45,17.18-26.99,20.27-40.23,1.64-7.02,2.47-13.83,2.47-20.27,0-1.07-.02-2.12-.07-3.17ZM102.19,179.74c-4.7-2.51-81.48-44.24-94.52-99.95-4.52-19.35-2.39-36.54,6.17-49.68,1.08-1.67,7.04-10.35,18.64-17.3,4.74-2.84,14.51-7.6,26.67-7.6,16.4,0,31.14,8.85,42.63,25.58l.41.6.42-.6c11.5-16.74,26.23-25.59,42.61-25.59,12.13,0,21.92,4.77,26.68,7.61,11.52,6.9,17.55,15.62,18.64,17.3,8.56,13.13,10.69,30.31,6.17,49.68-13.08,55.97-89.82,97.45-94.52,99.95Z" style="
+    fill: white;
+"></path>
+</svg>
+	</textarea>
 	<div class="main__wrapper">
 		<div class="container">
 			<div class="outer__main">
@@ -54,7 +107,7 @@
 								<li><a href="#"><span class="media"><span class="img"><img src="img/asset3.png" alt="asset"></span></span>Valentine</a></li>
 								<li><a href="#"><span class="media"><span class="img"><img src="img/asset4.png" alt="asset"></span></span>Circle</a></li>
 								<li><a href="#"><span class="media"><span class="img"><img src="img/asset5.png" alt="asset"></span></span>Heart</a></li>
-								<li><a href="#"><span class="media"><span class="img"><img src="img/asset6.png" alt="asset"></span></span>House</a></li>
+								<!-- <li><a href="#"><span class="media"><span class="img"><img src="img/asset6.png" alt="asset"></span></span>House</a></li> -->
 								<li class="double">
 									<p>also available as:</p>
 									<div class="dbl">
@@ -955,14 +1008,17 @@
 							<img src="img/thumb.webp" alt="thumb">
 						</div>
 						<div class="elem">
-							<img src="img/thumb.webp" al								="thumb">
+							<img src="img/thumb.webp" alt="thumb">
 						</div>
 					</div>
 					<div class="inn">
 						<div class="media">
 							<!-- <img src="img/40x30-black.png" alt="40x30-black"> -->
 						</div>
-						<div id="map" class="map-loading"></div>
+						<div id="map" class="map-loading">
+													<div id="shape-overlay"></div>
+
+						</div>
 						<div class="map-preview-title">
 							<h3 id="preview-title">MIAMI, UNITED STATES</h3>
 							<p id="preview-subtitle">25.76168°N / 80.19179°W</p>

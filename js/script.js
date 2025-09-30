@@ -14,6 +14,31 @@ let currentMarkerColor = '#E53422'; // Default red color
 // Cropper.js instance
 let cropper = null;
 
+// Make cropper control functions globally available (defined early for onclick attributes)
+window.zoomCropper = function(delta) {
+	if (cropper) {
+		cropper.zoom(delta);
+	}
+};
+
+window.resetCropper = function() {
+	if (cropper) {
+		cropper.reset();
+		// Restore fixed crop box size after reset
+		setTimeout(() => {
+			if (cropper) {
+				const containerData = cropper.getContainerData();
+				cropper.setCropBoxData({
+					width: 150,
+					height: 150,
+					left: (containerData.width - 150) / 2,
+					top: (containerData.height - 150) / 2
+				});
+			}
+		}, 100);
+	}
+};
+
 // Function to load map styles from JSON files
 async function loadMapStyle(styleName) {
     if (loadedStyles[styleName]) {
@@ -1105,29 +1130,141 @@ function changeMapLayout(layoutType) {
 
 	// Remove existing layout classes
 	mapContainer.className = mapContainer.className.replace(/layout-\w+/g, '');
+	const shapeOverLay = document.querySelector('#shape-overlay');
 
+	$("#map canvas, #map").css({
+		"max-height": document.querySelector('#map canvas').clientWidth*100 + "px",
+	});
+
+	if (map && map.loaded()) {
+		setTimeout(function() {
+			map.resize();
+			console.log('Map resized - Mapbox handling canvas dimensions for crisp rendering');
+		}, 150);
+	}
+
+	shapeOverLay.innerHTML = '';
 	// Add new layout class
 	if (layoutType !== 'default') {
 		mapContainer.classList.add(`layout-${layoutType}`);
 	}
 
-	// Handle photo upload interface for "With Photo" layout
+	// Handle photo upload interface for "With Photo" and "Valentine" layouts
 	if (layoutType === 'with-photo') {
-		console.log('Showing photo preview in title area');
-		showPhotoInTitleArea();
-		mapContainer.style.clipPath = 'none';
-		mapContainer.style.borderRadius = '0';
-	} else {
+			console.log('Showing photo preview in title area');
+			showPhotoInTitleArea();
+			// Remove with-valentine class if switching from valentine to photo
+			const previewTitle = document.querySelector('.map-preview-title');
+			if (previewTitle) {
+				previewTitle.classList.remove('with-valentine');
+			}
+			mapContainer.style.clipPath = 'none';
+			mapContainer.style.borderRadius = '0';
+
+			$("#map canvas, #map").css({
+				"max-height": document.querySelector('#map canvas').clientHeight-document.querySelector('.photo-preview img').clientHeight+50 + "px",
+			});
+
+			if (map && map.loaded()) {
+				setTimeout(function() {
+					map.resize();
+					console.log('Map resized - Mapbox handling canvas dimensions for crisp rendering');
+				}, 150);
+			}
+		} else if (layoutType === 'heart') {
+			console.log('Showing valentine photo preview in title area');
+			// Check if there's already an uploaded photo and update SVG if needed
+			const existingPhoto = localStorage.getItem('uploadedPhoto');
+			if (existingPhoto) {
+				// Ensure SVG is updated with current photo before showing
+				updateValentineSvgHref(existingPhoto);
+				console.log('Updated SVG with existing photo for valentine layout');
+			}
+
+		// Apply current background color to valentine SVG outline
+		const currentBgColor = $('.map-preview-title').css('background-color') || '#ffffff';
+		if (currentBgColor !== 'rgba(0, 0, 0, 0)' && currentBgColor !== 'transparent') {
+			updateValentineSvgOutlineColor(currentBgColor);
+			console.log('Applied current background color to valentine SVG outline');
+		}
+
+			showValentinePhotoInTitleArea();
+			// Remove with-photo class if it exists
+			const previewTitle = document.querySelector('.map-preview-title');
+			if (previewTitle) {
+				previewTitle.classList.remove('with-photo');
+			}
+			// Keep map layout the same as with-photo (no clip-path changes)
+			mapContainer.style.clipPath = 'none';
+			mapContainer.style.borderRadius = '0';
+		} else if (layoutType === 'circle') {
+			console.log('Hiding photo preview for layout:', layoutType);
+		// Hide photo preview for other layouts
+			const photoPreview = document.querySelector('.photo-preview');
+			const shapeOverLay = document.querySelector('#shape-overlay');
+			
+			if (photoPreview) {
+				photoPreview.remove();
+			}
+			// Remove with-photo and with-valentine classes from title
+			const previewTitle = document.querySelector('.map-preview-title');
+			if (previewTitle) {
+				previewTitle.classList.remove('with-photo', 'with-valentine');
+			}
+			// shapeOverLay.innerHTML = document.querySelector('#circle-svg').value;
+
+			$("#map canvas").css({
+				"max-height": document.querySelector('#map canvas').clientWidth + "px",
+			});
+
+			if (map && map.loaded()) {
+				setTimeout(function() {
+					map.resize();
+					console.log('Map resized - Mapbox handling canvas dimensions for crisp rendering');
+				}, 150);
+			}
+
+			// previewTitle.classList.add('with-circle')
+		}else if (layoutType === 'full-heart') {
+			console.log('Hiding photo preview for layout:', layoutType);
+		// Hide photo preview for other layouts
+			const photoPreview = document.querySelector('.photo-preview');
+			const shapeOverLay = document.querySelector('#shape-overlay');
+			
+			if (photoPreview) {
+				photoPreview.remove();
+			}
+			// Remove with-photo and with-valentine classes from title
+			const previewTitle = document.querySelector('.map-preview-title');
+			if (previewTitle) {
+				previewTitle.classList.remove('with-photo', 'with-valentine');
+			}
+			// shapeOverLay.innerHTML = document.querySelector('#circle-svg').value;
+
+			$("#map canvas").css({
+				"max-height": document.querySelector('#map canvas').clientWidth + "px",
+			});
+
+			if (map && map.loaded()) {
+				setTimeout(function() {
+					map.resize();
+					console.log('Map resized - Mapbox handling canvas dimensions for crisp rendering');
+				}, 150);
+			}
+
+			// previewTitle.classList.add('with-circle')
+		}
+		else{
 		console.log('Hiding photo preview for layout:', layoutType);
 		// Hide photo preview for other layouts
 		const photoPreview = document.querySelector('.photo-preview');
 		if (photoPreview) {
 			photoPreview.remove();
 		}
-		// Remove with-photo class from title
+		// Remove with-photo and with-valentine classes from title
 		const previewTitle = document.querySelector('.map-preview-title');
 		if (previewTitle) {
-			previewTitle.classList.remove('with-photo');
+			previewTitle.classList.remove('with-photo', 'with-valentine');
 		}
 
 		// Apply different clip-paths for different shapes
@@ -1172,7 +1309,7 @@ function showPhotoInTitleArea() {
 	// Check if photo is already uploaded
 	const uploadedPhoto = localStorage.getItem('uploadedPhoto');
 	if (uploadedPhoto) {
-		// Show uploaded photo preview
+		// Show uploaded photo preview - use regular img tag for "With Photo" layout
 		photoPreview.innerHTML = `
 			<img src="${uploadedPhoto}" alt="Uploaded photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
 		`;
@@ -1209,41 +1346,167 @@ function showPhotoInTitleArea() {
 	}
 }
 
+// Function to show valentine photo in title area
+function showValentinePhotoInTitleArea() {
+	console.log('showValentinePhotoInTitleArea called');
+
+	// Add with-valentine class to title area
+	const previewTitle = document.querySelector('.map-preview-title');
+	if (previewTitle) {
+		previewTitle.classList.add('with-valentine');
+	}
+
+	// Remove existing photo preview
+	const existingPreview = document.querySelector('.photo-preview');
+	if (existingPreview) {
+		existingPreview.remove();
+	}
+
+	// Create photo preview container with valentine styling
+	const photoPreview = document.createElement('div');
+	photoPreview.className = 'photo-preview with-valentine';
+
+	// Check if photo is already uploaded
+	const uploadedPhoto = localStorage.getItem('uploadedPhoto');
+	if (uploadedPhoto) {
+		// For valentine layout, always use SVG approach
+		const valentineSvgTextarea = document.getElementById('valentine-svg');
+		if (valentineSvgTextarea) {
+			// Get current SVG content
+			let svgContent = valentineSvgTextarea.value;
+
+			console.log('SVG content length:', svgContent.length);
+			console.log('SVG contains uploaded photo:', svgContent.includes(uploadedPhoto));
+
+			// FORCE update the SVG href to ensure it has the current photo
+			console.log('Force updating SVG href...');
+			svgContent = svgContent.replace(
+				/href="[^"]*"/,
+				`href="${uploadedPhoto}"`
+			);
+			// Update the textarea as well
+			valentineSvgTextarea.value = svgContent;
+			console.log('SVG href force updated in textarea');
+
+			// Use the SVG content directly
+			photoPreview.innerHTML = svgContent;
+			console.log('Using SVG content for valentine layout, content preview:', svgContent.substring(0, 100) + '...');
+		} else {
+			console.error('valentine-svg textarea not found, falling back to img');
+			// Fallback to img if textarea not found
+			photoPreview.innerHTML = `
+				<img src="${uploadedPhoto}" alt="Uploaded photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+			`;
+		}
+
+		// Add click handler to open valentine photo management popup
+		photoPreview.addEventListener('click', function() {
+			openValentinePhotoManagementPopup(uploadedPhoto);
+		});
+	} else {
+		// Show upload interface - for valentine layout, we still show simple upload interface
+		// The SVG will be used only after a photo is uploaded and processed
+		photoPreview.innerHTML = `
+			<div style="text-align: center;">
+				<div style="width: 40px; height: 40px; background: #f77147; border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">❤️</div>
+				<p style="margin: 0; color: #666; font-size: 12px; font-weight: 500;">Click to add photo</p>
+			</div>
+		`;
+
+		// Add click handler for upload
+		photoPreview.addEventListener('click', function() {
+			const input = document.createElement('input');
+			input.type = 'file';
+			input.accept = 'image/*';
+			input.style.display = 'none';
+			input.addEventListener('change', handleValentinePhotoUpload);
+			document.body.appendChild(input);
+			input.click();
+			document.body.removeChild(input);
+		});
+
+		console.log('Showing valentine upload interface');
+	}
+
+	// Add to title area
+	if (previewTitle) {
+		previewTitle.appendChild(photoPreview);
+	}
+}
+
+
 // Function to handle photo upload
 function handlePhotoUpload(event) {
-	const file = event.target.files[0];
-	if (!file) return;
+ 	const file = event.target.files[0];
+ 	if (!file) return;
 
-	// Validate file type
-	if (!file.type.startsWith('image/')) {
-		alert('Please select a valid image file.');
-		return;
-	}
+ 	// Validate file type
+ 	if (!file.type.startsWith('image/')) {
+ 		alert('Please select a valid image file.');
+ 		return;
+ 	}
 
-	// Validate file size (10MB limit)
-	if (file.size > 10 * 1024 * 1024) {
-		alert('Please select an image smaller than 10MB.');
-		return;
-	}
+ 	// Validate file size (10MB limit)
+ 	if (file.size > 10 * 1024 * 1024) {
+ 		alert('Please select an image smaller than 10MB.');
+ 		return;
+ 	}
 
-	const reader = new FileReader();
-	reader.onload = function(e) {
-		const photoData = e.target.result;
+ 	const reader = new FileReader();
+ 	reader.onload = function(e) {
+ 		const photoData = e.target.result;
 
-		// Save to localStorage temporarily (will be updated after cropping)
-		localStorage.setItem('uploadedPhotoTemp', photoData);
+ 		// Save to localStorage temporarily (will be updated after cropping)
+ 		localStorage.setItem('uploadedPhotoTemp', photoData);
 
-		// Open crop popup immediately after upload
-		openCropPopupAfterUpload(photoData);
+ 		// Open crop popup immediately after upload
+ 		openCropPopupAfterUpload(photoData);
 
-		console.log('Photo uploaded successfully, opening crop interface');
-	};
+ 		console.log('Photo uploaded successfully, opening crop interface');
+ 	};
 
-	reader.onerror = function() {
-		alert('Error reading the file. Please try again.');
-	};
+ 	reader.onerror = function() {
+ 		alert('Error reading the file. Please try again.');
+ 	};
 
-	reader.readAsDataURL(file);
+ 	reader.readAsDataURL(file);
+}
+
+// Function to handle valentine photo upload
+function handleValentinePhotoUpload(event) {
+ 	const file = event.target.files[0];
+ 	if (!file) return;
+
+ 	// Validate file type
+ 	if (!file.type.startsWith('image/')) {
+ 		alert('Please select a valid image file.');
+ 		return;
+ 	}
+
+ 	// Validate file size (10MB limit)
+ 	if (file.size > 10 * 1024 * 1024) {
+ 		alert('Please select an image smaller than 10MB.');
+ 		return;
+ 	}
+
+ 	const reader = new FileReader();
+ 	reader.onload = function(e) {
+ 		const photoData = e.target.result;
+
+ 		// Save to localStorage temporarily (will be updated after cropping)
+ 		localStorage.setItem('uploadedPhotoTemp', photoData);
+
+ 		// Open crop popup for valentine
+ 		openValentineCropPopupAfterUpload(photoData);
+
+ 		console.log('Valentine photo uploaded successfully, opening crop interface');
+ 	};
+
+ 	reader.onerror = function() {
+ 		alert('Error reading the file. Please try again.');
+ 	};
+
+ 	reader.readAsDataURL(file);
 }
 
 // Function to change photo
@@ -1317,12 +1580,102 @@ function openPhotoManagementPopup(currentPhoto) {
 	});
 }
 
+// Function to open valentine photo management popup
+function openValentinePhotoManagementPopup(currentPhoto) {
+	// Remove existing popup
+	const existingPopup = document.querySelector('.photo-management-popup, .valentine-photo-management-popup');
+	if (existingPopup) {
+		existingPopup.remove();
+	}
+
+	// Create popup overlay with valentine styling
+	const popupOverlay = document.createElement('div');
+	popupOverlay.className = 'valentine-photo-management-popup';
+	popupOverlay.style.cssText = `
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.8);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 10000;
+	`;
+
+	// Create popup content with valentine styling
+	const popupContent = document.createElement('div');
+	popupContent.style.cssText = `
+		background: linear-gradient(135deg, #fff 0%, #fde3da 100%);
+		border-radius: 16px;
+		padding: 30px;
+		max-width: 500px;
+		width: 90%;
+		text-align: center;
+		position: relative;
+		border: 2px solid #f77147;
+		box-shadow: 0 8px 32px rgba(247, 113, 71, 0.3);
+	`;
+
+	// Get the SVG content for valentine display
+	const valentineSvgTextarea = document.getElementById('valentine-svg');
+	let photoDisplay = '';
+	if (valentineSvgTextarea) {
+		const svgContent = valentineSvgTextarea.value;
+		// Use SVG content if available, otherwise fallback to img
+		if (svgContent.includes(currentPhoto)) {
+			photoDisplay = svgContent;
+		} else {
+			photoDisplay = `<img src="${currentPhoto}" alt="Current photo" style="max-width: 100%; max-height: 200px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">`;
+		}
+	} else {
+		photoDisplay = `<img src="${currentPhoto}" alt="Current photo" style="max-width: 100%; max-height: 200px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">`;
+	}
+
+	popupContent.innerHTML = `
+		<div style="margin-bottom: 25px; font-family: 'Poppins', sans-serif;">
+			<h3 style="margin: 0 0 15px 0; color: #f77147; font-size: 24px;">💖 Valentine Photo</h3>
+			<div style="background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+				${photoDisplay}
+			</div>
+		</div>
+		<div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+			<button onclick="changeValentinePhotoFromPopup()" style="padding: 12px 24px; background: #f77147; color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: 600; min-width: 120px; transition: all 0.3s ease;" onmouseover="this.style.background='#e53422'" onmouseout="this.style.background='#f77147'">Change Photo</button>
+			<button onclick="cropValentinePhotoFromPopup()" style="padding: 12px 24px; background: #4CAF50; color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: 600; min-width: 120px; transition: all 0.3s ease;" onmouseover="this.style.background='#45a049'" onmouseout="this.style.background='#4CAF50'">Crop Photo</button>
+			<button onclick="removeValentinePhotoFromPopup()" style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: 600; min-width: 120px; transition: all 0.3s ease;" onmouseover="this.style.background='#5a6268'" onmouseout="this.style.background='#6c757d'">Remove</button>
+		</div>
+		<button onclick="closeValentinePhotoManagementPopup()" style="position: absolute; top: 15px; right: 15px; background: #f77147; color: white; border: none; font-size: 20px; cursor: pointer; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;" onmouseover="this.style.background='#e53422'" onmouseout="this.style.background='#f77147'">×</button>
+	`;
+
+	popupOverlay.appendChild(popupContent);
+	document.body.appendChild(popupOverlay);
+
+	// Close popup when clicking outside
+	popupOverlay.addEventListener('click', function(e) {
+		if (e.target === popupOverlay) {
+			closeValentinePhotoManagementPopup();
+		}
+	});
+
+	console.log('Valentine photo management popup opened');
+}
+
 // Function to close photo management popup
 function closePhotoManagementPopup() {
 	const popup = document.querySelector('.photo-management-popup');
 	if (popup) {
 		popup.remove();
 	}
+}
+
+// Function to close valentine photo management popup
+function closeValentinePhotoManagementPopup() {
+	const popup = document.querySelector('.valentine-photo-management-popup');
+	if (popup) {
+		popup.remove();
+	}
+	console.log('Valentine photo management popup closed');
 }
 
 // Function to change photo from popup
@@ -1350,6 +1703,41 @@ function removePhotoFromPopup() {
 	closePhotoManagementPopup();
 	showPhotoInTitleArea();
 	console.log('Photo removed from popup');
+}
+
+// Function to change valentine photo from popup
+function changeValentinePhotoFromPopup() {
+	closeValentinePhotoManagementPopup();
+	const input = document.createElement('input');
+	input.type = 'file';
+	input.accept = 'image/*';
+	input.style.display = 'none';
+	input.addEventListener('change', handleValentinePhotoUpload);
+	document.body.appendChild(input);
+	input.click();
+	document.body.removeChild(input);
+	console.log('Changing valentine photo from popup');
+}
+
+// Function to crop valentine photo from popup
+function cropValentinePhotoFromPopup() {
+	closeValentinePhotoManagementPopup();
+	// Open the valentine crop popup with current photo
+	const currentPhoto = localStorage.getItem('uploadedPhoto');
+	if (currentPhoto) {
+		openValentineCropPopupAfterUpload(currentPhoto);
+	} else {
+		openCropPopup();
+	}
+	console.log('Cropping valentine photo from popup');
+}
+
+// Function to remove valentine photo from popup
+function removeValentinePhotoFromPopup() {
+	localStorage.removeItem('uploadedPhoto');
+	closeValentinePhotoManagementPopup();
+	showValentinePhotoInTitleArea();
+	console.log('Valentine photo removed from popup');
 }
 
 // Function to open crop popup
@@ -1433,158 +1821,547 @@ function closeCropPopup() {
 
 // Function to open crop popup after upload
 function openCropPopupAfterUpload(photoData) {
-	// Remove existing crop popup
-	const existingCropPopup = document.querySelector('.crop-popup');
-	if (existingCropPopup) {
-		existingCropPopup.remove();
-	}
+ 	// Remove existing crop popup
+ 	const existingCropPopup = document.querySelector('.crop-popup');
+ 	if (existingCropPopup) {
+ 		existingCropPopup.remove();
+ 	}
 
-	// Create crop popup overlay
-	const cropOverlay = document.createElement('div');
-	cropOverlay.className = 'crop-popup';
-	cropOverlay.style.cssText = `
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background: rgba(0, 0, 0, 0.8);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 10001;
-	`;
+ 	// Create crop popup overlay
+ 	const cropOverlay = document.createElement('div');
+ 	cropOverlay.className = 'crop-popup';
+ 	cropOverlay.style.cssText = `
+ 		position: fixed;
+ 		top: 0;
+ 		left: 0;
+ 		width: 100%;
+ 		height: 100%;
+ 		background: rgba(0, 0, 0, 0.8);
+ 		display: flex;
+ 		align-items: center;
+ 		justify-content: center;
+ 		z-index: 10001;
+ 	`;
 
-	// Create crop content
-	const cropContent = document.createElement('div');
-	cropContent.style.cssText = `
-		background: white;
-		border-radius: 12px;
-		padding: 30px;
-		max-width: 700px;
-		width: 90%;
-		max-height: 90vh;
-		overflow-y: auto;
-	`;
+ 	// Create crop content
+ 	const cropContent = document.createElement('div');
+ 	cropContent.style.cssText = `
+ 		background: white;
+ 		border-radius: 12px;
+ 		padding: 30px;
+ 		max-width: 700px;
+ 		width: 90%;
+ 		max-height: 90vh;
+ 		overflow-y: auto;
+ 	`;
 
-	cropContent.innerHTML = `
-		<div style="margin-bottom: 20px; text-align: center;">
-			<h3 style="margin: 0 0 20px 0; color: #16212c;">Crop Your Photo</h3>
-			<p style="margin: 0 0 20px 0; color: #666; font-size: 14px;">Position and zoom your photo to select the area that will be visible in the circular preview</p>
+ 	cropContent.innerHTML = `
+ 	<div style="margin-bottom: 20px; text-align: center;">
+ 		<h3 style="margin: 0 0 20px 0; color: #16212c;">Crop Your Photo</h3>
+ 		<p style="margin: 0 0 20px 0; color: #666; font-size: 14px;">Drag the image to position it, and use zoom controls to resize. The circular area shows what will be visible.</p>
 
-			<div style="margin-bottom: 20px; display: inline-block; position: relative;">
-				<img id="cropper-image" src="${photoData}" alt="Crop photo" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: block; margin: 0 auto;">
-			</div>
+ 		<div style="margin-bottom: 20px; display: inline-block; position: relative; max-width: 100%;">
+ 			<img id="cropper-image" src="${photoData}" alt="Crop photo" style="max-width: 400px; max-height: 400px; height: auto; border-radius: 8px; display: block; margin: 0 auto;">
+ 		</div>
 
-			<div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
-				<button onclick="zoomCropper(0.1)" style="padding: 8px 16px; background: #f77147; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Zoom In</button>
-				<button onclick="zoomCropper(-0.1)" style="padding: 8px 16px; background: #f77147; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Zoom Out</button>
-				<button onclick="resetCropper()" style="padding: 8px 16px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Reset</button>
-			</div>
+ 		<div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+ 			<button onclick="zoomCropper(0.2)" style="padding: 10px 20px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">➕ Zoom In</button>
+ 			<button onclick="zoomCropper(-0.2)" style="padding: 10px 20px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">➖ Zoom Out</button>
+ 			<button onclick="resetCropper()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">↺ Reset</button>
+ 		</div>
 
-			<div style="margin-bottom: 20px;">
-				<button onclick="applyCropAfterUpload()" style="padding: 12px 30px; margin-right: 10px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Use This Crop</button>
-				<button onclick="cancelCropAfterUpload()" style="padding: 12px 30px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Cancel</button>
-			</div>
-		</div>
-	`;
+ 		<div style="margin-bottom: 20px;">
+ 			<button onclick="applyCropAfterUpload()" style="padding: 12px 30px; margin-right: 10px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Apply Crop</button>
+ 			<button onclick="cancelCropAfterUpload()" style="padding: 12px 30px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Cancel</button>
+ 		</div>
+ 	</div>
+ `;
 
-	cropOverlay.appendChild(cropContent);
-	document.body.appendChild(cropOverlay);
+ 	cropOverlay.appendChild(cropContent);
+ 	document.body.appendChild(cropOverlay);
 
-	// Initialize Cropper.js
-	setTimeout(() => {
-		const cropperImage = document.getElementById('cropper-image');
-		if (cropperImage && typeof Cropper !== 'undefined') {
-			// Destroy existing cropper if it exists
-			if (cropper) {
-				cropper.destroy();
-			}
+ 	// Initialize Cropper.js
+ 	setTimeout(() => {
+ 		const cropperImage = document.getElementById('cropper-image');
+ 		if (cropperImage && window.Cropper) {
+ 			try {
+ 				// Destroy existing cropper if it exists
+ 				if (cropper) {
+ 					cropper.destroy();
+ 				}
 
-			// Create new cropper instance with circular crop area
-			cropper = new Cropper(cropperImage, {
-				aspectRatio: 1, // Square aspect ratio for circular crop
-				viewMode: 1,   // Restrict crop area to within canvas
-				dragMode: 'move', // Allow moving the image
-				modal: true,   // Show modal overlay
-				background: false, // Hide background
-				autoCropArea: 0.8, // Auto crop area as 80% of image
-				center: true,  // Center the crop area
-				highlight: false, // Hide highlight
-				cropBoxMovable: true,
-				cropBoxResizable: true,
-				toggleDragModeOnDblclick: false,
-				minCropBoxWidth: 100,
-				minCropBoxHeight: 100,
-				ready() {
-					console.log('Cropper initialized successfully');
-				}
-			});
-		} else {
-			console.error('Cropper.js not loaded or image element not found');
-		}
-	}, 100);
+ 				console.log('Initializing Cropper.js v1.6.2');
 
-	// Close crop popup when clicking outside
-	cropOverlay.addEventListener('click', function(e) {
-		if (e.target === cropOverlay) {
-			cancelCropAfterUpload();
-		}
-	});
+ 				// Create new cropper instance - professional Instagram/Facebook style
+ 				cropper = new window.Cropper(cropperImage, {
+ 					aspectRatio: 1, // Square aspect ratio for circular crop
+ 					viewMode: 0,   // No restrictions - allow selecting any part of image including edges
+ 					dragMode: 'move', // Move the image, not the crop box
+ 					modal: true,   // Show dark overlay outside crop area
+ 					background: true, // Show grid background
+ 					guides: false,  // Hide grid guides for cleaner UI
+ 					autoCropArea: 0.5, // Fixed crop area size
+ 					center: true,  // Center the crop area
+ 					highlight: false, // No highlight for cleaner UI
+ 					cropBoxMovable: false, // Fixed crop box position (centered)
+ 					cropBoxResizable: false, // Fixed crop box size (no resizing)
+ 					toggleDragModeOnDblclick: false, // No mode toggling
+ 					movable: true, // Allow moving the image underneath
+ 					zoomable: true, // Enable zoom via buttons, mouse wheel, and touch
+ 					zoomOnTouch: true, // Enable pinch-to-zoom on mobile
+ 					zoomOnWheel: true, // Enable mouse wheel zoom
+ 					wheelZoomRatio: 0.1, // Zoom ratio for mouse wheel
+ 					scalable: true, // Allow image scaling
+ 					rotatable: false, // No rotation
+ 					minCropBoxWidth: 150,  // Fixed crop box size
+ 					minCropBoxHeight: 150,
+ 					ready() {
+ 						console.log('Cropper initialized - drag to move, pinch/scroll to zoom');
+ 						// Set fixed crop box in center
+ 						setTimeout(() => {
+ 							const containerData = cropper.getContainerData();
+ 							const cropBoxSize = 150;
+ 							cropper.setCropBoxData({
+ 								width: cropBoxSize,
+ 								height: cropBoxSize,
+ 								left: (containerData.width - cropBoxSize) / 2,
+ 								top: (containerData.height - cropBoxSize) / 2
+ 							});
+ 						}, 100);
+ 					}
+ 				});
+ 			} catch (error) {
+ 				console.error('Error initializing Cropper:', error);
+ 				showSimpleCropInterface(cropperImage, photoData);
+ 			}
+ 		} else {
+ 			console.error('Cropper.js not available or image not found');
+ 			if (cropperImage) {
+ 				showSimpleCropInterface(cropperImage, photoData);
+ 			}
+ 		}
+ 	}, 300); // Wait for Cropper.js to load from CDN
+
+ 	// Close crop popup when clicking outside
+ 	cropOverlay.addEventListener('click', function(e) {
+ 		if (e.target === cropOverlay) {
+ 			cancelCropAfterUpload();
+ 		}
+ 	});
+}
+
+// Function to open valentine crop popup after upload
+function openValentineCropPopupAfterUpload(photoData) {
+ 	// Remove existing crop popup
+ 	const existingCropPopup = document.querySelector('.crop-popup');
+ 	if (existingCropPopup) {
+ 		existingCropPopup.remove();
+ 	}
+
+ 	// Create crop popup overlay
+ 	const cropOverlay = document.createElement('div');
+ 	cropOverlay.className = 'crop-popup';
+ 	cropOverlay.style.cssText = `
+ 		position: fixed;
+ 		top: 0;
+ 		left: 0;
+ 		width: 100%;
+ 		height: 100%;
+ 		background: rgba(0, 0, 0, 0.8);
+ 		display: flex;
+ 		align-items: center;
+ 		justify-content: center;
+ 		z-index: 10001;
+ 	`;
+
+ 	// Create crop content
+ 	const cropContent = document.createElement('div');
+ 	cropContent.style.cssText = `
+ 		background: white;
+ 		border-radius: 12px;
+ 		padding: 30px;
+ 		max-width: 700px;
+ 		width: 90%;
+ 		max-height: 90vh;
+ 		overflow-y: auto;
+ 	`;
+
+ 	cropContent.innerHTML = `
+ 	<div style="margin-bottom: 20px; text-align: center;">
+ 		<h3 style="margin: 0 0 20px 0; color: #16212c;">Crop Your Valentine Photo</h3>
+ 		<p style="margin: 0 0 20px 0; color: #666; font-size: 14px;">Drag the image to position it, and use zoom controls to resize. The heart-shaped area shows what will be visible in your valentine design.</p>
+
+ 		<div style="margin-bottom: 20px; display: inline-block; position: relative; max-width: 100%;">
+ 			<img id="valentine-cropper-image" src="${photoData}" alt="Crop valentine photo" style="max-width: 400px; max-height: 400px; height: auto; border-radius: 8px; display: block; margin: 0 auto;">
+ 		</div>
+
+ 		<div style="margin-bottom: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+ 			<button onclick="zoomValentineCropper(0.2)" style="padding: 10px 20px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">➕ Zoom In</button>
+ 			<button onclick="zoomValentineCropper(-0.2)" style="padding: 10px 20px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">➖ Zoom Out</button>
+ 			<button onclick="resetValentineCropper()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500;">↺ Reset</button>
+ 		</div>
+
+ 		<div style="margin-bottom: 20px;">
+ 			<button onclick="applyValentineCropAfterUpload()" style="padding: 12px 30px; margin-right: 10px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Apply Crop</button>
+ 			<button onclick="cancelValentineCropAfterUpload()" style="padding: 12px 30px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Cancel</button>
+ 		</div>
+ 	</div>
+ `;
+
+ 	cropOverlay.appendChild(cropContent);
+ 	document.body.appendChild(cropOverlay);
+
+ 	// Initialize Valentine Cropper.js
+ 	setTimeout(() => {
+ 		const cropperImage = document.getElementById('valentine-cropper-image');
+ 		if (cropperImage && window.Cropper) {
+ 			try {
+ 				// Destroy existing cropper if it exists
+ 				if (cropper) {
+ 					cropper.destroy();
+ 				}
+
+ 				console.log('Initializing Valentine Cropper.js v1.6.2');
+
+ 				// Create new cropper instance for valentine
+ 				cropper = new window.Cropper(cropperImage, {
+ 					aspectRatio: 1, // Square aspect ratio for heart-shaped crop
+ 					viewMode: 0,   // No restrictions - allow selecting any part of image including edges
+ 					dragMode: 'move', // Move the image, not the crop box
+ 					modal: true,   // Show dark overlay outside crop area
+ 					background: true, // Show grid background
+ 					guides: false,  // Hide grid guides for cleaner UI
+ 					autoCropArea: 0.5, // Fixed crop area size
+ 					center: true,  // Center the crop area
+ 					highlight: false, // No highlight for cleaner UI
+ 					cropBoxMovable: false, // Fixed crop box position (centered)
+ 					cropBoxResizable: false, // Fixed crop box size (no resizing)
+ 					toggleDragModeOnDblclick: false, // No mode toggling
+ 					movable: true, // Allow moving the image underneath
+ 					zoomable: true, // Enable zoom via buttons, mouse wheel, and touch
+ 					zoomOnTouch: true, // Enable pinch-to-zoom on mobile
+ 					zoomOnWheel: true, // Enable mouse wheel zoom
+ 					wheelZoomRatio: 0.1, // Zoom ratio for mouse wheel
+ 					scalable: true, // Allow image scaling
+ 					rotatable: false, // No rotation
+ 					minCropBoxWidth: 150,  // Fixed crop box size
+ 					minCropBoxHeight: 150,
+ 					ready() {
+ 						console.log('Valentine Cropper initialized - drag to move, pinch/scroll to zoom');
+ 						// Set fixed crop box in center
+ 						setTimeout(() => {
+ 							const containerData = cropper.getContainerData();
+ 							const cropBoxSize = 150;
+ 							cropper.setCropBoxData({
+ 								width: cropBoxSize,
+ 								height: cropBoxSize,
+ 								left: (containerData.width - cropBoxSize) / 2,
+ 								top: (containerData.height - cropBoxSize) / 2
+ 							});
+ 						}, 100);
+ 					}
+ 				});
+ 			} catch (error) {
+ 				console.error('Error initializing Valentine Cropper:', error);
+ 				showSimpleValentineCropInterface(cropperImage, photoData);
+ 			}
+ 		} else {
+ 			console.error('Cropper.js not available or image not found');
+ 			if (cropperImage) {
+ 				showSimpleValentineCropInterface(cropperImage, photoData);
+ 			}
+ 		}
+ 	}, 300); // Wait for Cropper.js to load from CDN
+
+ 	// Close crop popup when clicking outside
+ 	cropOverlay.addEventListener('click', function(e) {
+ 		if (e.target === cropOverlay) {
+ 			cancelValentineCropAfterUpload();
+ 		}
+ 	});
 }
 
 // Function to apply crop after upload
 function applyCropAfterUpload() {
-	if (cropper) {
-		// Get cropped canvas
-		const canvas = cropper.getCroppedCanvas({
-			width: 180,  // Match the preview size
-			height: 180,
-			imageSmoothingEnabled: true,
-			imageSmoothingQuality: 'high'
-		});
+ 	if (cropper) {
+ 		// Get cropped canvas
+ 		const canvas = cropper.getCroppedCanvas({
+ 			width: 180,  // Match the preview size
+ 			height: 180,
+ 			imageSmoothingEnabled: true,
+ 			imageSmoothingQuality: 'high'
+ 		});
 
-		// Convert canvas to blob, then to data URL
-		canvas.toBlob(function(blob) {
-			const reader = new FileReader();
-			reader.onload = function(e) {
-				const croppedDataUrl = e.target.result;
+ 		// Convert canvas to blob, then to data URL
+ 		canvas.toBlob(function(blob) {
+ 			const reader = new FileReader();
+ 			reader.onload = function(e) {
+ 				const croppedDataUrl = e.target.result;
 
-				// Save cropped image
-				localStorage.setItem('uploadedPhoto', croppedDataUrl);
-				localStorage.removeItem('uploadedPhotoTemp');
+ 				// Save cropped image
+ 				localStorage.setItem('uploadedPhoto', croppedDataUrl);
+ 				localStorage.removeItem('uploadedPhotoTemp');
 
-				// Close crop popup and update interface
-				closeCropPopup();
-				showPhotoInTitleArea();
+ 				// Close crop popup and update interface
+ 				closeCropPopup();
+ 				showPhotoInTitleArea();
 
-				console.log('Crop applied and photo saved');
-			};
-			reader.readAsDataURL(blob);
-		}, 'image/jpeg', 0.9);
-	} else {
-		// Fallback if cropper not available
-		const tempPhoto = localStorage.getItem('uploadedPhotoTemp');
-		if (tempPhoto) {
-			localStorage.setItem('uploadedPhoto', tempPhoto);
-			localStorage.removeItem('uploadedPhotoTemp');
-			closeCropPopup();
-			showPhotoInTitleArea();
-		}
-	}
+ 				console.log('Crop applied and photo saved');
+ 			};
+ 			reader.readAsDataURL(blob);
+ 		}, 'image/jpeg', 0.9);
+ 	} else {
+ 		// Fallback if cropper not available
+ 		const tempPhoto = localStorage.getItem('uploadedPhotoTemp');
+ 		if (tempPhoto) {
+ 			localStorage.setItem('uploadedPhoto', tempPhoto);
+ 			localStorage.removeItem('uploadedPhotoTemp');
+ 			closeCropPopup();
+ 			showPhotoInTitleArea();
+ 		}
+ 	}
+}
+
+// Function to apply valentine crop after upload
+function applyValentineCropAfterUpload() {
+ 	if (cropper) {
+ 		// Get cropped canvas
+ 		const canvas = cropper.getCroppedCanvas({
+ 			width: 180,  // Match the preview size
+ 			height: 180,
+ 			imageSmoothingEnabled: true,
+ 			imageSmoothingQuality: 'high'
+ 		});
+
+ 		// Convert canvas to blob, then to data URL
+ 		canvas.toBlob(function(blob) {
+ 			const reader = new FileReader();
+ 			reader.onload = function(e) {
+ 				const croppedDataUrl = e.target.result;
+
+ 				// Save cropped image
+ 				localStorage.setItem('uploadedPhoto', croppedDataUrl);
+ 				localStorage.removeItem('uploadedPhotoTemp');
+
+ 				// Update the SVG image href in the valentine-svg textarea
+ 				console.log('Updating SVG href with:', croppedDataUrl.substring(0, 50) + '...');
+ 				updateValentineSvgHref(croppedDataUrl);
+ 
+ 				// Apply current background color to SVG outline
+ 				const currentBgColor = $('.map-preview-title').css('background-color') || '#ffffff';
+ 				if (currentBgColor !== 'rgba(0, 0, 0, 0)' && currentBgColor !== 'transparent') {
+ 					updateValentineSvgOutlineColor(currentBgColor);
+ 				}
+ 
+ 				// Close crop popup
+ 				closeCropPopup();
+ 
+ 				// Small delay to ensure SVG is updated before showing
+ 				setTimeout(() => {
+ 					showValentinePhotoInTitleArea();
+ 					console.log('Valentine photo preview updated with SVG');
+ 				}, 100);
+
+ 			};
+ 			reader.readAsDataURL(blob);
+ 		}, 'image/jpeg', 0.9);
+ 	} else {
+ 		// Fallback if cropper not available
+ 		const tempPhoto = localStorage.getItem('uploadedPhotoTemp');
+ 		if (tempPhoto) {
+ 			localStorage.setItem('uploadedPhoto', tempPhoto);
+ 			localStorage.removeItem('uploadedPhotoTemp');
+ 			console.log('Updating SVG href with temp photo');
+ 			updateValentineSvgHref(tempPhoto);
+ 
+ 			// Apply current background color to SVG outline
+ 			const currentBgColor = $('.map-preview-title').css('background-color') || '#ffffff';
+ 			if (currentBgColor !== 'rgba(0, 0, 0, 0)' && currentBgColor !== 'transparent') {
+ 				updateValentineSvgOutlineColor(currentBgColor);
+ 			}
+ 
+ 			// Close crop popup
+ 			closeCropPopup();
+ 
+ 			// Small delay to ensure SVG is updated before showing
+ 			setTimeout(() => {
+ 				showValentinePhotoInTitleArea();
+ 				console.log('Valentine photo preview updated with SVG (fallback)');
+ 			}, 100);
+ 		}
+ 	}
 }
 
 // Function to cancel crop after upload
 function cancelCropAfterUpload() {
-	// Remove temp photo
-	localStorage.removeItem('uploadedPhotoTemp');
+ 	// Remove temp photo
+ 	localStorage.removeItem('uploadedPhotoTemp');
 
-	// Close crop popup and update interface
-	closeCropPopup();
-	showPhotoInTitleArea();
+ 	// Close crop popup and update interface
+ 	closeCropPopup();
+ 	showPhotoInTitleArea();
 
-	console.log('Crop cancelled');
+ 	console.log('Crop cancelled');
 }
+
+// Function to cancel valentine crop after upload
+function cancelValentineCropAfterUpload() {
+ 	// Remove temp photo
+ 	localStorage.removeItem('uploadedPhotoTemp');
+
+ 	// Close crop popup and update interface
+ 	closeCropPopup();
+ 	showValentinePhotoInTitleArea();
+
+ 	console.log('Valentine crop cancelled');
+}
+
+// Fallback function if Cropper.js doesn't load
+function showSimpleCropInterface(imageElement, photoData) {
+ 	// Replace the cropper image with a simple preview
+ 	const cropContent = imageElement.closest('.crop-popup').querySelector('.crop-content');
+ 	if (cropContent) {
+ 		cropContent.innerHTML = `
+ 			<div style="margin-bottom: 20px; text-align: center;">
+ 				<h3 style="margin: 0 0 20px 0; color: #16212c;">Crop Your Photo</h3>
+ 				<p style="margin: 0 0 20px 0; color: #666; font-size: 14px;">Cropper.js library didn't load. Using simple preview instead.</p>
+
+ 				<div style="position: relative; margin-bottom: 20px; display: inline-block;">
+ 					<img src="${photoData}" alt="Preview" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+ 					<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 180px; border: 3px solid #f77147; border-radius: 50%; pointer-events: none; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.3);"></div>
+ 				</div>
+
+ 				<div style="margin-bottom: 20px;">
+ 					<button onclick="applyCropAfterUpload()" style="padding: 12px 30px; margin-right: 10px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Use Photo</button>
+ 					<button onclick="cancelCropAfterUpload()" style="padding: 12px 30px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Cancel</button>
+ 				</div>
+ 			</div>
+ 		`;
+ 	}
+}
+
+// Fallback function for valentine crop if Cropper.js doesn't load
+function showSimpleValentineCropInterface(imageElement, photoData) {
+ 	// Replace the cropper image with a simple preview
+ 	const cropContent = imageElement.closest('.crop-popup').querySelector('.crop-content');
+ 	if (cropContent) {
+ 		cropContent.innerHTML = `
+ 			<div style="margin-bottom: 20px; text-align: center;">
+ 				<h3 style="margin: 0 0 20px 0; color: #16212c;">Crop Your Valentine Photo</h3>
+ 				<p style="margin: 0 0 20px 0; color: #666; font-size: 14px;">Cropper.js library didn't load. Using simple preview instead.</p>
+
+ 				<div style="position: relative; margin-bottom: 20px; display: inline-block;">
+ 					<img src="${photoData}" alt="Preview" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+ 					<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 180px; height: 180px; border: 3px solid #f77147; border-radius: 50%; pointer-events: none; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.3);"></div>
+ 				</div>
+
+ 				<div style="margin-bottom: 20px;">
+ 					<button onclick="applyValentineCropAfterUpload()" style="padding: 12px 30px; margin-right: 10px; background: #f77147; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Use Photo</button>
+ 					<button onclick="cancelValentineCropAfterUpload()" style="padding: 12px 30px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 500;">Cancel</button>
+ 				</div>
+ 			</div>
+ 		`;
+ 	}
+}
+
+// Function to update the SVG image href in valentine-svg textarea
+function updateValentineSvgHref(imageDataUrl) {
+	// Get the valentine-svg textarea
+	const valentineSvgTextarea = document.getElementById('valentine-svg');
+	if (valentineSvgTextarea) {
+		// Get the current SVG content
+		let svgContent = valentineSvgTextarea.value;
+
+		console.log('Original SVG content length:', svgContent.length);
+		console.log('Looking for href in SVG...');
+
+		// Check if href exists
+		const hrefMatch = svgContent.match(/href="[^"]*"/);
+		console.log('Found href:', hrefMatch);
+
+		// Update the href attribute in the image element
+		const updatedContent = svgContent.replace(
+			/href="[^"]*"/,
+			`href="${imageDataUrl}"`
+		);
+
+		// Update the textarea value
+		valentineSvgTextarea.value = updatedContent;
+
+		console.log('SVG href updated successfully');
+		console.log('New SVG content length:', updatedContent.length);
+		console.log('Image data URL length:', imageDataUrl.length);
+	} else {
+		console.error('valentine-svg textarea not found');
+	}
+}
+
+// Function to update the SVG outline color in valentine-svg textarea
+function updateValentineSvgOutlineColor(backgroundColor) {
+	// Get the valentine-svg textarea
+	const valentineSvgTextarea = document.getElementById('valentine-svg');
+	if (valentineSvgTextarea) {
+		// Get the current SVG content
+		let svgContent = valentineSvgTextarea.value;
+
+		console.log('Updating SVG outline color to:', backgroundColor);
+
+		// Update the path.outline fill color
+		// Look for the path with class="outline"
+		const outlinePattern = /class="outline"[^>]*fill="[^"]*"/;
+		if (svgContent.match(outlinePattern)) {
+			// Replace existing fill color in path.outline
+			svgContent = svgContent.replace(
+				/(class="outline"[^>]*)fill="[^"]*"/,
+				`$1fill="${backgroundColor}"`
+			);
+		} else {
+			// If no fill attribute exists, add it
+			svgContent = svgContent.replace(
+				/class="outline"/,
+				`class="outline" fill="${backgroundColor}"`
+			);
+		}
+
+		// Update the textarea value
+		valentineSvgTextarea.value = svgContent;
+
+		// Also update any currently displayed valentine photo preview
+		const valentinePreview = document.querySelector('.photo-preview.with-valentine');
+		if (valentinePreview) {
+			valentinePreview.innerHTML = svgContent;
+		}
+
+		console.log('SVG outline color updated successfully');
+	} else {
+		console.error('valentine-svg textarea not found');
+	}
+}
+
+// Valentine cropper control functions
+window.zoomValentineCropper = function(delta) {
+ 	if (cropper) {
+ 		cropper.zoom(delta);
+ 	}
+};
+
+window.resetValentineCropper = function() {
+ 	if (cropper) {
+ 		cropper.reset();
+ 		// Restore fixed crop box size after reset
+ 		setTimeout(() => {
+ 			if (cropper) {
+ 				const containerData = cropper.getContainerData();
+ 				cropper.setCropBoxData({
+ 					width: 150,
+ 					height: 150,
+ 					left: (containerData.width - 150) / 2,
+ 					top: (containerData.height - 150) / 2
+ 				});
+ 			}
+ 		}, 100);
+ 	}
+};
 
 // Function to apply crop (simplified - just saves the image as-is for now)
 function applyCrop() {
@@ -1958,11 +2735,20 @@ $(document).ready(function(){
 				$('.custom__style').slideDown(300);
 			} else {
 				$('.custom__style').slideUp(300);
-				
+
 				// Reset background and text colors when switching away from custom
 				$('.map-preview-title').css('background-color', '#ffffff');
 				$('.map-preview-title h3, .map-preview-title p').css('color', '');
 				$('.main__wrapper .outer__main .canvas__wrapper canvas').css('background-color', '');
+
+				// Reset photo preview backgrounds
+				$('.with-photo .photo-preview').css('background-color', '');
+				$('.photo-preview.with-valentine path.outline').css('fill', '#fff');
+				// Note: .photo-preview.with-valentine does NOT need background reset
+
+				// Reset valentine SVG outline color to white
+				updateValentineSvgOutlineColor('#ffffff');
+
 				console.log('Reset background to white with default text colors');
 			}
 			
@@ -1987,7 +2773,7 @@ $(document).ready(function(){
 			'with photo': 'with-photo',
 			'valentine': 'heart',
 			'circle': 'circle',
-			'heart': 'heart',
+			'heart': 'full-heart',
 			'house': 'default'
 		};
 
@@ -2381,11 +3167,19 @@ $(document).ready(function(){
 					// Apply background color to preview title and canvas element
 					$('.map-preview-title').css('background-color', selectedColor);
 					$('.main__wrapper .outer__main .canvas__wrapper canvas').css('background-color', selectedColor);
-					
+
+					// Apply background color to photo preview areas
+					$('.with-photo .photo-preview').css('background-color', selectedColor);
+					$('.photo-preview.with-valentine path.outline').css('fill', selectedColor);
+					// Note: .photo-preview.with-valentine does NOT get background color
+
+					// For valentine SVG, update the path.outline fill color
+					updateValentineSvgOutlineColor(selectedColor);
+
 					// Automatically adjust text color based on background brightness
 					const textColor = getContrastTextColor(selectedColor);
 					$('.map-preview-title h3, .map-preview-title p').css('color', textColor);
-					
+
 					console.log('Background color applied:', selectedColor, 'Text color:', textColor);
 				}
 				
@@ -2504,21 +3298,30 @@ $(document).ready(function(){
 			reinitializeMap();
 		});
 	
-	// Cropper.js control functions
-	function zoomCropper(delta) {
+	// Make cropper control functions globally available
+	window.zoomCropper = function(delta) {
 		if (cropper) {
-			const currentData = cropper.getData();
-			const currentScale = currentData.scaleX; // Cropper.js uses scaleX/scaleY
-			const newScale = Math.min(3, Math.max(0.1, currentScale + delta));
-			cropper.scale(newScale);
+			cropper.zoom(delta);
 		}
-	}
+	};
 	
-	function resetCropper() {
+	window.resetCropper = function() {
 		if (cropper) {
 			cropper.reset();
+			// Restore fixed crop box size after reset
+			setTimeout(() => {
+				if (cropper) {
+					const containerData = cropper.getContainerData();
+					cropper.setCropBoxData({
+						width: 150,
+						height: 150,
+						left: (containerData.width - 150) / 2,
+						top: (containerData.height - 150) / 2
+					});
+				}
+			}, 100);
 		}
-	}
+	};
 	
 	// Cleanup cropper when popup closes
 	function closeCropPopup() {
