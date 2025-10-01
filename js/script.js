@@ -1,5 +1,17 @@
 let map;
+let map1; // First map for double layout
+let map2; // Second map for double layout
+let map1Triple; // First map for triple layout
+let map2Triple; // Second map for triple layout
+let map3Triple; // Third map for triple layout
 let currentMarker = null;
+let currentMarker1 = null; // Marker for first map in double layout
+let currentMarker2 = null; // Marker for second map in double layout
+let currentMarker1Triple = null; // Marker for first map in triple layout
+let currentMarker2Triple = null; // Marker for second map in triple layout
+let currentMarker3Triple = null; // Marker for third map in triple layout
+let isDoubleMapLayout = false; // Track if we're in double map mode
+let isTripleMapLayout = false; // Track if we're in triple map mode
 let currentStyle = 'minimal'; // Start with Minimal style
 let loadedStyles = {};
 let customColors = {
@@ -183,6 +195,397 @@ async function initializeMap() {
 			createTokenSetupMessage();
 		} else {
 			mapContainer.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #f77147; font-size: 16px; padding: 20px; text-align: center;">Error initializing map: ' + error.message + '<br><br>Please check your Mapbox token and internet connection.</div>';
+		}
+	}
+}
+
+// Function to initialize double map layout
+async function initializeDoubleMaps() {
+	console.log('Initializing double maps...');
+	
+	const map1Container = document.getElementById('map1');
+	const map2Container = document.getElementById('map2');
+	
+	if (!map1Container || !map2Container) {
+		console.error('Double map containers not found!');
+		return;
+	}
+	
+	// Remove loading state
+	map1Container.classList.remove('map-loading');
+	map2Container.classList.remove('map-loading');
+	
+	// Load the Minimal style from JSON
+	const minimalStyle = await loadMapStyle('minimal');
+	const styleToUse = minimalStyle || 'mapbox://styles/mapbox/streets-v12';
+	
+	try {
+		// Initialize first map (e.g., Sophia's location)
+		map1 = new mapboxgl.Map({
+			container: 'map1',
+			style: styleToUse,
+			center: [-80.1918, 25.7617], // Default: Miami
+			zoom: 12
+		});
+		
+		// Initialize second map (e.g., Michael's location)
+		map2 = new mapboxgl.Map({
+			container: 'map2',
+			style: styleToUse,
+			center: [-0.1276, 51.5074], // Default: London
+			zoom: 12
+		});
+		
+		console.log('Both maps created');
+		
+		// Set up first map
+		map1.on('load', function() {
+			console.log('Map 1 loaded successfully!');
+			
+			// Add navigation controls to map1
+			map1.addControl(new mapboxgl.NavigationControl(), 'top-left');
+			
+			console.log('Map 1 setup complete');
+		});
+		
+		// Set up second map
+		map2.on('load', function() {
+			console.log('Map 2 loaded successfully!');
+			
+			// Add navigation controls to map2
+			map2.addControl(new mapboxgl.NavigationControl(), 'top-left');
+			
+			console.log('Map 2 setup complete');
+		});
+		
+		// Error handlers
+		map1.on('error', function(e) {
+			console.error('Map 1 error:', e);
+		});
+		
+		map2.on('error', function(e) {
+			console.error('Map 2 error:', e);
+		});
+		
+	} catch (error) {
+		console.error('Error creating double maps:', error);
+	}
+}
+
+// Function to initialize triple map layout
+async function initializeTripleMaps() {
+	console.log('Initializing triple maps...');
+
+	const map1Container = document.getElementById('map1-triple');
+	const map2Container = document.getElementById('map2-triple');
+	const map3Container = document.getElementById('map3-triple');
+
+	if (!map1Container || !map2Container || !map3Container) {
+		console.error('Triple map containers not found!');
+		return;
+	}
+
+	// Remove loading state
+	map1Container.classList.remove('map-loading');
+	map2Container.classList.remove('map-loading');
+	map3Container.classList.remove('map-loading');
+
+	// Load the Minimal style from JSON
+	const minimalStyle = await loadMapStyle('minimal');
+	const styleToUse = minimalStyle || 'mapbox://styles/mapbox/streets-v12';
+
+	try {
+		// Initialize first map
+		map1Triple = new mapboxgl.Map({
+			container: 'map1-triple',
+			style: styleToUse,
+			center: [-80.1918, 25.7617], // Default: Miami
+			zoom: 12
+		});
+
+		// Initialize second map
+		map2Triple = new mapboxgl.Map({
+			container: 'map2-triple',
+			style: styleToUse,
+			center: [-0.1276, 51.5074], // Default: London
+			zoom: 12
+		});
+
+		// Initialize third map
+		map3Triple = new mapboxgl.Map({
+			container: 'map3-triple',
+			style: styleToUse,
+			center: [139.6917, 35.6895], // Default: Tokyo
+			zoom: 12
+		});
+
+		console.log('All three maps created');
+
+		// Set up first map
+		map1Triple.on('load', function() {
+			console.log('Map 1 (triple) loaded successfully!');
+			map1Triple.addControl(new mapboxgl.NavigationControl(), 'top-left');
+		});
+
+		// Set up second map
+		map2Triple.on('load', function() {
+			console.log('Map 2 (triple) loaded successfully!');
+			map2Triple.addControl(new mapboxgl.NavigationControl(), 'top-left');
+		});
+
+		// Set up third map
+		map3Triple.on('load', function() {
+			console.log('Map 3 (triple) loaded successfully!');
+			map3Triple.addControl(new mapboxgl.NavigationControl(), 'top-left');
+		});
+
+		// Error handlers
+		map1Triple.on('error', function(e) {
+			console.error('Map 1 (triple) error:', e);
+		});
+
+		map2Triple.on('error', function(e) {
+			console.error('Map 2 (triple) error:', e);
+		});
+
+		map3Triple.on('error', function(e) {
+			console.error('Map 3 (triple) error:', e);
+		});
+
+	} catch (error) {
+		console.error('Error creating triple maps:', error);
+	}
+}
+
+// Function to switch between single, double, and triple map layouts
+function switchMapLayout(isDouble, isTriple = false) {
+	const singleView = document.querySelector('.single-map-view');
+	const doubleView = document.querySelector('.double-map-view');
+	const tripleView = document.querySelector('.triple-map-view');
+	const singleDetails = document.querySelector('.details__wrapper');
+	const doubleDetails = document.querySelector('.details__wrapper--double');
+	const tripleDetails = document.querySelector('.details__wrapper--triple');
+	
+	if (!singleView || !doubleView) {
+		console.error('Map view containers not found');
+		return;
+	}
+	
+	if (isDouble) {
+		console.log('Switching to double map layout');
+		isDoubleMapLayout = true;
+		isTripleMapLayout = false;
+
+		// Hide other views
+		if (singleView) singleView.style.display = 'none';
+		if (doubleView) doubleView.style.display = 'flex';
+		if (tripleView) tripleView.style.display = 'none';
+
+		// Switch details panels - ensure complete hide/show
+		if (singleDetails) {
+			singleDetails.style.display = 'none';
+			// Also hide any marker info sections in single layout
+			$(singleDetails).find('.marker__info').hide();
+			// Uncheck single layout marker checkbox to prevent conflicts
+			$(singleDetails).find('.map__marker input[type="checkbox"]').prop('checked', false);
+			// Remove any existing single map markers
+			if (currentMarker) {
+				currentMarker.remove();
+				currentMarker = null;
+			}
+		}
+		if (doubleDetails) {
+			doubleDetails.style.display = 'block';
+			// Hide marker info sections in double layout by default
+			$(doubleDetails).find('.marker__info').hide();
+		}
+		if (tripleDetails) {
+			tripleDetails.style.display = 'none';
+		}
+
+		// Update main title in double map view
+		const mainTitleInput = document.getElementById('double-map-main-title');
+		const doubleMapTitle = document.querySelector('.double-map-title h2');
+		if (mainTitleInput && doubleMapTitle) {
+			doubleMapTitle.textContent = mainTitleInput.value;
+		}
+
+		// Destroy other maps if they exist
+		if (map) {
+			map.remove();
+			map = null;
+			currentMarker = null;
+		}
+		if (map1Triple) {
+			map1Triple.remove();
+			map1Triple = null;
+			currentMarker1Triple = null;
+		}
+		if (map2Triple) {
+			map2Triple.remove();
+			map2Triple = null;
+			currentMarker2Triple = null;
+		}
+		if (map3Triple) {
+			map3Triple.remove();
+			map3Triple = null;
+			currentMarker3Triple = null;
+		}
+
+		// Initialize double maps if not already initialized
+		if (!map1 || !map2) {
+			setTimeout(() => {
+				initializeDoubleMaps();
+			}, 100);
+		} else {
+			// Resize existing maps
+			setTimeout(() => {
+				if (map1) map1.resize();
+				if (map2) map2.resize();
+			}, 150);
+		}
+
+		// Force landscape orientation for double map
+		resizeType = "landscape";
+
+	} else if (isTriple) {
+		console.log('Switching to triple map layout');
+		isTripleMapLayout = true;
+		isDoubleMapLayout = false;
+
+		// Hide other views
+		if (singleView) singleView.style.display = 'none';
+		if (doubleView) doubleView.style.display = 'none';
+		if (tripleView) tripleView.style.display = 'flex';
+
+		// Switch details panels
+		if (singleDetails) {
+			singleDetails.style.display = 'none';
+			$(singleDetails).find('.marker__info').hide();
+			$(singleDetails).find('.map__marker input[type="checkbox"]').prop('checked', false);
+			if (currentMarker) {
+				currentMarker.remove();
+				currentMarker = null;
+			}
+		}
+		if (doubleDetails) {
+			doubleDetails.style.display = 'none';
+			$(doubleDetails).find('.marker__info').hide();
+		}
+		if (tripleDetails) {
+			tripleDetails.style.display = 'block';
+			$(tripleDetails).find('.marker__info').hide();
+		}
+
+		// Update main title in triple map view
+		const mainTitleInput = document.getElementById('triple-map-main-title');
+		const tripleMapTitle = document.querySelector('.triple-map-title h2');
+		if (mainTitleInput && tripleMapTitle) {
+			tripleMapTitle.textContent = mainTitleInput.value;
+		}
+
+		// Destroy other maps
+		if (map) {
+			map.remove();
+			map = null;
+			currentMarker = null;
+		}
+		if (map1) {
+			map1.remove();
+			map1 = null;
+			currentMarker1 = null;
+		}
+		if (map2) {
+			map2.remove();
+			map2 = null;
+			currentMarker2 = null;
+		}
+
+		// Initialize triple maps if not already initialized
+		if (!map1Triple || !map2Triple || !map3Triple) {
+			setTimeout(() => {
+				initializeTripleMaps();
+			}, 100);
+		} else {
+			// Resize existing maps
+			setTimeout(() => {
+				if (map1Triple) map1Triple.resize();
+				if (map2Triple) map2Triple.resize();
+				if (map3Triple) map3Triple.resize();
+			}, 150);
+		}
+
+		// Force landscape orientation for triple map
+		resizeType = "landscape";
+
+	} else {
+		console.log('Switching to single map layout');
+		isDoubleMapLayout = false;
+		isTripleMapLayout = false;
+
+		// Show single map view
+		if (singleView) singleView.style.display = 'block';
+
+		// Hide other views
+		if (doubleView) doubleView.style.display = 'none';
+		if (tripleView) tripleView.style.display = 'none';
+
+		// Switch details panels
+		if (singleDetails) {
+			singleDetails.style.display = 'block';
+			// Hide marker info sections in single layout by default
+			$(singleDetails).find('.marker__info').hide();
+		}
+		if (doubleDetails) {
+			doubleDetails.style.display = 'none';
+			// Also hide marker info in double layout and uncheck checkboxes
+			$(doubleDetails).find('.marker__info').hide();
+			$(doubleDetails).find('.map__marker input[type="checkbox"]').prop('checked', false);
+			$(doubleDetails).find('.map__title input[type="checkbox"]').prop('checked', false);
+			$(doubleDetails).find('.content').hide();
+		}
+		if (tripleDetails) {
+			tripleDetails.style.display = 'none';
+			$(tripleDetails).find('.marker__info').hide();
+			$(tripleDetails).find('.map__marker input[type="checkbox"]').prop('checked', false);
+			$(tripleDetails).find('.map__title input[type="checkbox"]').prop('checked', false);
+			$(tripleDetails).find('.content').hide();
+		}
+
+		// Destroy double maps if they exist
+		if (map1) {
+			map1.remove();
+			map1 = null;
+			currentMarker1 = null;
+		}
+		if (map2) {
+			map2.remove();
+			map2 = null;
+			currentMarker2 = null;
+		}
+
+		// Destroy triple maps if they exist
+		if (map1Triple) {
+			map1Triple.remove();
+			map1Triple = null;
+			currentMarker1Triple = null;
+		}
+		if (map2Triple) {
+			map2Triple.remove();
+			map2Triple = null;
+			currentMarker2Triple = null;
+		}
+		if (map3Triple) {
+			map3Triple.remove();
+			map3Triple = null;
+			currentMarker3Triple = null;
+		}
+
+		// Reinitialize single map if not exists
+		if (!map) {
+			setTimeout(() => {
+				initializeMap();
+			}, 100);
 		}
 	}
 }
@@ -647,12 +1050,116 @@ function showLocationSuggestions(suggestions, inputElement) {
 
 		suggestionItem.addEventListener('click', () => {
 			const coordinates = place.center;
-			
+
 			// Update input value
 			inputElement.value = place.place_name;
-			
-			// Update map
-			if (map) {
+
+			// Check if this is a double map input
+			const isDoubleMap1 = inputElement.id === 'double-map-place-1';
+			const isDoubleMap2 = inputElement.id === 'double-map-place-2';
+			const isDoubleMarker1 = inputElement.id === 'double-marker-address-1';
+			const isDoubleMarker2 = inputElement.id === 'double-marker-address-2';
+
+			if (isDoubleMap1 && map1) {
+				// Update first map
+				map1.jumpTo({
+					center: coordinates,
+					zoom: 14
+				});
+
+				// Add or update marker only if checkbox is checked
+				const markerCheckbox = document.getElementById('double-marker-1');
+				if (markerCheckbox && markerCheckbox.checked) {
+					if (currentMarker1) currentMarker1.remove();
+					currentMarker1 = new mapboxgl.Marker({ color: currentMarkerColor })
+						.setLngLat(coordinates)
+						.addTo(map1);
+				}
+
+				// Update title fields for first map
+				const titleInput = document.getElementById('double-large-text-1');
+				const subtitleInput = document.getElementById('double-small-text-1');
+				if (titleInput) titleInput.value = place.place_name;
+				if (subtitleInput) subtitleInput.value = `${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`;
+
+				// Update display titles
+				$('.map-1-title h3').text(place.place_name);
+				$('.map-1-title p').text(`${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`);
+
+			} else if (isDoubleMarker1 && map1) {
+				// Update first map for marker
+				map1.jumpTo({
+					center: coordinates,
+					zoom: 14
+				});
+
+				// Add marker
+				if (currentMarker1) currentMarker1.remove();
+				currentMarker1 = new mapboxgl.Marker({ color: currentMarkerColor })
+					.setLngLat(coordinates)
+					.addTo(map1);
+
+				// Update title fields for first map
+				const titleInput = document.getElementById('double-large-text-1');
+				const subtitleInput = document.getElementById('double-small-text-1');
+				if (titleInput) titleInput.value = place.place_name;
+				if (subtitleInput) subtitleInput.value = `${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`;
+
+				// Update display titles
+				$('.map-label:first h3').text(place.place_name);
+				$('.map-label:first p').text(`${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`);
+
+			} else if (isDoubleMarker2 && map2) {
+				// Update second map for marker
+				map2.jumpTo({
+					center: coordinates,
+					zoom: 14
+				});
+
+				// Add marker
+				if (currentMarker2) currentMarker2.remove();
+				currentMarker2 = new mapboxgl.Marker({ color: currentMarkerColor })
+					.setLngLat(coordinates)
+					.addTo(map2);
+
+				// Update title fields for second map
+				const titleInput = document.getElementById('double-large-text-2');
+				const subtitleInput = document.getElementById('double-small-text-2');
+				if (titleInput) titleInput.value = place.place_name;
+				if (subtitleInput) subtitleInput.value = `${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`;
+
+				// Update display titles
+				$('.map-label:last h3').text(place.place_name);
+				$('.map-label:last p').text(`${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`);
+
+			} else if (isDoubleMap2 && map2) {
+				// Update second map
+				map2.jumpTo({
+					center: coordinates,
+					zoom: 14
+				});
+
+				// Add or update marker only if checkbox is checked
+				const markerCheckbox = document.getElementById('double-marker-2');
+				if (markerCheckbox && markerCheckbox.checked) {
+					if (currentMarker2) currentMarker2.remove();
+					currentMarker2 = new mapboxgl.Marker({ color: currentMarkerColor })
+						.setLngLat(coordinates)
+						.addTo(map2);
+				}
+
+				// Update title fields for second map
+				const titleInput = document.getElementById('double-large-text-2');
+				const subtitleInput = document.getElementById('double-small-text-2');
+				if (titleInput) titleInput.value = place.place_name;
+				if (subtitleInput) subtitleInput.value = `${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`;
+
+				// Update display titles
+				$('.map-2-title h3').text(place.place_name);
+				$('.map-2-title p').text(`${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`);
+
+			} else if (map) {
+				// Update single map (existing functionality)
 				map.jumpTo({
 					center: coordinates,
 					zoom: 14
@@ -1121,6 +1628,18 @@ function updateMapTitle() {
 
 function changeMapLayout(layoutType) {
 	console.log('changeMapLayout called with:', layoutType);
+
+	// Check if switching to double or triple map layout
+	if (layoutType === 'double-map') {
+		switchMapLayout(true, false);
+		return;
+	} else if (layoutType === 'triple-map') {
+		switchMapLayout(false, true);
+		return;
+	} else if (isDoubleMapLayout || isTripleMapLayout) {
+		// If we were in double or triple map mode, switch back to single
+		switchMapLayout(false, false);
+	}
 
 	// Handle different layout shapes (circle, heart, square, puzzle, story)
 	const mapContainer = document.getElementById('map');
@@ -2454,25 +2973,33 @@ let currentAspectRatio = getSelectedSizeRatio(); // Get initial ratio from selec
 
 // Resize frame function - must be defined before document.ready
 function resizeFrame(){
+	// Check if we're on mobile
+	const isMobile = window.innerWidth <= 767;
+	const isSmallMobile = window.innerWidth <= 480;
+
+	// Adjust max dimensions based on screen size
+	const screenPadding = isSmallMobile ? 20 : (isMobile ? 30 : 0);
+	const availableWidth = isMobile ? (window.innerWidth - screenPadding) : 520;
+
 	const maxTotalHeight = 750; // Maximum total poster height (map + title)
-	const maxWidth = 520;  // Maximum poster width for portrait
-	const maxLandscapeWidth = 800; // Maximum width for landscape
-	
+	const maxWidth = isMobile ? availableWidth : 520;  // Maximum poster width for portrait
+	const maxLandscapeWidth = isMobile ? availableWidth : 800; // Maximum width for landscape
+
 	// Get the preview title height (approximate)
-	const titleHeight = 70; // Approximate height of map-preview-title section
-	
+	const titleHeight = isSmallMobile ? 60 : 70; // Approximate height of map-preview-title section
+
 	let width, mapHeight, totalHeight;
-	
+
 	// Calculate dimensions based on orientation
 	// IMPORTANT: Aspect ratio applies to TOTAL poster (map + title), not just map
 	if (resizeType === "landscape") {
 		// Landscape - width is LARGER than height
 		// For landscape: totalWidth / totalHeight = ratio
 		// Start with a base total height and calculate width
-		totalHeight = 470; // Base total poster height for landscape (map + title)
+		totalHeight = isMobile ? 350 : 470; // Base total poster height for landscape (map + title)
 		width = totalHeight * currentAspectRatio; // width = total height × (width/height ratio)
 		mapHeight = totalHeight - titleHeight;
-		
+
 		// If width exceeds max, recalculate proportionally
 		if (width > maxLandscapeWidth) {
 			width = maxLandscapeWidth;
@@ -2482,18 +3009,18 @@ function resizeFrame(){
 	} else if (resizeType === "square") {
 		// Square - total dimensions should be equal (1:1 ratio)
 		// For square: totalWidth = totalHeight
-		totalHeight = 570; // Total poster height including title
+		totalHeight = isMobile ? availableWidth : 570; // Total poster height including title
 		width = totalHeight; // Width equals height for square
 		mapHeight = totalHeight - titleHeight;
 	} else {
 		// Portrait (default) - height is LARGER than width
 		// For portrait: totalHeight / width = ratio
 		// Total poster (map + title) should match the aspect ratio
-		
+
 		width = maxWidth;
 		totalHeight = width * currentAspectRatio; // total height = width × (height/width ratio)
 		mapHeight = totalHeight - titleHeight;
-		
+
 		// If total height exceeds max, scale down proportionally
 		if (totalHeight > maxTotalHeight) {
 			totalHeight = maxTotalHeight;
@@ -2501,27 +3028,31 @@ function resizeFrame(){
 			mapHeight = totalHeight - titleHeight;
 		}
 	}
-	
+
 	// Round dimensions
 	const finalWidth = Math.round(width);
 	const finalHeight = Math.round(mapHeight);
-	
+
 	// Apply dimensions to map container ONLY
 	// Let Mapbox handle canvas sizing internally for proper rendering
 	$("#map").css({
 		"height": finalHeight + "px",
 		"width": finalWidth + "px",
-		"max-width": finalWidth + "px"
+		"max-width": "100%"
 	});
-	
+
 	// Also resize preview title container to match width
-	$('.map-preview-title').css("width", finalWidth + "px");
-	
+	$('.map-preview-title').css({
+		"width": finalWidth + "px",
+		"max-width": "100%"
+	});
+
 	console.log('Resize:', resizeType, 'Ratio:', currentAspectRatio,
 	           'Map container:', finalWidth + 'w x ' + finalHeight + 'h',
 	           'Total poster (map+title):', finalWidth + 'w x ' + Math.round(totalHeight) + 'h',
-	           'Actual ratio:', (totalHeight / width).toFixed(3));
-	
+	           'Actual ratio:', (totalHeight / width).toFixed(3),
+	           'Mobile:', isMobile);
+
 	// Force Mapbox to resize - it will handle canvas dimensions properly
 	// Mapbox automatically sizes the canvas with correct device pixel ratio
 	if (map && map.loaded()) {
@@ -2627,8 +3158,26 @@ $(document).ready(function(){
 		if (!$(this).hasClass("current")) {
 			$(this).closest('ul').find('.current').removeClass("current");
 			$(this).addClass('current');
-			$('.design__info ,.details__wrapper , .format__wrapper').css("display" ,'none');
-			$('.' + $(this).attr("data-tab")).fadeIn(300);
+			
+			// Hide all panels
+			$('.design__info, .details__wrapper, .format__wrapper').css("display", 'none');
+			$('.details__wrapper--double').css("display", 'none');
+			
+			// Show the appropriate panel based on layout
+			const tabName = $(this).attr("data-tab");
+			if (tabName === 'details__wrapper' && isTripleMapLayout) {
+				// Show triple map details panel if in triple map mode
+				$('.details__wrapper--triple').fadeIn(300);
+			} else if (tabName === 'details__wrapper' && isDoubleMapLayout) {
+				// Show double map details panel if in double map mode
+				$('.details__wrapper--double').fadeIn(300);
+			} else if (tabName === 'details__wrapper' && !isDoubleMapLayout && !isTripleMapLayout) {
+				// Show single map details panel
+				$('.details__wrapper').fadeIn(300);
+			} else {
+				// Show regular panel (design or format)
+				$('.' + tabName).fadeIn(300);
+			}
 		}
 	});
 
@@ -2777,12 +3326,26 @@ $(document).ready(function(){
 			'valentine': 'heart',
 			'circle': 'circle',
 			'heart': 'full-heart',
-			'house': 'default'
+			'house': 'default',
+			'double map': 'double-map',
+			'triple map': 'triple-map'
 		};
 
 		if (layoutMap[layoutText]) {
 			console.log('Switching to layout:', layoutMap[layoutText]);
 			changeMapLayout(layoutMap[layoutText]);
+
+			// For double and triple map, hide portrait/square options and show only landscape
+			if (layoutText === 'double map' || layoutText === 'triple map') {
+				// Auto-select landscape orientation
+				$('.elem__picker .type__switcher li a[data-type="landscape"]').click();
+				// Hide portrait and square options
+				$('.elem__picker .type__switcher li a[data-type="portrait"]').parent().hide();
+				$('.elem__picker .type__switcher li a[data-type="square"]').parent().hide();
+			} else {
+				// Show all orientation options for other layouts
+				$('.elem__picker .type__switcher li').show();
+			}
 		} else {
 			console.log('Layout not found in mapping:', layoutText);
 		}
@@ -2851,8 +3414,8 @@ $(document).ready(function(){
 		}
 	});
 
-	// Map marker toggle functionality
-	$('.map__marker input[type="checkbox"]').on('change', function() {
+	// Map marker toggle functionality (single layout only)
+	$('.details__wrapper .map__marker input[type="checkbox"]').on('change', function() {
 		toggleMapMarker();
 	});
 	
@@ -3047,15 +3610,15 @@ $(document).ready(function(){
 		return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
 	}
 
-	// Map title toggle functionality
-	$('.map__title .title input[type="checkbox"]').on('change', function() {
+	// Map title toggle functionality (single layout only)
+	$('.details__wrapper .map__title .title input[type="checkbox"]').on('change', function() {
 		updateMapTitle();
 	});
 
-	// Title input change handlers
-	$('.map__title .content textarea').on('input', function() {
-		const titleInput = $('.map__title .content textarea').eq(0);
-		const subtitleInput = $('.map__title .content textarea').eq(1);
+	// Title input change handlers (single layout only)
+	$('.details__wrapper .map__title .content textarea').on('input', function() {
+		const titleInput = $('.details__wrapper .map__title .content textarea').eq(0);
+		const subtitleInput = $('.details__wrapper .map__title .content textarea').eq(1);
 		
 		const title = titleInput.val() || 'MIAMI, UNITED STATES';
 		const subtitle = subtitleInput.val() || '25.76168°N / 80.19179°W';
@@ -3064,10 +3627,10 @@ $(document).ready(function(){
 		updatePreviewTitle(title, subtitle);
 	});
 
-	// Initialize map title state
-	const titleCheckbox = $('.map__title .title input[type="checkbox"]');
+	// Initialize map title state (single layout only)
+	const titleCheckbox = $('.details__wrapper .map__title .title input[type="checkbox"]');
 	if (titleCheckbox.prop('checked')) {
-		$('.map__title .content').show();
+		$('.details__wrapper .map__title .content').show();
 		const posterTitle = document.querySelector('.poster-title');
 		if (posterTitle) {
 			posterTitle.style.display = 'block';
@@ -3091,18 +3654,20 @@ $(document).ready(function(){
 
 
 
-	$('.marker__info>.btns>a').on('click' ,function(e){
+	// Marker info toggle for single layout only
+	$('.details__wrapper .marker__info>.btns>a').on('click' ,function(e){
 		e.preventDefault();
 		if (!$(this).hasClass("current")) {
 			$(this).closest(".btns").find(">a").removeClass("current");
 			$(this).addClass('current');
+			const $markerInfo = $(this).closest('.marker__info');
 			if ($(this).attr("data-id") == "address") {
-				$('.address__info').fadeIn(300);
-				$('.address__geo').css("display" ,"none");
+				$markerInfo.find('.address__info').fadeIn(300);
+				$markerInfo.find('.address__geo').css("display" ,"none");
 			}
 			if ($(this).attr("data-id") == "gps") {
-				$('.address__info').css("display" ,"none");
-				$('.address__geo').fadeIn(300)
+				$markerInfo.find('.address__info').css("display" ,"none");
+				$markerInfo.find('.address__geo').fadeIn(300)
 			}
 		}
 	});
@@ -3337,4 +3902,330 @@ $(document).ready(function(){
 			popup.remove();
 		}
 	}
+
+	// Double map title event listeners
+	$('#double-map-main-title').on('input', function() {
+		const title = $(this).val();
+		$('.double-map-title h2').text(title);
+	});
+
+	$('#double-map-title-1').on('input', function() {
+		const title = $(this).val();
+		$('.map-1-title').text(title);
+	});
+
+	$('#double-map-title-2').on('input', function() {
+		const title = $(this).val();
+		$('.map-2-title').text(title);
+	});
+
+	// Double map place search functionality
+	$('#double-map-place-1').on('input', function() {
+		const query = $(this).val().trim();
+		const $input = $(this);
+		const inputElement = this;
+		const $span = $input.next('span');
+
+		if (query.length < 3) {
+			$span.text('minimum 3 characters needed to search').css('color', '#666');
+			return;
+		}
+
+		$span.text('searching...').css('color', '#f77147');
+
+		clearTimeout(window.doubleMapSearchTimeout1);
+		window.doubleMapSearchTimeout1 = setTimeout(() => {
+			if (map1 && map1.loaded()) {
+				searchLocation(query, false).then(suggestions => {
+					if (suggestions && suggestions.length > 0) {
+						showLocationSuggestions(suggestions, inputElement);
+						$span.text(`${suggestions.length} locations found`).css('color', '#4CAF50');
+					} else {
+						$span.text('no locations found').css('color', '#f77147');
+					}
+				}).catch(error => {
+					console.error('Double map search error:', error);
+					$span.text('search error, please try again').css('color', '#f77147');
+				});
+			} else {
+				$span.text('map not ready, please wait').css('color', '#f77147');
+			}
+		}, 300);
+	});
+
+	$('#double-map-place-2').on('input', function() {
+		const query = $(this).val().trim();
+		const $input = $(this);
+		const inputElement = this;
+		const $span = $input.next('span');
+
+		if (query.length < 3) {
+			$span.text('minimum 3 characters needed to search').css('color', '#666');
+			return;
+		}
+
+		$span.text('searching...').css('color', '#f77147');
+
+		clearTimeout(window.doubleMapSearchTimeout2);
+		window.doubleMapSearchTimeout2 = setTimeout(() => {
+			if (map2 && map2.loaded()) {
+				searchLocation(query, false).then(suggestions => {
+					if (suggestions && suggestions.length > 0) {
+						showLocationSuggestions(suggestions, inputElement);
+						$span.text(`${suggestions.length} locations found`).css('color', '#4CAF50');
+					} else {
+						$span.text('no locations found').css('color', '#f77147');
+					}
+				}).catch(error => {
+					console.error('Double map search error:', error);
+					$span.text('search error, please try again').css('color', '#f77147');
+				});
+			} else {
+				$span.text('map not ready, please wait').css('color', '#f77147');
+			}
+		}, 300);
+	});
+
+	// Double map marker toggle functionality using delegated events
+	$(document).on('change', '#double-marker-1', function() {
+		const isChecked = $(this).prop('checked');
+		const $mapSection = $(this).closest('.map-section');
+		const $markerInfo = $mapSection.find('.marker__info').first();
+		
+		if (isChecked) {
+			if (currentMarker1 && map1) {
+				currentMarker1.addTo(map1);
+			}
+			// Show marker info section for first map only
+			$markerInfo.slideDown(300);
+		} else {
+			if (currentMarker1) {
+				currentMarker1.remove();
+			}
+			// Hide marker info section for first map only
+			$markerInfo.slideUp(300);
+		}
+	});
+
+	$(document).on('change', '#double-marker-2', function() {
+		const isChecked = $(this).prop('checked');
+		const $mapSection = $(this).closest('.map-section');
+		const $markerInfo = $mapSection.find('.marker__info').first();
+		
+		if (isChecked) {
+			if (currentMarker2 && map2) {
+				currentMarker2.addTo(map2);
+			}
+			// Show marker info section for second map only
+			$markerInfo.slideDown(300);
+		} else {
+			if (currentMarker2) {
+				currentMarker2.remove();
+			}
+			// Hide marker info section for second map only
+			$markerInfo.slideUp(300);
+		}
+	});
+
+	// Double map marker info toggle (address vs GPS) for map 1
+	$('.details__wrapper--double .map-section:first-child .marker__info .btns a').on('click', function(e) {
+		e.preventDefault();
+		if (!$(this).hasClass('current')) {
+			$(this).closest('.btns').find('a').removeClass('current');
+			$(this).addClass('current');
+			if ($(this).attr('data-id') === 'address-1') {
+				$(this).closest('.marker__info').find('.address__info').fadeIn(300);
+				$(this).closest('.marker__info').find('.address__geo').css('display', 'none');
+			} else if ($(this).attr('data-id') === 'gps-1') {
+				$(this).closest('.marker__info').find('.address__info').css('display', 'none');
+				$(this).closest('.marker__info').find('.address__geo').fadeIn(300);
+			}
+		}
+	});
+
+	// Double map marker info toggle (address vs GPS) for map 2
+	$('.details__wrapper--double .map-section:last-child .marker__info .btns a').on('click', function(e) {
+		e.preventDefault();
+		if (!$(this).hasClass('current')) {
+			$(this).closest('.btns').find('a').removeClass('current');
+			$(this).addClass('current');
+			if ($(this).attr('data-id') === 'address-2') {
+				$(this).closest('.marker__info').find('.address__info').fadeIn(300);
+				$(this).closest('.marker__info').find('.address__geo').css('display', 'none');
+			} else if ($(this).attr('data-id') === 'gps-2') {
+				$(this).closest('.marker__info').find('.address__info').css('display', 'none');
+				$(this).closest('.marker__info').find('.address__geo').fadeIn(300);
+			}
+		}
+	});
+
+	// Double map marker address search for map 1
+	let doubleMarkerSearchTimeout1;
+	$('#double-marker-address-1').on('input', function() {
+		const query = $(this).val().trim();
+		const $input = $(this);
+		const inputElement = this;
+		const $span = $input.next('span');
+
+		if (query.length < 3) {
+			$span.text('minimum 3 characters needed to search').css('color', '#666');
+			const existingSuggestions = document.querySelector('.location-suggestions');
+			if (existingSuggestions) existingSuggestions.remove();
+			return;
+		}
+
+		$span.text('searching...').css('color', '#f77147');
+
+		clearTimeout(doubleMarkerSearchTimeout1);
+		doubleMarkerSearchTimeout1 = setTimeout(() => {
+			if (map1 && map1.loaded()) {
+				searchLocation(query, false).then(suggestions => {
+					if (suggestions && suggestions.length > 0) {
+						showLocationSuggestions(suggestions, inputElement);
+						$span.text(`${suggestions.length} locations found`).css('color', '#4CAF50');
+					} else {
+						$span.text('no locations found').css('color', '#f77147');
+					}
+				}).catch(error => {
+					console.error('Double marker search error:', error);
+					$span.text('search error, please try again').css('color', '#f77147');
+				});
+			}
+		}, 300);
+	});
+
+	// Double map marker address search for map 2
+	let doubleMarkerSearchTimeout2;
+	$('#double-marker-address-2').on('input', function() {
+		const query = $(this).val().trim();
+		const $input = $(this);
+		const inputElement = this;
+		const $span = $input.next('span');
+
+		if (query.length < 3) {
+			$span.text('minimum 3 characters needed to search').css('color', '#666');
+			const existingSuggestions = document.querySelector('.location-suggestions');
+			if (existingSuggestions) existingSuggestions.remove();
+			return;
+		}
+
+		$span.text('searching...').css('color', '#f77147');
+
+		clearTimeout(doubleMarkerSearchTimeout2);
+		doubleMarkerSearchTimeout2 = setTimeout(() => {
+			if (map2 && map2.loaded()) {
+				searchLocation(query, false).then(suggestions => {
+					if (suggestions && suggestions.length > 0) {
+						showLocationSuggestions(suggestions, inputElement);
+						$span.text(`${suggestions.length} locations found`).css('color', '#4CAF50');
+					} else {
+						$span.text('no locations found').css('color', '#f77147');
+					}
+				}).catch(error => {
+					console.error('Double marker search error:', error);
+					$span.text('search error, please try again').css('color', '#f77147');
+				});
+			}
+		}, 300);
+	});
+
+	// GPS coordinates input for double map 1
+	$('#double-marker-lat-1, #double-marker-lng-1').on('blur change keypress', function(e) {
+		if (e.type === 'keypress' && e.which !== 13) return;
+
+		const lat = parseFloat($('#double-marker-lat-1').val());
+		const lng = parseFloat($('#double-marker-lng-1').val());
+
+		if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+			if (map1 && map1.loaded()) {
+				const coordinates = [lng, lat];
+				map1.setCenter(coordinates);
+				map1.setZoom(14);
+
+				// Add marker
+				if (currentMarker1) currentMarker1.remove();
+				currentMarker1 = new mapboxgl.Marker({ color: currentMarkerColor })
+					.setLngLat(coordinates)
+					.addTo(map1);
+
+				// Update title fields
+				$('#double-large-text-1').val(`${lat.toFixed(5)}°N / ${Math.abs(lng).toFixed(5)}°W`);
+				$('#double-small-text-1').val(`${lat.toFixed(5)}°N / ${Math.abs(lng).toFixed(5)}°W`);
+			}
+		}
+	});
+
+	// GPS coordinates input for double map 2
+	$('#double-marker-lat-2, #double-marker-lng-2').on('blur change keypress', function(e) {
+		if (e.type === 'keypress' && e.which !== 13) return;
+
+		const lat = parseFloat($('#double-marker-lat-2').val());
+		const lng = parseFloat($('#double-marker-lng-2').val());
+
+		if (!isNaN(lat) && !isNaN(lng) && lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
+			if (map2 && map2.loaded()) {
+				const coordinates = [lng, lat];
+				map2.setCenter(coordinates);
+				map2.setZoom(14);
+
+				// Add marker
+				if (currentMarker2) currentMarker2.remove();
+				currentMarker2 = new mapboxgl.Marker({ color: currentMarkerColor })
+					.setLngLat(coordinates)
+					.addTo(map2);
+
+				// Update title fields
+				$('#double-large-text-2').val(`${lat.toFixed(5)}°N / ${Math.abs(lng).toFixed(5)}°W`);
+				$('#double-small-text-2').val(`${lat.toFixed(5)}°N / ${Math.abs(lng).toFixed(5)}°W`);
+			}
+		}
+	});
+
+	// Double map title toggle functionality
+	$(document).on('change', '#double-title-1', function() {
+		const isChecked = $(this).prop('checked');
+		const $mapSection = $(this).closest('.map-section');
+		const $content = $mapSection.find('.map__title .content').first();
+		
+		if (isChecked) {
+			$content.slideDown(300);
+			// Show map labels
+			$('.double-map-container .map-wrapper').eq(0).find('.map-label').show();
+		} else {
+			$content.slideUp(300);
+			// Hide map labels
+			$('.double-map-container .map-wrapper').eq(0).find('.map-label').hide();
+		}
+	});
+
+	$(document).on('change', '#double-title-2', function() {
+		const isChecked = $(this).prop('checked');
+		const $mapSection = $(this).closest('.map-section');
+		const $content = $mapSection.find('.map__title .content').first();
+		
+		if (isChecked) {
+			$content.slideDown(300);
+			// Show map labels
+			$('.double-map-container .map-wrapper').eq(1).find('.map-label').show();
+		} else {
+			$content.slideUp(300);
+			// Hide map labels
+			$('.double-map-container .map-wrapper').eq(1).find('.map-label').hide();
+		}
+	});
+
+	// Double map title text input handlers
+	$('#double-large-text-1, #double-small-text-1').on('input', function() {
+		const largeText = $('#double-large-text-1').val() || 'Sophia';
+		const smallText = $('#double-small-text-1').val() || 'small text, map 1';
+		$('.double-map-container .map-wrapper:first .map-label h3').text(largeText);
+		$('.double-map-container .map-wrapper:first .map-label p').text(smallText);
+	});
+
+	$('#double-large-text-2, #double-small-text-2').on('input', function() {
+		const largeText = $('#double-large-text-2').val() || 'Michael';
+		const smallText = $('#double-small-text-2').val() || 'small text, map 2';
+		$('.double-map-container .map-wrapper:last .map-label h3').text(largeText);
+		$('.double-map-container .map-wrapper:last .map-label p').text(smallText);
+	});
 });

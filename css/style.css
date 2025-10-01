@@ -5,9 +5,12 @@ html {
   overflow-x: hidden;
 }
 
-.mapboxgl-map,
-.map-preview-title {
+.mapboxgl-map {
   margin: auto;
+}
+
+.map-preview-title {
+  margin: 0 auto;
 }
 
 body * {
@@ -146,17 +149,24 @@ body * {
 }
 
 .main__wrapper .outer__main .canvas__wrapper .inn {
-  /* max-width: 540px; */
+  max-width: 100%;
+  width: 100%;
   margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: visible;
 }
 
 .main__wrapper .outer__main .canvas__wrapper canvas {
   width: 100%;
-  /* max-width: 540px; */
-  height: 940px;
   padding: 20px;
   padding-bottom: 0px;
   background-color: white;
+}
+
+.main__wrapper .outer__main .double-map-container .double-map canvas{
+  padding: 0px;
 }
 
 .main__switcher {
@@ -2390,12 +2400,8 @@ body * {
 
   .main__wrapper .outer__main .canvas__wrapper .inn {
     max-width: 100%;
-    margin-right: 0px;
-  }
-
-  .main__wrapper .outer__main .canvas__wrapper canvas {
-    max-width: 100%;
-    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
   }
 
   .main__wrapper .outer__main .canvas__wrapper .gallery .elem {
@@ -2436,6 +2442,12 @@ body * {
 
   .main__wrapper .outer__main .canvas__wrapper {
     margin-left: 0px;
+  }
+
+  .main__wrapper .outer__main .canvas__wrapper .inn {
+    max-width: 100%;
+    margin-right: auto;
+    margin-left: auto;
   }
 
   .main__switcher {
@@ -2482,6 +2494,22 @@ body * {
   .info__popup>.inner .box {
     padding: 15px;
   }
+
+  .main__wrapper .outer__main .canvas__wrapper .inn {
+    max-width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0 15px;
+  }
+
+  .map-preview-title {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  #map {
+    max-width: 100%;
+  }
 }
 
 .marker__color>div {
@@ -2489,6 +2517,32 @@ body * {
 }
 
 @media (max-width: 480px) {
+  .main__wrapper .outer__main .canvas__wrapper .inn {
+    max-width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0 10px;
+  }
+
+  .map-preview-title {
+    padding: 12px 10px;
+    max-width: 100%;
+  }
+
+  .map-preview-title h3 {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .map-preview-title p {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  #map {
+    max-width: 100%;
+  }
+
   .marker__color>div {
     width: calc(100% + 30px);
     margin-left: -15px;
@@ -2596,7 +2650,13 @@ body * {
   padding: 20px;
   background-color: #fff;
   border-top: none;
-  margin-top: 0;
+  margin: 0 auto;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: visible;
+  word-wrap: break-word;
+  position: relative;
+  z-index: 10;
 }
 
 .map-preview-title.with-photo {
@@ -2645,7 +2705,10 @@ body * {
 /* Ensure map canvas always fills the container */
 #map {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  margin: 0 auto;
+  box-sizing: border-box;
+  z-index: 0;
 }
 
 #map canvas.mapboxgl-canvas {
@@ -2815,7 +2878,7 @@ body * {
 }
 
 #shape-overlay {
-  z-index: 2;
+  z-index: 1;
   position: absolute;
   width: 100%;
 }
@@ -3081,5 +3144,587 @@ div#map.layout-circle, div#map.layout-full-heart {
   .photo-preview {
     width: 140px;
     height: 140px;
+  }
+}
+
+/* Double Map Layout Styles */
+.double-map-view {
+  max-width: 500px;
+  width: 100%;
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.double-map-title {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.double-map-title h2 {
+  margin: 0;
+  font-size: 24px;
+  font-family: 'Richmond Semi', cursive;
+  font-weight: 400;
+  color: #000;
+  letter-spacing: 0.5px;
+}
+
+.double-map-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+  max-width: 460px;
+  padding: 10px;
+}
+
+.double-map-container .map-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.double-map-container .double-map {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  background-color: #f5f5f5;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* Triple Map Layout Styles */
+.triple-map-view {
+  max-width: 600px;
+  width: 100%;
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.triple-map-title {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.triple-map-title h2 {
+  margin: 0;
+  font-size: 24px;
+  font-family: 'Richmond Semi', cursive;
+  font-weight: 400;
+  color: #000;
+  letter-spacing: 0.5px;
+}
+
+.triple-map-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 560px;
+  padding: 10px;
+}
+
+.triple-map-container .map-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+
+.triple-map-container .triple-map {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  background-color: #f5f5f5;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.double-map-container .double-map .shape-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Navigation controls for double maps */
+.double-map .mapboxgl-ctrl-top-left {
+  top: 10px;
+  left: 10px;
+}
+
+.double-map .mapboxgl-ctrl-group {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.double-map-container .map-label {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.double-map-container .map-label h3 {
+  margin: 0 0 5px 0;
+  font-size: 20px;
+  font-family: 'Richmond Semi', cursive;
+  font-weight: 400;
+  color: #000;
+}
+
+.double-map-container .map-label p {
+  margin: 0;
+  font-size: 11px;
+  color: #666;
+  font-weight: 500;
+}
+
+.triple-map-container .map-label h3 {
+  margin: 0 0 5px 0;
+  font-size: 18px;
+  font-family: 'Richmond Semi', cursive;
+  font-weight: 400;
+  color: #000;
+}
+
+.triple-map-container .map-label p {
+  margin: 0;
+  font-size: 10px;
+  color: #666;
+  font-weight: 500;
+}
+
+.triple-map-container .triple-map .shape-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Navigation controls for triple maps */
+.triple-map .mapboxgl-ctrl-top-left {
+  top: 10px;
+  left: 10px;
+}
+
+.triple-map .mapboxgl-ctrl-group {
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.triple-map-container .map-label {
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* Hide Mapbox logo and attribution for double and triple maps */
+.double-map .mapboxgl-ctrl-bottom-left,
+.double-map .mapboxgl-ctrl-bottom-right,
+.double-map a.mapboxgl-ctrl-logo,
+.triple-map .mapboxgl-ctrl-bottom-left,
+.triple-map .mapboxgl-ctrl-bottom-right,
+.triple-map a.mapboxgl-ctrl-logo {
+  display: none !important;
+}
+
+/* Responsive adjustments for double and triple maps - keep same size on all devices */
+@media (max-width: 991px) {
+  .double-map-view {
+    max-width: 500px;
+  }
+
+  .double-map-container {
+    gap: 15px;
+    max-width: 460px;
+  }
+
+  .double-map-container .double-map {
+    width: 200px;
+    height: 200px;
+  }
+
+  .double-map-title h2 {
+    font-size: 24px;
+  }
+
+  .triple-map-view {
+    max-width: 600px;
+  }
+
+  .triple-map-container {
+    gap: 12px;
+    max-width: 560px;
+  }
+
+  .triple-map-container .triple-map {
+    width: 160px;
+    height: 160px;
+  }
+
+  .triple-map-title h2 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .double-map-view {
+    max-width: 500px;
+    padding: 20px;
+  }
+
+  .double-map-container {
+    gap: 15px;
+    max-width: 460px;
+  }
+
+  .double-map-container .double-map {
+    width: 200px;
+    height: 200px;
+  }
+
+  .double-map-title h2 {
+    font-size: 24px;
+  }
+
+  .double-map-container .map-label h3 {
+    font-size: 18px;
+  }
+
+  .triple-map-view {
+    max-width: 600px;
+    padding: 20px;
+  }
+
+  .triple-map-container {
+    gap: 12px;
+    max-width: 560px;
+  }
+
+  .triple-map-container .triple-map {
+    width: 160px;
+    height: 160px;
+  }
+
+  .triple-map-title h2 {
+    font-size: 24px;
+  }
+
+  .triple-map-container .map-label h3 {
+    font-size: 14px;
+  }
+}
+
+/* Double Map Details Panel Styles */
+.details__wrapper--double {
+  padding: 25px;
+}
+
+.details__wrapper--double .group__input {
+  margin-bottom: 20px;
+}
+
+.details__wrapper--double .group__input > p {
+  margin-top: 0px;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  margin-left: 1px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+.details__wrapper--double .group__input > input {
+  width: 100%;
+  font-size: 12px;
+  height: 48px;
+  padding: 7px 10px;
+  outline: none;
+  font-size: 14px;
+  border: solid 1px #dedede;
+  font-family: "Poppins", sans-serif;
+  color: #16212c;
+  transition: 0.3s ease all;
+  font-weight: 500;
+  border-radius: 4px;
+}
+
+.details__wrapper--double .group__input > input:focus {
+  border-color: #000;
+}
+
+.details__wrapper--double .group__input > span {
+  display: block;
+  font-size: 12px;
+  line-height: 16px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.details__wrapper--double .double-map-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+}
+
+.details__wrapper--double .map-section {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #fafafa;
+}
+
+.details__wrapper--double .map-section h4 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #16212c;
+  font-family: "Poppins", sans-serif;
+}
+
+.details__wrapper--double .map__marker {
+  margin-bottom: 15px;
+}
+
+.details__wrapper--double .map__title {
+  margin-bottom: 0;
+}
+
+.details__wrapper--double .map__title .title {
+  margin-bottom: 10px;
+}
+
+.details__wrapper--double .map__title .content {
+  margin-top: 10px;
+}
+
+.details__wrapper--double .btn {
+  margin-top: 30px;
+  width: 100%;
+}
+
+.details__wrapper--double .btn > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-decoration: none;
+  padding: 12px 20px;
+  min-height: 50px;
+  background-color: transparent;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 250px;
+  transition: 0.3s ease all;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+}
+
+.details__wrapper--double .btn > a:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.details__wrapper--double .btn > a:hover span {
+  left: 10px;
+}
+
+.details__wrapper--double .btn > a span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  left: 0px;
+  transition: 0.3s ease all;
+  margin-left: 20px;
+}
+
+.details__wrapper--double .btn > a span svg path {
+  transition: 0.3s ease all;
+  fill: #000;
+}
+
+.details__wrapper--double .btn > a:hover span svg path {
+  fill: #fff;
+}
+
+/* Triple Map Details Panel Styles */
+.details__wrapper--triple {
+  padding: 25px;
+}
+
+.details__wrapper--triple .group__input {
+  margin-bottom: 20px;
+}
+
+.details__wrapper--triple .group__input > p {
+  margin-top: 0px;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  margin-left: 1px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+.details__wrapper--triple .group__input > input {
+  width: 100%;
+  font-size: 12px;
+  height: 48px;
+  padding: 7px 10px;
+  outline: none;
+  font-size: 14px;
+  border: solid 1px #dedede;
+  font-family: "Poppins", sans-serif;
+  color: #16212c;
+  transition: 0.3s ease all;
+  font-weight: 500;
+  border-radius: 4px;
+}
+
+.details__wrapper--triple .group__input > input:focus {
+  border-color: #000;
+}
+
+.details__wrapper--triple .group__input > span {
+  display: block;
+  font-size: 12px;
+  line-height: 16px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.details__wrapper--triple .triple-map-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+}
+
+.details__wrapper--triple .map-section {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #fafafa;
+}
+
+.details__wrapper--triple .map-section h4 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #16212c;
+  font-family: "Poppins", sans-serif;
+}
+
+.details__wrapper--triple .map__marker {
+  margin-bottom: 15px;
+}
+
+.details__wrapper--triple .map__title {
+  margin-bottom: 0;
+}
+
+.details__wrapper--triple .map__title .title {
+  margin-bottom: 10px;
+}
+
+.details__wrapper--triple .map__title .content {
+  margin-top: 10px;
+}
+
+.details__wrapper--triple .btn {
+  margin-top: 30px;
+  width: 100%;
+}
+
+.details__wrapper--triple .btn > a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-decoration: none;
+  padding: 12px 20px;
+  min-height: 50px;
+  background-color: transparent;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 250px;
+  transition: 0.3s ease all;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+}
+
+.details__wrapper--triple .btn > a:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.details__wrapper--triple .btn > a:hover span {
+  left: 10px;
+}
+
+.details__wrapper--triple .btn > a span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  left: 0px;
+  transition: 0.3s ease all;
+  margin-left: 20px;
+}
+
+.details__wrapper--triple .btn > a span svg path {
+  transition: 0.3s ease all;
+  fill: #000;
+}
+
+.details__wrapper--triple .btn > a:hover span svg path {
+  fill: #fff;
+}
+
+@media (max-width: 768px) {
+  .details__wrapper--double {
+    padding: 15px;
+  }
+
+  .details__wrapper--double .map-section {
+    padding: 15px;
+  }
+
+  .details__wrapper--triple {
+    padding: 15px;
+  }
+
+  .details__wrapper--triple .map-section {
+    padding: 15px;
   }
 }

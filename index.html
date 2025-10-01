@@ -227,6 +227,374 @@
 						</div>
 						
 					</div>
+					
+					<!-- Double Map Details Panel (hidden by default) -->
+					<div class="details__wrapper--double" style="display:none;">
+						<div class="group__input">
+							<p>MAIN TITLE</p>
+							<input type="text" id="double-map-main-title" value="Love knows no distance">
+						</div>
+						
+						<div class="double-map-sections">
+							<div class="map-section">
+								<h4>Map (left)</h4>
+								<div class="group__input">
+									<p>PLACE *</p>
+									<input type="text" id="double-map-place-1" placeholder="For e.g. city, street address or building" value="Miami, FL, USA">
+									<span>minimum 3 characters needed to search</span>
+								</div>
+								
+								<div class="map__marker">
+									<label class="container__checkbox">
+										<input type="checkbox" id="double-marker-1">
+										<span class="checkmark"></span>
+										<p>Add map marker</p>
+									</label>
+								</div>
+								
+								<div class="marker__info" style="display:none;">
+									<div class="btns">
+										<a href="#" class="current" data-id="address-1">Select by address</a>
+										<a href="#" data-id="gps-1">Select by GPS</a>
+									</div>
+									
+									<div class="address__info">
+										<div class="group__input">
+											<span>ADDRESS FOR MARKER</span>
+											<input type="text" id="double-marker-address-1" value="">
+											<span>minimum 3 characters needed to search</span>
+										</div>
+									</div>
+									<div class="address__geo" style="display:none;">
+										<span>Please provide coordinates exclusively in decimal degrees format (e.g., 40.7128, -74.0060), which can be found on Google Maps.</span>
+										<div class="group__input">
+											<span>COORDINATES</span>
+											<div class="double">
+												<div class="group__input">
+													<input type="text" id="double-marker-lat-1" value="">
+												</div>
+												<div class="group__input">
+													<input type="text" id="double-marker-lng-1" value="">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="map__title">
+									<div class="title">
+										<label class="container__checkbox">
+											<input type="checkbox" id="double-title-1">
+											<span class="checkmark"></span>
+											<p>Map title</p>
+										</label>
+									</div>
+									<div class="content" style="display:none;">
+										<span>The default title and coordinates can be edited</span>
+										<div class="group__input">
+											<p>Large text</p>
+											<input type="text" id="double-large-text-1" value="Sophia">
+										</div>
+										<div class="group__input">
+											<p>Small text</p>
+											<input type="text" id="double-small-text-1" value="small text, map 1">
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="map-section">
+								<h4>Map (right)</h4>
+								<div class="group__input">
+									<p>PLACE *</p>
+									<input type="text" id="double-map-place-2" placeholder="For e.g. city, street address or building" value="London, UK">
+									<span>minimum 3 characters needed to search</span>
+								</div>
+								
+								<div class="map__marker">
+									<label class="container__checkbox">
+										<input type="checkbox" id="double-marker-2">
+										<span class="checkmark"></span>
+										<p>Add map marker</p>
+									</label>
+								</div>
+								
+								<div class="marker__info" style="display:none;">
+									<div class="btns">
+										<a href="#" class="current" data-id="address-2">Select by address</a>
+										<a href="#" data-id="gps-2">Select by GPS</a>
+									</div>
+									
+									<div class="address__info">
+										<div class="group__input">
+											<span>ADDRESS FOR MARKER</span>
+											<input type="text" id="double-marker-address-2" value="">
+											<span>minimum 3 characters needed to search</span>
+										</div>
+									</div>
+									<div class="address__geo" style="display:none;">
+										<span>Please provide coordinates exclusively in decimal degrees format (e.g., 40.7128, -74.0060), which can be found on Google Maps.</span>
+										<div class="group__input">
+											<span>COORDINATES</span>
+											<div class="double">
+												<div class="group__input">
+													<input type="text" id="double-marker-lat-2" value="">
+												</div>
+												<div class="group__input">
+													<input type="text" id="double-marker-lng-2" value="">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+								<div class="map__title">
+									<div class="title">
+										<label class="container__checkbox">
+											<input type="checkbox" id="double-title-2">
+											<span class="checkmark"></span>
+											<p>Map title</p>
+										</label>
+									</div>
+									<div class="content" style="display:none;">
+										<span>The default title and coordinates can be edited</span>
+										<div class="group__input">
+											<p>Large text</p>
+											<input type="text" id="double-large-text-2" value="Michael">
+										</div>
+										<div class="group__input">
+											<p>Small text</p>
+											<input type="text" id="double-small-text-2" value="small text, map 2">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="btn">
+							<a href="#" class="select__format">Select format <span><svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c3263369692="" aria-hidden="true">
+								<path d="M5.172 7.00026L0.222001 2.05026L1.636 0.636257L8 7.00026L1.636 13.3643L0.222 11.9503L5.172 7.00026Z" fill="#16212C" _ngcontent-ng-c3263369692=""></path>
+							</svg></span></a>
+						</div>
+					</div>
+
+					<!-- Triple Map Details Panel (hidden by default) -->
+					<div class="details__wrapper--triple" style="display:none;">
+						<div class="group__input">
+							<p>MAIN TITLE</p>
+							<input type="text" id="triple-map-main-title" value="Three amazing places">
+						</div>
+
+						<div class="triple-map-sections">
+							<div class="map-section">
+								<h4>Map 1 (left)</h4>
+								<div class="group__input">
+									<p>PLACE *</p>
+									<input type="text" id="triple-map-place-1" placeholder="For e.g. city, street address or building" value="Miami, FL, USA">
+									<span>minimum 3 characters needed to search</span>
+								</div>
+
+								<div class="map__marker">
+									<label class="container__checkbox">
+										<input type="checkbox" id="triple-marker-1">
+										<span class="checkmark"></span>
+										<p>Add map marker</p>
+									</label>
+								</div>
+
+								<div class="marker__info" style="display:none;">
+									<div class="btns">
+										<a href="#" class="current" data-id="address-1">Select by address</a>
+										<a href="#" data-id="gps-1">Select by GPS</a>
+									</div>
+
+									<div class="address__info">
+										<div class="group__input">
+											<span>ADDRESS FOR MARKER</span>
+											<input type="text" id="triple-marker-address-1" value="">
+											<span>minimum 3 characters needed to search</span>
+										</div>
+									</div>
+									<div class="address__geo" style="display:none;">
+										<span>Please provide coordinates exclusively in decimal degrees format (e.g., 40.7128, -74.0060), which can be found on Google Maps.</span>
+										<div class="group__input">
+											<span>COORDINATES</span>
+											<div class="double">
+												<div class="group__input">
+													<input type="text" id="triple-marker-lat-1" value="">
+												</div>
+												<div class="group__input">
+													<input type="text" id="triple-marker-lng-1" value="">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="map__title">
+									<div class="title">
+										<label class="container__checkbox">
+											<input type="checkbox" id="triple-title-1">
+											<span class="checkmark"></span>
+											<p>Map title</p>
+										</label>
+									</div>
+									<div class="content" style="display:none;">
+										<span>The default title and coordinates can be edited</span>
+										<div class="group__input">
+											<p>Large text</p>
+											<input type="text" id="triple-large-text-1" value="Location 1">
+										</div>
+										<div class="group__input">
+											<p>Small text</p>
+											<input type="text" id="triple-small-text-1" value="small text, map 1">
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="map-section">
+								<h4>Map 2 (center)</h4>
+								<div class="group__input">
+									<p>PLACE *</p>
+									<input type="text" id="triple-map-place-2" placeholder="For e.g. city, street address or building" value="London, UK">
+									<span>minimum 3 characters needed to search</span>
+								</div>
+
+								<div class="map__marker">
+									<label class="container__checkbox">
+										<input type="checkbox" id="triple-marker-2">
+										<span class="checkmark"></span>
+										<p>Add map marker</p>
+									</label>
+								</div>
+
+								<div class="marker__info" style="display:none;">
+									<div class="btns">
+										<a href="#" class="current" data-id="address-2">Select by address</a>
+										<a href="#" data-id="gps-2">Select by GPS</a>
+									</div>
+
+									<div class="address__info">
+										<div class="group__input">
+											<span>ADDRESS FOR MARKER</span>
+											<input type="text" id="triple-marker-address-2" value="">
+											<span>minimum 3 characters needed to search</span>
+										</div>
+									</div>
+									<div class="address__geo" style="display:none;">
+										<span>Please provide coordinates exclusively in decimal degrees format (e.g., 40.7128, -74.0060), which can be found on Google Maps.</span>
+										<div class="group__input">
+											<span>COORDINATES</span>
+											<div class="double">
+												<div class="group__input">
+													<input type="text" id="triple-marker-lat-2" value="">
+												</div>
+												<div class="group__input">
+													<input type="text" id="triple-marker-lng-2" value="">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="map__title">
+									<div class="title">
+										<label class="container__checkbox">
+											<input type="checkbox" id="triple-title-2">
+											<span class="checkmark"></span>
+											<p>Map title</p>
+										</label>
+									</div>
+									<div class="content" style="display:none;">
+										<span>The default title and coordinates can be edited</span>
+										<div class="group__input">
+											<p>Large text</p>
+											<input type="text" id="triple-large-text-2" value="Location 2">
+										</div>
+										<div class="group__input">
+											<p>Small text</p>
+											<input type="text" id="triple-small-text-2" value="small text, map 2">
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="map-section">
+								<h4>Map 3 (right)</h4>
+								<div class="group__input">
+									<p>PLACE *</p>
+									<input type="text" id="triple-map-place-3" placeholder="For e.g. city, street address or building" value="Tokyo, Japan">
+									<span>minimum 3 characters needed to search</span>
+								</div>
+
+								<div class="map__marker">
+									<label class="container__checkbox">
+										<input type="checkbox" id="triple-marker-3">
+										<span class="checkmark"></span>
+										<p>Add map marker</p>
+									</label>
+								</div>
+
+								<div class="marker__info" style="display:none;">
+									<div class="btns">
+										<a href="#" class="current" data-id="address-3">Select by address</a>
+										<a href="#" data-id="gps-3">Select by GPS</a>
+									</div>
+
+									<div class="address__info">
+										<div class="group__input">
+											<span>ADDRESS FOR MARKER</span>
+											<input type="text" id="triple-marker-address-3" value="">
+											<span>minimum 3 characters needed to search</span>
+										</div>
+									</div>
+									<div class="address__geo" style="display:none;">
+										<span>Please provide coordinates exclusively in decimal degrees format (e.g., 40.7128, -74.0060), which can be found on Google Maps.</span>
+										<div class="group__input">
+											<span>COORDINATES</span>
+											<div class="double">
+												<div class="group__input">
+													<input type="text" id="triple-marker-lat-3" value="">
+												</div>
+												<div class="group__input">
+													<input type="text" id="triple-marker-lng-3" value="">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="map__title">
+									<div class="title">
+										<label class="container__checkbox">
+											<input type="checkbox" id="triple-title-3">
+											<span class="checkmark"></span>
+											<p>Map title</p>
+										</label>
+									</div>
+									<div class="content" style="display:none;">
+										<span>The default title and coordinates can be edited</span>
+										<div class="group__input">
+											<p>Large text</p>
+											<input type="text" id="triple-large-text-3" value="Location 3">
+										</div>
+										<div class="group__input">
+											<p>Small text</p>
+											<input type="text" id="triple-small-text-3" value="small text, map 3">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="btn">
+							<a href="#" class="select__format">Select format <span><svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c3263369692="" aria-hidden="true">
+								<path d="M5.172 7.00026L0.222001 2.05026L1.636 0.636257L8 7.00026L1.636 13.3643L0.222 11.9503L5.172 7.00026Z" fill="#16212C" _ngcontent-ng-c3263369692=""></path>
+							</svg></span></a>
+						</div>
+					</div>
+
 					<div class="details__wrapper" style="display:none;">
 						<div class="group__input">
 							<p>PLACE *</p>
@@ -1011,17 +1379,79 @@
 							<img src="img/thumb.webp" alt="thumb">
 						</div>
 					</div>
-					<div class="inn">
+					<div class="inn single-map-view">
 						<div class="media">
 							<!-- <img src="img/40x30-black.png" alt="40x30-black"> -->
 						</div>
 						<div id="map" class="map-loading">
-													<div id="shape-overlay"></div>
-
+							<div id="shape-overlay"></div>
 						</div>
 						<div class="map-preview-title">
 							<h3 id="preview-title">MIAMI, UNITED STATES</h3>
 							<p id="preview-subtitle">25.76168°N / 80.19179°W</p>
+						</div>
+					</div>
+					
+					<!-- Double Map Layout (hidden by default) -->
+					<div class="inn double-map-view" style="display: none;">
+						<div class="double-map-title">
+							<h2>Love knows no distance</h2>
+						</div>
+						<div class="double-map-container">
+							<div class="map-wrapper">
+								<div id="map1" class="double-map">
+									<div class="shape-overlay"></div>
+								</div>
+								<div class="map-label">
+									<h3>Sophia</h3>
+									<p>small text, map 1</p>
+								</div>
+							</div>
+							<div class="map-wrapper">
+								<div id="map2" class="double-map">
+									<div class="shape-overlay"></div>
+								</div>
+								<div class="map-label">
+									<h3>Michael</h3>
+									<p>small text, map 2</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Triple Map Layout (hidden by default) -->
+					<div class="inn triple-map-view" style="display: none;">
+						<div class="triple-map-title">
+							<h2>Three amazing places</h2>
+						</div>
+						<div class="triple-map-container">
+							<div class="map-wrapper">
+								<div id="map1-triple" class="triple-map">
+									<div class="shape-overlay"></div>
+								</div>
+								<div class="map-label">
+									<h3>Location 1</h3>
+									<p>small text, map 1</p>
+								</div>
+							</div>
+							<div class="map-wrapper">
+								<div id="map2-triple" class="triple-map">
+									<div class="shape-overlay"></div>
+								</div>
+								<div class="map-label">
+									<h3>Location 2</h3>
+									<p>small text, map 2</p>
+								</div>
+							</div>
+							<div class="map-wrapper">
+								<div id="map3-triple" class="triple-map">
+									<div class="shape-overlay"></div>
+								</div>
+								<div class="map-label">
+									<h3>Location 3</h3>
+									<p>small text, map 3</p>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
