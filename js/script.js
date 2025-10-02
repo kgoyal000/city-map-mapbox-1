@@ -10,6 +10,20 @@ let currentMarker2 = null; // Marker for second map in double layout
 let currentMarker1Triple = null; // Marker for first map in triple layout
 let currentMarker2Triple = null; // Marker for second map in triple layout
 let currentMarker3Triple = null; // Marker for third map in triple layout
+let currentDoubleMarker1 = null; // New marker for double layout map 1
+let currentDoubleMarker2 = null; // New marker for double layout map 2
+let currentTripleMarker1 = null; // New marker for triple layout map 1
+let currentTripleMarker2 = null; // New marker for triple layout map 2
+let currentTripleMarker3 = null; // New marker for triple layout map 3
+
+// Store selected icon and color for each map
+let markerSettings = {
+	'double-1': { iconElement: null, color: 'rgb(211, 59, 62)' },
+	'double-2': { iconElement: null, color: 'rgb(211, 59, 62)' },
+	'triple-1': { iconElement: null, color: 'rgb(211, 59, 62)' },
+	'triple-2': { iconElement: null, color: 'rgb(211, 59, 62)' },
+	'triple-3': { iconElement: null, color: 'rgb(211, 59, 62)' }
+};
 let isDoubleMapLayout = false; // Track if we're in double map mode
 let isTripleMapLayout = false; // Track if we're in triple map mode
 let currentLayout = 'default'; // Track current layout type (circle, heart, square, etc.)
@@ -3460,11 +3474,53 @@ $(document).ready(function(){
 	if (mapContainer) {
 		console.log('Map container dimensions:', mapContainer.offsetWidth, 'x', mapContainer.offsetHeight);
 	}
-	
+
 	// Set initial size BEFORE initializing the map
 	// This ensures the map loads with correct dimensions from the start
 	resizeFrame();
 	console.log('Initial container size set before map initialization');
+
+	// Initialize marker settings with default icon (first heart icon SVG)
+	const defaultIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 35.908 32.946">
+		<path class="marker-fill" fill="#E53422" data-name="Path 515" d="M19.954,35.946l-2.6-2.37C8.1,25.191,2,19.661,2,12.875A9.779,
+		9.779,0,0,1,11.875,3a10.752,10.752,0,0,1,8.079,3.752A10.752,10.752,0,0,1,28.033,3a9.779,9.779,0,0,1,9.875,9.875c0,
+		6.787-6.1,12.316-15.351,20.719Z" transform="translate(-2 -3)"></path>
+	</svg>`;
+
+	Object.keys(markerSettings).forEach(key => {
+		markerSettings[key].iconElement = defaultIconSVG;
+	});
+
+	// Copy all marker icons from single layout to double and triple layouts
+	setTimeout(function() {
+		const singleLayoutIcons = $('.details__wrapper .marker__switcher .elem__picker ul').html();
+
+		if (singleLayoutIcons) {
+			// Update double layout icons for both maps
+			$('.details__wrapper--double .map-section').each(function(index) {
+				const mapNum = index + 1;
+				const $iconList = $(this).find('.marker__switcher .elem__picker ul');
+				if ($iconList.length > 0) {
+					$iconList.html(singleLayoutIcons);
+					// Update class names for double layout
+					$iconList.find('a').removeClass('current').addClass(`double-marker-icon-${mapNum}`).attr('data-map', `double-${mapNum}`);
+					$iconList.find('a').first().addClass('current');
+				}
+			});
+
+			// Update triple layout icons for all three maps
+			$('.details__wrapper--triple .map-section').each(function(index) {
+				const mapNum = index + 1;
+				const $iconList = $(this).find('.marker__switcher .elem__picker ul');
+				if ($iconList.length > 0) {
+					$iconList.html(singleLayoutIcons);
+					// Update class names for triple layout
+					$iconList.find('a').removeClass('current').addClass(`triple-marker-icon-${mapNum}`).attr('data-map', `triple-${mapNum}`);
+					$iconList.find('a').first().addClass('current');
+				}
+			});
+		}
+	}, 100);
 
 	$('.elem__picker ul li a').on('click' ,function(e){
 		e.preventDefault();
@@ -3546,11 +3602,12 @@ $(document).ready(function(){
 		if (!$(this).hasClass("current")) {
 			$(this).closest('ul').find('.current').removeClass("current");
 			$(this).addClass('current');
-			
-			// Hide all panels
+
+			// Hide all panels including double and triple details
 			$('.design__info, .details__wrapper, .format__wrapper').css("display", 'none');
 			$('.details__wrapper--double').css("display", 'none');
-			
+			$('.details__wrapper--triple').css("display", 'none');
+
 			// Show the appropriate panel based on layout
 			const tabName = $(this).attr("data-tab");
 			if (tabName === 'details__wrapper' && isTripleMapLayout) {
@@ -4019,6 +4076,360 @@ $(document).ready(function(){
 	$(document).on('change', '.details__wrapper .map__title .title input[type="checkbox"]', function() {
 		updateMapTitle();
 	});
+
+	// Double layout marker checkboxes
+	$(document).on('change', '#double-marker-1', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map-section').find('.marker__info').slideDown(300);
+			if (map1) {
+				map1.getCanvas().style.cursor = 'crosshair';
+				if (!map1._markerClickHandler) {
+					map1._markerClickHandler = function(e) {
+						if (currentDoubleMarker1) currentDoubleMarker1.remove();
+						currentDoubleMarker1 = createMarkerForMap('double-1', [e.lngLat.lng, e.lngLat.lat], map1);
+					};
+					map1.on('click', map1._markerClickHandler);
+				}
+			}
+		} else {
+			$(this).closest('.map-section').find('.marker__info').slideUp(300);
+			if (map1) {
+				map1.getCanvas().style.cursor = '';
+				if (map1._markerClickHandler) {
+					map1.off('click', map1._markerClickHandler);
+					map1._markerClickHandler = null;
+				}
+			}
+			if (currentDoubleMarker1) {
+				currentDoubleMarker1.remove();
+				currentDoubleMarker1 = null;
+			}
+		}
+	});
+
+	$(document).on('change', '#double-marker-2', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map-section').find('.marker__info').slideDown(300);
+			if (map2) {
+				map2.getCanvas().style.cursor = 'crosshair';
+				if (!map2._markerClickHandler) {
+					map2._markerClickHandler = function(e) {
+						if (currentDoubleMarker2) currentDoubleMarker2.remove();
+						currentDoubleMarker2 = createMarkerForMap('double-2', [e.lngLat.lng, e.lngLat.lat], map2);
+					};
+					map2.on('click', map2._markerClickHandler);
+				}
+			}
+		} else {
+			$(this).closest('.map-section').find('.marker__info').slideUp(300);
+			if (map2) {
+				map2.getCanvas().style.cursor = '';
+				if (map2._markerClickHandler) {
+					map2.off('click', map2._markerClickHandler);
+					map2._markerClickHandler = null;
+				}
+			}
+			if (currentDoubleMarker2) {
+				currentDoubleMarker2.remove();
+				currentDoubleMarker2 = null;
+			}
+		}
+	});
+
+	// Triple layout marker checkboxes
+	$(document).on('change', '#triple-marker-1', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map-section').find('.marker__info').slideDown(300);
+			if (map1Triple) {
+				map1Triple.getCanvas().style.cursor = 'crosshair';
+				if (!map1Triple._markerClickHandler) {
+					map1Triple._markerClickHandler = function(e) {
+						if (currentTripleMarker1) currentTripleMarker1.remove();
+						currentTripleMarker1 = createMarkerForMap('triple-1', [e.lngLat.lng, e.lngLat.lat], map1Triple);
+					};
+					map1Triple.on('click', map1Triple._markerClickHandler);
+				}
+			}
+		} else {
+			$(this).closest('.map-section').find('.marker__info').slideUp(300);
+			if (map1Triple) {
+				map1Triple.getCanvas().style.cursor = '';
+				if (map1Triple._markerClickHandler) {
+					map1Triple.off('click', map1Triple._markerClickHandler);
+					map1Triple._markerClickHandler = null;
+				}
+			}
+			if (currentTripleMarker1) {
+				currentTripleMarker1.remove();
+				currentTripleMarker1 = null;
+			}
+		}
+	});
+
+	$(document).on('change', '#triple-marker-2', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map-section').find('.marker__info').slideDown(300);
+			if (map2Triple) {
+				map2Triple.getCanvas().style.cursor = 'crosshair';
+				if (!map2Triple._markerClickHandler) {
+					map2Triple._markerClickHandler = function(e) {
+						if (currentTripleMarker2) currentTripleMarker2.remove();
+						currentTripleMarker2 = createMarkerForMap('triple-2', [e.lngLat.lng, e.lngLat.lat], map2Triple);
+					};
+					map2Triple.on('click', map2Triple._markerClickHandler);
+				}
+			}
+		} else {
+			$(this).closest('.map-section').find('.marker__info').slideUp(300);
+			if (map2Triple) {
+				map2Triple.getCanvas().style.cursor = '';
+				if (map2Triple._markerClickHandler) {
+					map2Triple.off('click', map2Triple._markerClickHandler);
+					map2Triple._markerClickHandler = null;
+				}
+			}
+			if (currentTripleMarker2) {
+				currentTripleMarker2.remove();
+				currentTripleMarker2 = null;
+			}
+		}
+	});
+
+	$(document).on('change', '#triple-marker-3', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map-section').find('.marker__info').slideDown(300);
+			if (map3Triple) {
+				map3Triple.getCanvas().style.cursor = 'crosshair';
+				if (!map3Triple._markerClickHandler) {
+					map3Triple._markerClickHandler = function(e) {
+						if (currentTripleMarker3) currentTripleMarker3.remove();
+						currentTripleMarker3 = createMarkerForMap('triple-3', [e.lngLat.lng, e.lngLat.lat], map3Triple);
+					};
+					map3Triple.on('click', map3Triple._markerClickHandler);
+				}
+			}
+		} else {
+			$(this).closest('.map-section').find('.marker__info').slideUp(300);
+			if (map3Triple) {
+				map3Triple.getCanvas().style.cursor = '';
+				if (map3Triple._markerClickHandler) {
+					map3Triple.off('click', map3Triple._markerClickHandler);
+					map3Triple._markerClickHandler = null;
+				}
+			}
+			if (currentTripleMarker3) {
+				currentTripleMarker3.remove();
+				currentTripleMarker3 = null;
+			}
+		}
+	});
+
+	// Double layout title checkboxes
+	$(document).on('change', '#double-title-1', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map__title').find('.content').slideDown(300);
+		} else {
+			$(this).closest('.map__title').find('.content').slideUp(300);
+		}
+	});
+
+	$(document).on('change', '#double-title-2', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map__title').find('.content').slideDown(300);
+		} else {
+			$(this).closest('.map__title').find('.content').slideUp(300);
+		}
+	});
+
+	// Triple layout title checkboxes
+	$(document).on('change', '#triple-title-1', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map__title').find('.content').slideDown(300);
+		} else {
+			$(this).closest('.map__title').find('.content').slideUp(300);
+		}
+	});
+
+	$(document).on('change', '#triple-title-2', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map__title').find('.content').slideDown(300);
+		} else {
+			$(this).closest('.map__title').find('.content').slideUp(300);
+		}
+	});
+
+	$(document).on('change', '#triple-title-3', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map__title').find('.content').slideDown(300);
+		} else {
+			$(this).closest('.map__title').find('.content').slideUp(300);
+		}
+	});
+
+	// Double and Triple layout marker icon selection
+	$(document).on('click', '.double-marker-icon-1, .double-marker-icon-2, .triple-marker-icon-1, .triple-marker-icon-2, .triple-marker-icon-3', function(e) {
+		e.preventDefault();
+		$(this).closest('ul').find('a').removeClass('current');
+		$(this).addClass('current');
+
+		const mapType = $(this).attr('data-map');
+		// Store the selected icon element with smaller size
+		const svg = $(this).find('svg').clone();
+		if (svg.length > 0) {
+			svg.attr('width', '20').attr('height', '20');
+			markerSettings[mapType].iconElement = svg[0].outerHTML;
+		}
+
+		// Update marker if it exists
+		updateMarkerIcon(mapType, this);
+	});
+
+	// Double and Triple layout marker color selection
+	$(document).on('click', '.double-marker-color-1, .double-marker-color-2, .triple-marker-color-1, .triple-marker-color-2, .triple-marker-color-3', function(e) {
+		e.preventDefault();
+		$(this).closest('.marker__color').find('a').removeClass('current');
+		$(this).addClass('current');
+
+		// Get the color
+		const colorSpan = $(this).find('.color').first();
+		const color = colorSpan.css('background-color');
+
+		const mapType = $(this).attr('data-map');
+		// Store the selected color
+		markerSettings[mapType].color = color;
+
+		// Update marker if it exists
+		updateMarkerColor(mapType, color);
+	});
+
+	// Helper function to create a marker with stored icon and color
+	function createMarkerForMap(mapType, coordinates, targetMap) {
+		const settings = markerSettings[mapType];
+		let markerEl = null;
+
+		// Use stored icon if available, otherwise use default
+		if (settings.iconElement) {
+			markerEl = document.createElement('div');
+			markerEl.innerHTML = settings.iconElement;
+
+			// Make markers smaller on double and triple layouts
+			const svg = markerEl.querySelector('svg');
+			if (svg) {
+				svg.setAttribute('width', '20');
+				svg.setAttribute('height', '20');
+			}
+
+			// Apply stored color
+			const fills = markerEl.querySelectorAll('.marker-fill');
+			const strokes = markerEl.querySelectorAll('.marker-stroke');
+			fills.forEach(el => el.style.fill = settings.color);
+			strokes.forEach(el => el.style.stroke = settings.color);
+		}
+
+		// Create marker
+		const marker = markerEl
+			? new mapboxgl.Marker(markerEl, { draggable: true })
+			: new mapboxgl.Marker({ color: settings.color, draggable: true });
+
+		marker.setLngLat(coordinates).addTo(targetMap);
+		return marker;
+	}
+
+	function updateMarkerIcon(mapType, iconElement) {
+		// Get the SVG from the clicked icon
+		const svg = $(iconElement).find('svg').clone();
+
+		let marker = null;
+		switch(mapType) {
+			case 'double-1': marker = currentDoubleMarker1; break;
+			case 'double-2': marker = currentDoubleMarker2; break;
+			case 'triple-1': marker = currentTripleMarker1; break;
+			case 'triple-2': marker = currentTripleMarker2; break;
+			case 'triple-3': marker = currentTripleMarker3; break;
+		}
+
+		if (marker && svg.length > 0) {
+			// Create new marker element with the selected icon
+			const markerEl = document.createElement('div');
+			markerEl.innerHTML = svg[0].outerHTML;
+
+			// Make markers smaller for double and triple layouts
+			const svgEl = markerEl.querySelector('svg');
+			if (svgEl) {
+				svgEl.setAttribute('width', '20');
+				svgEl.setAttribute('height', '20');
+			}
+
+			// Apply stored color
+			const settings = markerSettings[mapType];
+			const fills = markerEl.querySelectorAll('.marker-fill');
+			const strokes = markerEl.querySelectorAll('.marker-stroke');
+			fills.forEach(el => el.style.fill = settings.color);
+			strokes.forEach(el => el.style.stroke = settings.color);
+
+			// Get current position
+			const lngLat = marker.getLngLat();
+
+			// Remove old marker
+			marker.remove();
+
+			// Get the appropriate map
+			let targetMap = null;
+			switch(mapType) {
+				case 'double-1':
+					targetMap = map1;
+					currentDoubleMarker1 = new mapboxgl.Marker(markerEl, { draggable: true })
+						.setLngLat(lngLat)
+						.addTo(targetMap);
+					break;
+				case 'double-2':
+					targetMap = map2;
+					currentDoubleMarker2 = new mapboxgl.Marker(markerEl, { draggable: true })
+						.setLngLat(lngLat)
+						.addTo(targetMap);
+					break;
+				case 'triple-1':
+					targetMap = map1Triple;
+					currentTripleMarker1 = new mapboxgl.Marker(markerEl, { draggable: true })
+						.setLngLat(lngLat)
+						.addTo(targetMap);
+					break;
+				case 'triple-2':
+					targetMap = map2Triple;
+					currentTripleMarker2 = new mapboxgl.Marker(markerEl, { draggable: true })
+						.setLngLat(lngLat)
+						.addTo(targetMap);
+					break;
+				case 'triple-3':
+					targetMap = map3Triple;
+					currentTripleMarker3 = new mapboxgl.Marker(markerEl, { draggable: true })
+						.setLngLat(lngLat)
+						.addTo(targetMap);
+					break;
+			}
+		}
+	}
+
+	function updateMarkerColor(mapType, color) {
+		let marker = null;
+		switch(mapType) {
+			case 'double-1': marker = currentDoubleMarker1; break;
+			case 'double-2': marker = currentDoubleMarker2; break;
+			case 'triple-1': marker = currentTripleMarker1; break;
+			case 'triple-2': marker = currentTripleMarker2; break;
+			case 'triple-3': marker = currentTripleMarker3; break;
+		}
+
+		if (marker) {
+			// Get the marker element and update fill/stroke colors
+			const markerEl = marker.getElement();
+			const fills = markerEl.querySelectorAll('.marker-fill');
+			const strokes = markerEl.querySelectorAll('.marker-stroke');
+
+			fills.forEach(el => el.style.fill = color);
+			strokes.forEach(el => el.style.stroke = color);
+		}
+	}
 
 	// Title input change handlers (single layout only)
 	$('.details__wrapper .map__title .content textarea').on('input', function() {
