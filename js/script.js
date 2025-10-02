@@ -1814,34 +1814,34 @@ function loadMapConfiguration() {
 }
 
 function toggleMapMarker() {
-	const markerCheckbox = document.querySelector('.map__marker input[type="checkbox"]');
+	const markerCheckbox = document.querySelector('.details__wrapper .map__marker input[type="checkbox"]');
 
 	if (markerCheckbox && markerCheckbox.checked) {
 		if (currentMarker && map) {
 			currentMarker.addTo(map);
 		}
-		// Show marker info section
-		$('.marker__info').slideDown(300);
+		// Show marker info section for single layout
+		$('.details__wrapper .marker__info').slideDown(300);
 	} else {
 		if (currentMarker) {
 			currentMarker.remove();
 		}
-		// Hide marker info section
-		$('.marker__info').slideUp(300);
+		// Hide marker info section for single layout
+		$('.details__wrapper .marker__info').slideUp(300);
 	}
 }
 
 function updateMapTitle() {
-	const titleCheckbox = document.querySelector('.map__title .title input[type="checkbox"]');
+	const titleCheckbox = document.querySelector('.details__wrapper .map__title .title input[type="checkbox"]');
 	const posterTitle = document.querySelector('.poster-title');
 
 	if (titleCheckbox && titleCheckbox.checked) {
-		$('.map__title .content').slideDown(300);
+		$('.details__wrapper .map__title .content').slideDown(300);
 		if (posterTitle) {
 			posterTitle.style.display = 'block';
 		}
 	} else {
-		$('.map__title .content').slideUp(300);
+		$('.details__wrapper .map__title .content').slideUp(300);
 		if (posterTitle) {
 			posterTitle.style.display = 'none';
 		}
@@ -3334,14 +3334,7 @@ $(document).ready(function(){
 	});
 
 
-	$('.map__title .title input').on("change" , function(e){
-		if ($(this).prop("checked") == true) {
-			$('.map__title .content').slideDown(300);
-		} else {
-			$('.map__title .content').slideUp(300);			
-		}
-	});
-
+	// Map title handler removed - now using delegated handler below
 
 
 	$('.size__picker>a').on("click" ,function(e){
@@ -3658,7 +3651,8 @@ $(document).ready(function(){
 	});
 
 	// Map marker toggle functionality (single layout only)
-	$('.details__wrapper .map__marker input[type="checkbox"]').on('change', function() {
+	// Use delegated event handler for map marker checkbox (single layout)
+	$(document).on('change', '.details__wrapper .map__marker input[type="checkbox"]', function() {
 		toggleMapMarker();
 	});
 	
@@ -3854,7 +3848,8 @@ $(document).ready(function(){
 	}
 
 	// Map title toggle functionality (single layout only)
-	$('.details__wrapper .map__title .title input[type="checkbox"]').on('change', function() {
+	// Use delegated event handler for map title checkbox (single layout)
+	$(document).on('change', '.details__wrapper .map__title .title input[type="checkbox"]', function() {
 		updateMapTitle();
 	});
 
