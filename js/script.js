@@ -3473,6 +3473,14 @@ $(document).ready(function(){
 		if ($(this).closest('.tab__switcher').length) {
 			$('.el__format').css("display" ,"none");
 			$('.el__format[data-id='+ $(this).attr("data-id") +']').fadeIn(300);
+
+			// Auto-select first frame option when Framed Poster is clicked
+			if ($(this).attr("data-id") === '2') {
+				const $frameOptions = $('.el__format[data-id="2"] .image__changer ul li a');
+				if ($frameOptions.length > 0 && !$frameOptions.hasClass('current')) {
+					$frameOptions.first().addClass('current').trigger('click');
+				}
+			}
 		}
 	});
 
