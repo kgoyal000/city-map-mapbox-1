@@ -1828,13 +1828,13 @@ function loadMapConfiguration() {
 }
 
 function toggleMapMarker() {
-	const markerCheckbox = document.querySelector('.details__wrapper .map__marker input[type="checkbox"]');
+	const markerCheckbox = document.querySelector('.details__wrapper .map__marker input[type="checkbox"], .markers__wrapper .map__marker input[type="checkbox"]');
 
 	if (markerCheckbox && markerCheckbox.checked) {
 		// Enable click-to-place marker mode
 		enableMarkerPlacement();
 		// Show marker info section for single layout
-		$('.details__wrapper .marker__info').slideDown(300);
+		$('.details__wrapper .marker__info, .markers__wrapper .marker__info').slideDown(300);
 		// Show instruction message
 		showMarkerInstruction('Click or tap on the map to place a marker');
 	} else {
@@ -1845,7 +1845,7 @@ function toggleMapMarker() {
 			currentMarker = null;
 		}
 		// Hide marker info section for single layout
-		$('.details__wrapper .marker__info').slideUp(300);
+		$('.details__wrapper .marker__info, .markers__wrapper .marker__info').slideUp(300);
 	}
 }
 
@@ -1995,7 +1995,7 @@ function updateMarkerAddress(lngLat) {
 		.then(data => {
 			if (data.features && data.features.length > 0) {
 				const place = data.features[0];
-				const addressInput = document.querySelector('.details__wrapper .marker__info .address__info input[type="text"]');
+				const addressInput = document.querySelector('.details__wrapper .marker__info .address__info input[type="text"], .markers__wrapper .marker__info .address__info input[type="text"]');
 				if (addressInput) {
 					addressInput.value = place.place_name;
 				}
@@ -2005,16 +2005,16 @@ function updateMarkerAddress(lngLat) {
 }
 
 function updateMapTitle() {
-	const titleCheckbox = document.querySelector('.details__wrapper .map__title .title input[type="checkbox"]');
+	const titleCheckbox = document.querySelector('.details__wrapper .map__title .title input[type="checkbox"], .markers__wrapper .map__title .title input[type="checkbox"]');
 	const posterTitle = document.querySelector('.poster-title');
 
 	if (titleCheckbox && titleCheckbox.checked) {
-		$('.details__wrapper .map__title .content').slideDown(300);
+		$('.details__wrapper .map__title .content, .markers__wrapper .map__title .content').slideDown(300);
 		if (posterTitle) {
 			posterTitle.style.display = 'block';
 		}
 	} else {
-		$('.details__wrapper .map__title .content').slideUp(300);
+		$('.details__wrapper .map__title .content, .markers__wrapper .map__title .content').slideUp(300);
 		if (posterTitle) {
 			posterTitle.style.display = 'none';
 		}
@@ -3493,7 +3493,7 @@ $(document).ready(function(){
 
 	// Copy all marker icons from single layout to double and triple layouts
 	setTimeout(function() {
-		const singleLayoutIcons = $('.details__wrapper .marker__switcher .elem__picker ul').html();
+		const singleLayoutIcons = $('.details__wrapper .marker__switcher .elem__picker ul, .markers__wrapper .marker__switcher .elem__picker ul').html();
 
 		if (singleLayoutIcons) {
 			// Update double layout icons for both maps
@@ -3594,7 +3594,7 @@ $(document).ready(function(){
 		$('.main__switcher>ul>li:nth-child(2)>a').click();
 	});
 	$('.select__format').on('click' ,function(e){
-		$('.main__switcher>ul>li:nth-child(3)>a').click();
+		$('.main__switcher>ul>li:nth-child(4)>a').click();
 	});
 
 	$('.main__switcher ul li a').on('click', function(e){
@@ -3603,24 +3603,82 @@ $(document).ready(function(){
 			$(this).closest('ul').find('.current').removeClass("current");
 			$(this).addClass('current');
 
-			// Hide all panels including double and triple details
-			$('.design__info, .details__wrapper, .format__wrapper').css("display", 'none');
-			$('.details__wrapper--double').css("display", 'none');
-			$('.details__wrapper--triple').css("display", 'none');
+			// Hide all panels including double and triple details and new location/markers panels
+			$('.design__info, .details__wrapper, .format__wrapper, .location__wrapper, .markers__wrapper').css("display", 'none');
+			$('.details__wrapper--double, .location__wrapper--double, .markers__wrapper--double').css("display", 'none');
+			$('.details__wrapper--triple, .location__wrapper--triple, .markers__wrapper--triple').css("display", 'none');
 
-			// Show the appropriate panel based on layout
+			// Show the appropriate panel based on layout and tab
 			const tabName = $(this).attr("data-tab");
-			if (tabName === 'details__wrapper' && isTripleMapLayout) {
-				// Show triple map details panel if in triple map mode
-				$('.details__wrapper--triple').fadeIn(300);
-			} else if (tabName === 'details__wrapper' && isDoubleMapLayout) {
-				// Show double map details panel if in double map mode
-				$('.details__wrapper--double').fadeIn(300);
-			} else if (tabName === 'details__wrapper' && !isDoubleMapLayout && !isTripleMapLayout) {
-				// Show single map details panel
-				$('.details__wrapper').fadeIn(300);
-			} else {
-				// Show regular panel (design or format)
+
+			// Handle Location tab
+			if (tabName === 'location__wrapper') {
+				if (isTripleMapLayout) {
+					// Check if separate location wrapper exists for triple layout
+					if ($('.location__wrapper--triple').length > 0) {
+						$('.location__wrapper--triple').fadeIn(300);
+					} else {
+						// Fallback to details wrapper with proper hiding
+						$('.details__wrapper--triple')
+							.removeClass('hide-location-inputs hide-maps')
+							.addClass('hide-main-title hide-fonts hide-markers-titles')
+							.fadeIn(300);
+					}
+				} else if (isDoubleMapLayout) {
+					// Check if separate location wrapper exists for double layout
+					if ($('.location__wrapper--double').length > 0) {
+						$('.location__wrapper--double').fadeIn(300);
+					} else {
+						// Fallback to details wrapper with proper hiding
+						$('.details__wrapper--double')
+							.removeClass('hide-location-inputs hide-maps')
+							.addClass('hide-main-title hide-fonts hide-markers-titles')
+							.fadeIn(300);
+					}
+				} else {
+					$('.location__wrapper').fadeIn(300);
+				}
+			}
+			// Handle Markers tab
+			else if (tabName === 'markers__wrapper') {
+				if (isTripleMapLayout) {
+					// Check if separate markers wrapper exists for triple layout
+					if ($('.markers__wrapper--triple').length > 0) {
+						$('.markers__wrapper--triple').fadeIn(300);
+					} else {
+						// Fallback to details wrapper with proper hiding
+						$('.details__wrapper--triple')
+							.removeClass('hide-markers-titles hide-maps')
+							.addClass('hide-main-title hide-fonts hide-location-inputs')
+							.fadeIn(300);
+					}
+				} else if (isDoubleMapLayout) {
+					// Check if separate markers wrapper exists for double layout
+					if ($('.markers__wrapper--double').length > 0) {
+						$('.markers__wrapper--double').fadeIn(300);
+					} else {
+						// Fallback to details wrapper with proper hiding
+						$('.details__wrapper--double')
+							.removeClass('hide-markers-titles hide-maps')
+							.addClass('hide-main-title hide-fonts hide-location-inputs')
+							.fadeIn(300);
+					}
+				} else {
+					$('.markers__wrapper').fadeIn(300);
+				}
+			}
+			// Handle Design tab
+			else if (tabName === 'design__info') {
+				$('.design__info').fadeIn(300);
+				// For double/triple layouts, show details wrapper (main title + fonts)
+				if (isTripleMapLayout) {
+					$('.details__wrapper--triple').fadeIn(300);
+				} else if (isDoubleMapLayout) {
+					$('.details__wrapper--double').fadeIn(300);
+				}
+			}
+			// Handle Format and other tabs
+			else {
 				$('.' + tabName).fadeIn(300);
 			}
 		}
@@ -3813,7 +3871,7 @@ $(document).ready(function(){
 
 	// Search functionality with suggestions
 	let searchTimeout;
-	$('.details__wrapper input[type="text"]').on('input', function() {
+	$('.details__wrapper input[type="text"], .location__wrapper input[type="text"]').on('input', function() {
 		const query = $(this).val().trim();
 		const $input = $(this);
 		const inputElement = this;
@@ -3853,7 +3911,7 @@ $(document).ready(function(){
 	});
 
 	// Handle Enter key to select first suggestion
-	$('.details__wrapper input[type="text"]').on('keydown', function(e) {
+	$('.details__wrapper input[type="text"], .location__wrapper input[type="text"]').on('keydown', function(e) {
 		if (e.key === 'Enter') {
 			e.preventDefault();
 			const suggestions = document.querySelector('.location-suggestions');
@@ -3876,7 +3934,7 @@ $(document).ready(function(){
 
 	// Map marker toggle functionality (single layout only)
 	// Use delegated event handler for map marker checkbox (single layout)
-	$(document).on('change', '.details__wrapper .map__marker input[type="checkbox"]', function() {
+	$(document).on('change', '.details__wrapper .map__marker input[type="checkbox"], .markers__wrapper .map__marker input[type="checkbox"]', function() {
 		toggleMapMarker();
 	});
 	
@@ -4073,7 +4131,7 @@ $(document).ready(function(){
 
 	// Map title toggle functionality (single layout only)
 	// Use delegated event handler for map title checkbox (single layout)
-	$(document).on('change', '.details__wrapper .map__title .title input[type="checkbox"]', function() {
+	$(document).on('change', '.details__wrapper .map__title .title input[type="checkbox"], .markers__wrapper .map__title .title input[type="checkbox"]', function() {
 		updateMapTitle();
 	});
 
@@ -4432,21 +4490,21 @@ $(document).ready(function(){
 	}
 
 	// Title input change handlers (single layout only)
-	$('.details__wrapper .map__title .content textarea').on('input', function() {
-		const titleInput = $('.details__wrapper .map__title .content textarea').eq(0);
-		const subtitleInput = $('.details__wrapper .map__title .content textarea').eq(1);
-		
+	$('.details__wrapper .map__title .content textarea, .markers__wrapper .map__title .content textarea').on('input', function() {
+		const titleInput = $('.details__wrapper .map__title .content textarea, .markers__wrapper .map__title .content textarea').eq(0);
+		const subtitleInput = $('.details__wrapper .map__title .content textarea, .markers__wrapper .map__title .content textarea').eq(1);
+
 		const title = titleInput.val() || 'MIAMI, UNITED STATES';
 		const subtitle = subtitleInput.val() || '25.76168°N / 80.19179°W';
-		
+
 		updatePosterTitle(title, subtitle);
 		updatePreviewTitle(title, subtitle);
 	});
 
 	// Initialize map title state (single layout only)
-	const titleCheckbox = $('.details__wrapper .map__title .title input[type="checkbox"]');
+	const titleCheckbox = $('.details__wrapper .map__title .title input[type="checkbox"], .markers__wrapper .map__title .title input[type="checkbox"]');
 	if (titleCheckbox.prop('checked')) {
-		$('.details__wrapper .map__title .content').show();
+		$('.details__wrapper .map__title .content, .markers__wrapper .map__title .content').show();
 		const posterTitle = document.querySelector('.poster-title');
 		if (posterTitle) {
 			posterTitle.style.display = 'block';
@@ -4471,7 +4529,7 @@ $(document).ready(function(){
 
 
 	// Marker info toggle for single layout only
-	$('.details__wrapper .marker__info>.btns>a').on('click' ,function(e){
+	$('.details__wrapper .marker__info>.btns>a, .markers__wrapper .marker__info>.btns>a').on('click' ,function(e){
 		e.preventDefault();
 		if (!$(this).hasClass("current")) {
 			$(this).closest(".btns").find(">a").removeClass("current");
@@ -5146,12 +5204,12 @@ $(document).ready(function(){
 	});
 
 	// Font picker functionality
-	$('.font__picker .font-options li a').on('click', function(e) {
+	$('.font__picker .font-options li a, .font__picker .font-options-grid li a').on('click', function(e) {
 		e.preventDefault();
 		console.log('Font picker clicked!');
 
 		// Remove current class from all font options
-		$('.font__picker .font-options li a').removeClass('current');
+		$('.font__picker .font-options li a, .font__picker .font-options-grid li a').removeClass('current');
 		$(this).addClass('current');
 
 		// Get selected font
@@ -5163,6 +5221,55 @@ $(document).ready(function(){
 
 		// Apply font to all text elements in the map preview areas
 		applyFontToAllLayouts(selectedFont);
+	});
+
+	// Map marker checkbox handler
+	$(document).on('change', '#single-marker', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map__marker').next('.marker__info').slideDown(300);
+			// Enable marker placement on map
+			if (map) {
+				map.getCanvas().style.cursor = 'crosshair';
+				if (!map._markerClickHandler) {
+					map._markerClickHandler = function(e) {
+						if (currentMarker) currentMarker.remove();
+						const coordinates = [e.lngLat.lng, e.lngLat.lat];
+						placeMarkerAtLocation(coordinates);
+					};
+					map.on('click', map._markerClickHandler);
+				}
+			}
+		} else {
+			$(this).closest('.map__marker').next('.marker__info').slideUp(300);
+			// Disable marker placement
+			if (map) {
+				map.getCanvas().style.cursor = '';
+				if (map._markerClickHandler) {
+					map.off('click', map._markerClickHandler);
+					map._markerClickHandler = null;
+				}
+			}
+			if (currentMarker) {
+				currentMarker.remove();
+				currentMarker = null;
+			}
+		}
+	});
+
+	// Map title checkbox handler
+	$(document).on('change', '#single-title', function() {
+		const posterTitle = document.querySelector('.poster-title');
+		if ($(this).is(':checked')) {
+			$(this).closest('.title').next('.content').slideDown(300);
+			if (posterTitle) {
+				posterTitle.style.display = 'block';
+			}
+		} else {
+			$(this).closest('.title').next('.content').slideUp(300);
+			if (posterTitle) {
+				posterTitle.style.display = 'none';
+			}
+		}
 	});
 
 	// Function to apply font to all layouts

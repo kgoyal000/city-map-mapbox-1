@@ -571,6 +571,271 @@ body * {
   margin-top: 45px;
 }
 
+/* Style Grid - 6 columns */
+.style-grid {
+  display: grid !important;
+  grid-template-columns: repeat(6, 1fr) !important;
+  gap: 10px !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.style-grid li {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* Location Wrapper Styles */
+.location__wrapper,
+.location__wrapper--double,
+.location__wrapper--triple {
+  padding: 25px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.markers__wrapper,
+.markers__wrapper--double,
+.markers__wrapper--triple {
+  padding: 25px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Control visibility of sections in double/triple layouts based on active tab */
+.details__wrapper--double.hide-main-title > .group__input:first-child,
+.details__wrapper--triple.hide-main-title > .group__input:first-child {
+  display: none !important;
+}
+
+.details__wrapper--double.hide-fonts .elem__picker.font__picker,
+.details__wrapper--triple.hide-fonts .elem__picker.font__picker {
+  display: none !important;
+}
+
+.details__wrapper--double.hide-maps .double-map-sections,
+.details__wrapper--triple.hide-maps .triple-map-sections {
+  display: none !important;
+}
+
+/* Hide location inputs when not in Location tab */
+.details__wrapper--double.hide-location-inputs .map-section > .group__input,
+.details__wrapper--triple.hide-location-inputs .map-section > .group__input {
+  display: none !important;
+}
+
+/* Hide markers and titles when not in Markers tab */
+.details__wrapper--double.hide-markers-titles .map-section .map__marker,
+.details__wrapper--double.hide-markers-titles .map-section .marker__info,
+.details__wrapper--double.hide-markers-titles .map-section .map__title,
+.details__wrapper--triple.hide-markers-titles .map-section .map__marker,
+.details__wrapper--triple.hide-markers-titles .map-section .marker__info,
+.details__wrapper--triple.hide-markers-titles .map-section .map__title {
+  display: none !important;
+}
+
+.location__wrapper .group__input,
+.location__wrapper--double .group__input,
+.location__wrapper--triple .group__input,
+.details__wrapper--double .group__input,
+.details__wrapper--triple .group__input {
+  margin-bottom: 15px;
+}
+
+.location__wrapper .group__input>p,
+.location__wrapper--double .group__input>p,
+.location__wrapper--triple .group__input>p,
+.details__wrapper--double .group__input>p,
+.details__wrapper--triple .group__input>p {
+  margin-top: 0px;
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  margin-left: 1px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+}
+
+.location__wrapper .group__input>input {
+  width: 100%;
+  font-size: 12px;
+  height: 48px;
+  padding: 7px 10px;
+  outline: none;
+  font-size: 14px;
+  border: solid 1px #dedede;
+  font-family: "Poppins", sans-serif;
+  color: #16212c;
+  transition: 0.3s ease all;
+}
+
+.location__wrapper .group__input>input:focus {
+  border-color: #000;
+}
+
+.location__wrapper .group__input>span {
+  display: block;
+  font-size: 12px;
+  line-height: 16px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Font Grid - Same as style-grid but with ABC text */
+.font-options-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 10px !important;
+  padding: 0 !important;
+  list-style: none !important;
+  margin: 10px 0 0 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+.font-options-grid li {
+  width: 100% !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+
+.font-options-grid li a {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  text-decoration: none !important;
+  padding: 0 !important;
+  position: relative !important;
+  width: 100% !important;
+}
+
+.font-options-grid li a .media {
+  width: 100% !important;
+  padding-bottom: 100% !important;
+  position: relative !important;
+  background: #f7f7f8 !important;
+  border: 1px solid #dedede !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+  transition: all 0.2s ease !important;
+  display: block !important;
+}
+
+.font-options-grid li a:hover .media {
+  border-color: #000 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+.font-options-grid li a.current .media {
+  border-color: #000 !important;
+  background: #fff !important;
+}
+
+.font-options-grid li a .abc-preview {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  font-size: 22px !important;
+  font-weight: 500 !important;
+  color: #16212c !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+}
+
+.font-options-grid li a .font-name {
+  font-size: 10px !important;
+  color: #666 !important;
+  font-family: "Roobert", sans-serif !important;
+  text-align: center !important;
+  display: block !important;
+  line-height: 1.3 !important;
+  margin-top: 6px !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  padding: 0 2px !important;
+}
+
+/* Markers Wrapper Styles */
+.markers__wrapper {
+  padding: 25px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.markers__wrapper .btn {
+  margin-top: 30px;
+}
+
+/* Custom Style Switcher - Tab-like design in 1 row */
+.custom__style .switcher {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 0 !important;
+  margin-bottom: 20px !important;
+  border-bottom: 2px solid #e0e0e0 !important;
+  overflow-x: auto !important;
+  white-space: nowrap !important;
+}
+
+.custom__style .switcher a {
+  flex: 1 !important;
+  min-width: fit-content !important;
+  padding: 12px 16px !important;
+  text-decoration: none !important;
+  color: #666 !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  border-bottom: 3px solid transparent !important;
+  margin-bottom: -2px !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+
+.custom__style .switcher a:hover {
+  color: #000 !important;
+  background: #f7f7f8 !important;
+}
+
+.custom__style .switcher a.current {
+  color: #000 !important;
+  border-bottom-color: #000 !important;
+}
+
+.custom__style .switcher a .color {
+  width: 16px !important;
+  height: 16px !important;
+  border-radius: 3px !important;
+  display: inline-block !important;
+  border: 1px solid rgba(0,0,0,0.1) !important;
+}
+
+/* Text & Markers Wrapper Styles (for old references) */
+.text_markers__wrapper {
+  padding: 25px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+}
+
+.text_markers__wrapper .btn {
+  margin-top: 30px;
+}
+
 .details__wrapper .btn>a {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2698,7 +2963,7 @@ body * {
   }
 
   .custom__style .box .wrap {
-    width: 25%;
+    width: 20%;
   }
 
   .elem__picker ul.four {
@@ -2756,7 +3021,7 @@ body * {
 
   .elem__picker ul {
     -ms-grid-columns: 1fr 16px 1fr 16px 1fr;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 
@@ -3718,11 +3983,16 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 
 /* Double Map Details Panel Styles */
 .details__wrapper--double {
-  padding: 25px;
+  padding: 20px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .details__wrapper--double .group__input {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .details__wrapper--double .group__input > p {
@@ -3738,7 +4008,7 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 .details__wrapper--double .group__input > input {
   width: 100%;
   font-size: 12px;
-  height: 48px;
+  height: 40px;
   padding: 7px 10px;
   outline: none;
   font-size: 14px;
@@ -3765,14 +4035,14 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 .details__wrapper--double .double-map-sections {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
   width: 100%;
 }
 
 .details__wrapper--double .map-section {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 20px;
+  padding: 15px;
   background-color: #fafafa;
 }
 
@@ -3854,11 +4124,16 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 
 /* Triple Map Details Panel Styles */
 .details__wrapper--triple {
-  padding: 25px;
+  padding: 20px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .details__wrapper--triple .group__input {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .details__wrapper--triple .group__input > p {
@@ -3874,7 +4149,7 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 .details__wrapper--triple .group__input > input {
   width: 100%;
   font-size: 12px;
-  height: 48px;
+  height: 40px;
   padding: 7px 10px;
   outline: none;
   font-size: 14px;
@@ -3901,14 +4176,14 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 .details__wrapper--triple .triple-map-sections {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
   width: 100%;
 }
 
 .details__wrapper--triple .map-section {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  padding: 20px;
+  padding: 15px;
   background-color: #fafafa;
 }
 
@@ -4003,6 +4278,49 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 
   .details__wrapper--triple .map-section {
     padding: 15px;
+  }
+
+  .location__wrapper {
+    padding: 15px;
+  }
+
+  .text_markers__wrapper {
+    padding: 15px;
+  }
+
+  .markers__wrapper {
+    padding: 15px;
+  }
+
+  /* Style grid - 3 columns on mobile */
+  .style-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  /* Font grid - 3 columns on mobile */
+  .font-options-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .font-options-grid .abc-preview {
+    font-size: 20px !important;
+  }
+
+  .font-options-grid .font-name {
+    font-size: 10px !important;
+    margin-top: 6px !important;
+  }
+
+  /* Custom switcher - scrollable on mobile */
+  .custom__style .switcher {
+    gap: 4px !important;
+  }
+
+  .custom__style .switcher a {
+    padding: 10px 12px !important;
+    font-size: 10px !important;
   }
 }
 /* Font Picker Styles */
