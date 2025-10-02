@@ -5188,6 +5188,12 @@ $(document).ready(function(){
 		}
 	});
 
+	// Double map main title input handler
+	$('#double-main-title').on('input', function() {
+		const mainTitle = $(this).val() || 'Love knows no distance';
+		$('.double-map-title h2').text(mainTitle);
+	});
+
 	// Double map title text input handlers
 	$('#double-large-text-1, #double-small-text-1').on('input', function() {
 		const largeText = $('#double-large-text-1').val() || 'Sophia';
@@ -5201,6 +5207,34 @@ $(document).ready(function(){
 		const smallText = $('#double-small-text-2').val() || 'small text, map 2';
 		$('.double-map-container .map-wrapper:last .map-label h3').text(largeText);
 		$('.double-map-container .map-wrapper:last .map-label p').text(smallText);
+	});
+
+	// Triple map main title input handler
+	$('#triple-main-title').on('input', function() {
+		const mainTitle = $(this).val() || 'Three amazing places';
+		$('.triple-map-title h2').text(mainTitle);
+	});
+
+	// Triple map title text input handlers
+	$('#triple-large-text-1, #triple-small-text-1').on('input', function() {
+		const largeText = $('#triple-large-text-1').val() || 'Location 1';
+		const smallText = $('#triple-small-text-1').val() || 'small text, map 1';
+		$('.triple-map-container .map-wrapper:nth-child(1) .map-label h3').text(largeText);
+		$('.triple-map-container .map-wrapper:nth-child(1) .map-label p').text(smallText);
+	});
+
+	$('#triple-large-text-2, #triple-small-text-2').on('input', function() {
+		const largeText = $('#triple-large-text-2').val() || 'Location 2';
+		const smallText = $('#triple-small-text-2').val() || 'small text, map 2';
+		$('.triple-map-container .map-wrapper:nth-child(2) .map-label h3').text(largeText);
+		$('.triple-map-container .map-wrapper:nth-child(2) .map-label p').text(smallText);
+	});
+
+	$('#triple-large-text-3, #triple-small-text-3').on('input', function() {
+		const largeText = $('#triple-large-text-3').val() || 'Location 3';
+		const smallText = $('#triple-small-text-3').val() || 'small text, map 3';
+		$('.triple-map-container .map-wrapper:nth-child(3) .map-label h3').text(largeText);
+		$('.triple-map-container .map-wrapper:nth-child(3) .map-label p').text(smallText);
 	});
 
 	// Font picker functionality
@@ -5268,6 +5302,101 @@ $(document).ready(function(){
 			$(this).closest('.title').next('.content').slideUp(300);
 			if (posterTitle) {
 				posterTitle.style.display = 'none';
+			}
+		}
+	});
+
+	// Double layout marker checkbox handlers
+	$(document).on('change', '#double-marker-1, #double-marker-2', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map__marker').next('.marker__info').slideDown(300);
+		} else {
+			$(this).closest('.map__marker').next('.marker__info').slideUp(300);
+		}
+	});
+
+	// Double layout title checkbox handlers
+	$(document).on('change', '#double-title-1', function() {
+		const mapLabel = document.querySelector('.double-map-container .map-wrapper:first .map-label');
+		if ($(this).is(':checked')) {
+			$(this).closest('.title').next('.content').slideDown(300);
+			if (mapLabel) {
+				mapLabel.style.display = 'block';
+			}
+		} else {
+			$(this).closest('.title').next('.content').slideUp(300);
+			if (mapLabel) {
+				mapLabel.style.display = 'none';
+			}
+		}
+	});
+
+	$(document).on('change', '#double-title-2', function() {
+		const mapLabel = document.querySelector('.double-map-container .map-wrapper:last .map-label');
+		if ($(this).is(':checked')) {
+			$(this).closest('.title').next('.content').slideDown(300);
+			if (mapLabel) {
+				mapLabel.style.display = 'block';
+			}
+		} else {
+			$(this).closest('.title').next('.content').slideUp(300);
+			if (mapLabel) {
+				mapLabel.style.display = 'none';
+			}
+		}
+	});
+
+	// Triple layout marker checkbox handlers
+	$(document).on('change', '#triple-marker-1, #triple-marker-2, #triple-marker-3', function() {
+		if ($(this).is(':checked')) {
+			$(this).closest('.map__marker').next('.marker__info').slideDown(300);
+		} else {
+			$(this).closest('.map__marker').next('.marker__info').slideUp(300);
+		}
+	});
+
+	// Triple layout title checkbox handlers
+	$(document).on('change', '#triple-title-1', function() {
+		const mapLabel = document.querySelector('.triple-map-container .map-wrapper:nth-child(1) .map-label');
+		if ($(this).is(':checked')) {
+			$(this).closest('.title').next('.content').slideDown(300);
+			if (mapLabel) {
+				mapLabel.style.display = 'block';
+			}
+		} else {
+			$(this).closest('.title').next('.content').slideUp(300);
+			if (mapLabel) {
+				mapLabel.style.display = 'none';
+			}
+		}
+	});
+
+	$(document).on('change', '#triple-title-2', function() {
+		const mapLabel = document.querySelector('.triple-map-container .map-wrapper:nth-child(2) .map-label');
+		if ($(this).is(':checked')) {
+			$(this).closest('.title').next('.content').slideDown(300);
+			if (mapLabel) {
+				mapLabel.style.display = 'block';
+			}
+		} else {
+			$(this).closest('.title').next('.content').slideUp(300);
+			if (mapLabel) {
+				mapLabel.style.display = 'none';
+			}
+		}
+	});
+
+	$(document).on('change', '#triple-title-3', function() {
+		const mapLabel = document.querySelector('.triple-map-container .map-wrapper:nth-child(3) .map-label');
+		if ($(this).is(':checked')) {
+			$(this).closest('.title').next('.content').slideDown(300);
+			if (mapLabel) {
+				mapLabel.style.display = 'block';
+			}
+		} else {
+			$(this).closest('.title').next('.content').slideUp(300);
+			if (mapLabel) {
+				mapLabel.style.display = 'none';
 			}
 		}
 	});

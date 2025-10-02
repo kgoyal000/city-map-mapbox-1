@@ -595,6 +595,7 @@ body * {
   overflow-x: hidden;
   width: 100%;
   box-sizing: border-box;
+  background-color: #fff;
 }
 
 .markers__wrapper,
@@ -644,7 +645,9 @@ body * {
 .location__wrapper--double .group__input,
 .location__wrapper--triple .group__input,
 .details__wrapper--double .group__input,
-.details__wrapper--triple .group__input {
+.details__wrapper--triple .group__input,
+.markers__wrapper--double .group__input,
+.markers__wrapper--triple .group__input {
   margin-bottom: 15px;
 }
 
@@ -652,7 +655,9 @@ body * {
 .location__wrapper--double .group__input>p,
 .location__wrapper--triple .group__input>p,
 .details__wrapper--double .group__input>p,
-.details__wrapper--triple .group__input>p {
+.details__wrapper--triple .group__input>p,
+.markers__wrapper--double .group__input>p,
+.markers__wrapper--triple .group__input>p {
   margin-top: 0px;
   font-size: 12px;
   text-transform: uppercase;
@@ -662,7 +667,13 @@ body * {
   font-weight: 500;
 }
 
-.location__wrapper .group__input>input {
+.location__wrapper .group__input>input,
+.location__wrapper--double .group__input>input,
+.location__wrapper--triple .group__input>input,
+.details__wrapper--double .group__input>input,
+.details__wrapper--triple .group__input>input,
+.markers__wrapper--double .group__input>input,
+.markers__wrapper--triple .group__input>input {
   width: 100%;
   font-size: 12px;
   height: 48px;
@@ -673,13 +684,26 @@ body * {
   font-family: "Poppins", sans-serif;
   color: #16212c;
   transition: 0.3s ease all;
+  border-radius: 4px;
 }
 
-.location__wrapper .group__input>input:focus {
+.location__wrapper .group__input>input:focus,
+.location__wrapper--double .group__input>input:focus,
+.location__wrapper--triple .group__input>input:focus,
+.details__wrapper--double .group__input>input:focus,
+.details__wrapper--triple .group__input>input:focus,
+.markers__wrapper--double .group__input>input:focus,
+.markers__wrapper--triple .group__input>input:focus {
   border-color: #000;
 }
 
-.location__wrapper .group__input>span {
+.location__wrapper .group__input>span,
+.location__wrapper--double .group__input>span,
+.location__wrapper--triple .group__input>span,
+.details__wrapper--double .group__input>span,
+.details__wrapper--triple .group__input>span,
+.markers__wrapper--double .group__input>span,
+.markers__wrapper--triple .group__input>span {
   display: block;
   font-size: 12px;
   line-height: 16px;
@@ -2578,6 +2602,7 @@ body * {
   -ms-flex-pack: start;
   justify-content: flex-start;
   margin-top: 15px;
+  display: none;
 }
 
 .main__wrapper .outer__main .canvas__wrapper .gallery .elem {
@@ -2932,96 +2957,6 @@ body * {
   /* Adjust clip-path for heart in small landscape */
   div#map.layout-full-heart canvas.mapboxgl-canvas {
     clip-path: shape( from 50% 95%, line to 85% 52%, arc to 50% 30% of 10%, arc to 15% 52% of 10%, close );
-  }
-}
-
-  .marker__color>div {
-    width: calc(100% + 30px);
-    margin-left: -15px;
-  }
-
-  .marker__color>div>.wrap {
-    width: 25%;
-  }
-
-  .custom__style .box {
-    width: calc(100% + 30px);
-    margin-left: -15px;
-  }
-
-  .custom__style {
-    width: calc(100% + 30px);
-    margin-left: -15px;
-  }
-
-  .custom__style {
-    padding: 15px 15px;
-  }
-
-  .custom__style .switcher>a {
-    margin: 6px 4px;
-  }
-
-  .custom__style .box .wrap {
-    width: 20%;
-  }
-
-  .elem__picker ul.four {
-    -ms-grid-columns: 1fr 16px 1fr 16px 1fr;
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .details__wrapper,
-  .format__wrapper {
-    padding: 15px;
-  }
-
-  .main__switcher .bottom__controls .btn {
-    margin-top: 10px;
-  }
-
-  .main__switcher .bottom__controls .desc>p {
-    margin-right: 12px;
-  }
-
-  .main__switcher .bottom__controls .desc .include {
-    margin-right: 12px;
-  }
-
-  .main__switcher .bottom__controls {
-    padding: 10px 15px;
-  }
-
-  .design__info {
-    padding: 15px;
-  }
-
-  .main__switcher {
-    min-width: 0px;
-  }
-
-  .main__wrapper .outer__main .canvas__wrapper .gallery .elem {
-    margin-right: 6px;
-  }
-
-  .main__wrapper .outer__main .canvas__wrapper .gallery .elem {
-    min-width: 64px;
-    min-height: 64px;
-  }
-
-  .main__wrapper .outer__main .canvas__wrapper .gallery .elem span {
-    padding: 2px 4px;
-    font-size: 8px;
-    line-height: 11px;
-  }
-
-  .main__wrapper .outer__main .canvas__wrapper .gallery {
-    padding-top: 15px;
-  }
-
-  .elem__picker ul {
-    -ms-grid-columns: 1fr 16px 1fr 16px 1fr;
-    grid-template-columns: repeat(5, 1fr);
   }
 }
 
