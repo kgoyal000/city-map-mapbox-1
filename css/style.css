@@ -70,11 +70,12 @@ body * {
   align-items: flex-start;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .main__wrapper .outer__main .canvas__wrapper {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -150,8 +151,9 @@ body * {
 
 .main__wrapper .outer__main .canvas__wrapper .inn {
   max-width: 100%;
-  width: 100%;
+  width: auto;
   margin-right: auto;
+  margin-left: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -165,13 +167,14 @@ body * {
   background-color: white;
 }
 
-.main__wrapper .outer__main .double-map-container .double-map canvas{
+.main__wrapper .outer__main .double-map-container .double-map canvas,
+.main__wrapper .outer__main .triple-map-container .triple-map canvas{
   padding: 0px;
 }
 
 .main__switcher {
   max-width: 445px;
-  min-width: 445px;
+  /* min-width: 445px; */
   width: 100%;
   background-color: #fff;
   -webkit-box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.15);
@@ -2400,6 +2403,7 @@ body * {
 
   .main__wrapper .outer__main .canvas__wrapper .inn {
     max-width: 100%;
+    width: auto;
     margin-right: auto;
     margin-left: auto;
   }
@@ -2446,6 +2450,7 @@ body * {
 
   .main__wrapper .outer__main .canvas__wrapper .inn {
     max-width: 100%;
+    width: auto;
     margin-right: auto;
     margin-left: auto;
   }
@@ -2497,9 +2502,15 @@ body * {
 
   .main__wrapper .outer__main .canvas__wrapper .inn {
     max-width: 100%;
+    width: auto;
     margin-right: auto;
     margin-left: auto;
     padding: 0 15px;
+  }
+
+  .main__wrapper .outer__main .canvas__wrapper canvas {
+    padding: 15px;
+    padding-bottom: 0px;
   }
 
   .map-preview-title {
@@ -2510,6 +2521,11 @@ body * {
   #map {
     max-width: 100%;
   }
+
+  /* Ensure circle and heart shapes are properly centered */
+  div#map.layout-circle, div#map.layout-full-heart {
+    margin: 0 auto;
+  }
 }
 
 .marker__color>div {
@@ -2519,9 +2535,19 @@ body * {
 @media (max-width: 480px) {
   .main__wrapper .outer__main .canvas__wrapper .inn {
     max-width: 100%;
+    width: auto;
     margin-right: auto;
     margin-left: auto;
     padding: 0 10px;
+  }
+
+  .main__wrapper .outer__main .canvas__wrapper canvas {
+    padding: 12px;
+    padding-bottom: 0px;
+  }
+
+  .map-preview-title.with-photo{
+    min-height: 140px !important;
   }
 
   .map-preview-title {
@@ -2542,6 +2568,107 @@ body * {
   #map {
     max-width: 100%;
   }
+
+  /* Ensure circle and heart shapes are properly centered */
+  div#map.layout-circle, div#map.layout-full-heart {
+    margin: 0 auto;
+  }
+}
+
+/* Mobile adjustments for all orientations */
+@media (max-width: 768px) {
+  /* Adjust clip-path for heart on mobile */
+  div#map.layout-full-heart canvas.mapboxgl-canvas {
+    clip-path: shape( from 50% 95%, line to 85% 52%, arc to 50% 30% of 10%, arc to 15% 52% of 10%, close );
+  }
+
+  /* Portrait orientation */
+  .map-preview-title h3 {
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .map-preview-title p {
+    font-size: 12px;
+    line-height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Adjust clip-path for heart on smaller mobile */
+  div#map.layout-full-heart canvas.mapboxgl-canvas {
+    clip-path: shape( from 50% 94%, line to 84% 52%, arc to 50% 32% of 12%, arc to 16% 52% of 12%, close );
+  }
+
+  .map-preview-title h3 {
+    font-size: 15px;
+    line-height: 20px;
+  }
+
+  .map-preview-title p {
+    font-size: 11px;
+    line-height: 14px;
+  }
+}
+
+/* Landscape mobile adjustments for single map layout */
+@media (max-width: 768px) and (orientation: landscape) {
+  .main__wrapper .outer__main .canvas__wrapper .inn {
+    padding: 0 8px;
+  }
+
+  .map-preview-title {
+    padding: 10px 8px;
+  }
+
+  .map-preview-title h3 {
+    font-size: 14px;
+    line-height: 18px;
+    margin: 0 0 4px 0;
+  }
+
+  .map-preview-title p {
+    font-size: 11px;
+    line-height: 14px;
+    margin: 0;
+  }
+
+  #map.landscape {
+    margin: 0 auto;
+  }
+
+  /* Adjust clip-path for heart in landscape */
+  div#map.layout-full-heart canvas.mapboxgl-canvas {
+    clip-path: shape( from 50% 96%, line to 86% 52%, arc to 50% 28% of 8%, arc to 14% 52% of 8%, close );
+  }
+}
+
+@media (max-width: 480px) and (orientation: landscape) {
+  .main__wrapper .outer__main .canvas__wrapper .inn {
+    padding: 0 5px;
+  }
+
+  .map-preview-title {
+    padding: 8px 5px;
+  }
+
+  .map-preview-title h3 {
+    font-size: 13px;
+    line-height: 16px;
+    margin: 0 0 3px 0;
+  }
+
+  .map-preview-title p {
+    font-size: 10px;
+    line-height: 12px;
+    margin: 0;
+  }
+
+  /* Adjust clip-path for heart in small landscape */
+  div#map.layout-full-heart canvas.mapboxgl-canvas {
+    clip-path: shape( from 50% 95%, line to 85% 52%, arc to 50% 30% of 10%, arc to 15% 52% of 10%, close );
+  }
+}
 
   .marker__color>div {
     width: calc(100% + 30px);
@@ -2891,31 +3018,29 @@ a.mapboxgl-ctrl-logo,
 }
 
 
-div#map.layout-circle canvas.mapboxgl-canvas, div#map.layout-full-heart canvas.mapboxgl-canvas {
+/* Circle and Heart Layout - Keep container full width but center canvas */
+div#map.layout-circle, div#map.layout-full-heart {
+  background-color: white;
   padding: 20px;
-  padding-bottom: 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+/* Circle and Heart Layout - Canvas styling */
 div#map.layout-circle canvas.mapboxgl-canvas, div#map.layout-full-heart canvas.mapboxgl-canvas {
   border-radius: 50%;
+  margin: 0 auto;
 }
 
-
+/* Heart specific clip-path */
 div#map.layout-full-heart canvas.mapboxgl-canvas {
-  aspect-ratio: 1;
-  /* clip-path: shape(from 50% 90%, line to 85% 50%, arc to 50% 25% of 1%, arc to 15% 50% of 1%); */
   clip-path: shape( from 50% 96%, line to 86% 52%, arc to 50% 28% of 8%, arc to 14% 52% of 8%, close );
-
-  /* clip-path: shape( from 50% 96%, line to 82% 46%, arc to 50% 28% of 14%, arc to 18% 46% of 14%, close ); */
 }
-
 
 .poster-title {
   display: none;
-}
-
-div#map.layout-circle, div#map.layout-full-heart {
-  background-color: white;
 }
 
 .with-valentine.photo-preview {
@@ -3145,12 +3270,60 @@ div#map.layout-circle, div#map.layout-full-heart {
     width: 140px;
     height: 140px;
   }
+
+  .with-valentine.photo-preview {
+    width: 140px;
+    height: 140px;
+    top: -55%;
+  }
+}
+
+@media (max-width: 480px) {
+  .photo-preview {
+    width: 120px;
+    height: 120px;
+  }
+
+  .with-valentine.photo-preview {
+    width: 120px;
+    height: 120px;
+    top: -40%;
+  }
+}
+
+/* Landscape orientation adjustments for photo preview */
+@media (max-width: 768px) and (orientation: landscape) {
+  .photo-preview {
+    width: 100px;
+    height: 100px;
+    top: 3%;
+  }
+
+  .with-valentine.photo-preview {
+    width: 100px;
+    height: 100px;
+    top: -50%;
+  }
+}
+
+@media (max-width: 480px) and (orientation: landscape) {
+  .photo-preview {
+    width: 80px;
+    height: 80px;
+    top: 2%;
+  }
+
+  .with-valentine.photo-preview {
+    width: 80px;
+    height: 80px;
+    top: -45%;
+  }
 }
 
 /* Double Map Layout Styles */
 .double-map-view {
   max-width: 500px;
-  width: 100%;
+  width: auto;
   background-color: white;
   padding: 20px;
   display: flex;
@@ -3205,7 +3378,7 @@ div#map.layout-circle, div#map.layout-full-heart {
 /* Triple Map Layout Styles */
 .triple-map-view {
   max-width: 600px;
-  width: 100%;
+  width: auto;
   background-color: white;
   padding: 20px;
   display: flex;
@@ -3355,87 +3528,191 @@ div#map.layout-circle, div#map.layout-full-heart {
 /* Responsive adjustments for double and triple maps - keep same size on all devices */
 @media (max-width: 991px) {
   .double-map-view {
-    max-width: 500px;
+    max-width: 95%;
+    width: 100%;
+    padding: 15px;
   }
 
   .double-map-container {
-    gap: 15px;
-    max-width: 460px;
+    gap: 12px;
+    max-width: 100%;
+    padding: 5px;
   }
 
   .double-map-container .double-map {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
   }
 
   .double-map-title h2 {
-    font-size: 24px;
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  .double-map-container .map-label h3 {
+    font-size: 16px;
+  }
+
+  .double-map-container .map-label p {
+    font-size: 11px;
   }
 
   .triple-map-view {
-    max-width: 600px;
+    max-width: 95%;
+    width: 100%;
+    padding: 15px;
   }
 
   .triple-map-container {
-    gap: 12px;
-    max-width: 560px;
+    gap: 10px;
+    max-width: 100%;
+    padding: 5px;
   }
 
   .triple-map-container .triple-map {
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
   }
 
   .triple-map-title h2 {
-    font-size: 24px;
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  .triple-map-container .map-label h3 {
+    font-size: 14px;
+  }
+
+  .triple-map-container .map-label p {
+    font-size: 10px;
   }
 }
 
 @media (max-width: 768px) {
   .double-map-view {
-    max-width: 500px;
-    padding: 20px;
+    max-width: 95%;
+    width: 100%;
+    padding: 12px;
   }
 
   .double-map-container {
-    gap: 15px;
-    max-width: 460px;
+    gap: 10px;
+    max-width: 100%;
+    padding: 5px;
   }
 
   .double-map-container .double-map {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
   }
 
   .double-map-title h2 {
-    font-size: 24px;
+    font-size: 20px;
+    margin-bottom: 8px;
   }
 
   .double-map-container .map-label h3 {
-    font-size: 18px;
+    font-size: 14px;
+    margin: 8px 0 4px 0;
+  }
+
+  .double-map-container .map-label p {
+    font-size: 10px;
   }
 
   .triple-map-view {
-    max-width: 600px;
-    padding: 20px;
+    max-width: 95%;
+    width: 100%;
+    padding: 12px;
   }
 
   .triple-map-container {
-    gap: 12px;
-    max-width: 560px;
+    gap: 8px;
+    max-width: 100%;
+    padding: 5px;
   }
 
   .triple-map-container .triple-map {
-    width: 160px;
-    height: 160px;
+    width: 110px;
+    height: 110px;
   }
 
   .triple-map-title h2 {
-    font-size: 24px;
+    font-size: 18px;
+    margin-bottom: 8px;
   }
 
   .triple-map-container .map-label h3 {
-    font-size: 14px;
+    font-size: 12px;
+    margin: 6px 0 3px 0;
+  }
+
+  .triple-map-container .map-label p {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .double-map-view {
+    max-width: 98%;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .double-map-container {
+    gap: 8px;
+    max-width: 100%;
+    padding: 3px;
+  }
+
+  .double-map-container .double-map {
+    width: 130px;
+    height: 130px;
+  }
+
+  .double-map-title h2 {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  .double-map-container .map-label h3 {
+    font-size: 13px;
+    margin: 6px 0 3px 0;
+  }
+
+  .double-map-container .map-label p {
+    font-size: 9px;
+  }
+
+  .triple-map-view {
+    max-width: 98%;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .triple-map-container {
+    gap: 6px;
+    max-width: 100%;
+    padding: 3px;
+  }
+
+  .triple-map-container .triple-map {
+    width: 95px;
+    height: 95px;
+  }
+
+  .triple-map-title h2 {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  .triple-map-container .map-label h3 {
+    font-size: 11px;
+    margin: 5px 0 2px 0;
+  }
+
+  .triple-map-container .map-label p {
+    font-size: 8px;
   }
 }
 
@@ -3728,3 +4005,53 @@ div#map.layout-circle, div#map.layout-full-heart {
     padding: 15px;
   }
 }
+/* Font Picker Styles */
+.font__picker .font-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.font__picker .font-options li {
+  width: 100%;
+}
+
+.font__picker .font-options li a {
+  display: block;
+  padding: 12px 15px;
+  background: #fff;
+  border: 1px solid #E0E0E0;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.font__picker .font-options li a:hover {
+  border-color: #000;
+  background-color: #f8f8f8;
+}
+
+.font__picker .font-options li a.current {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+}
+
+.font__picker {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .font__picker .font-options {
+    grid-template-columns: 1fr;
+  }
+}
+

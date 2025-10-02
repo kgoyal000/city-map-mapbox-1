@@ -12,7 +12,10 @@ let currentMarker2Triple = null; // Marker for second map in triple layout
 let currentMarker3Triple = null; // Marker for third map in triple layout
 let isDoubleMapLayout = false; // Track if we're in double map mode
 let isTripleMapLayout = false; // Track if we're in triple map mode
+let currentLayout = 'default'; // Track current layout type (circle, heart, square, etc.)
+
 let currentStyle = 'minimal'; // Start with Minimal style
+let currentFont = 'Poppins'; // Start with Poppins font
 let loadedStyles = {};
 let customColors = {
 	land: '#F5F5DC',
@@ -81,6 +84,7 @@ let mapStyles = {
 	'pink': 'pink', // Load GlobeTee Wanderlust style from JSON
 	'green': 'green', // Load GlobeTee Cosy style from JSON
 	'intense': 'intense', // Load GlobeTee Intense style from JSON
+	'atlas': 'atlas', // Load GlobeTee Atlas style from JSON
 	'custom': 'mapbox://styles/mapbox/streets-v12' // Will be customized
 };
 
@@ -134,7 +138,7 @@ async function initializeMap() {
 			mapContainer.style.display = 'block';
 			mapContainer.style.visibility = 'visible';
 			mapContainer.style.opacity = '1';
-			mapContainer.style.width = '100%';
+			// Don't set width to 100% - let resizeFrame() handle dimensions
 			// mapContainer.style.height = '640px';
 
 			// Check if map canvas exists
@@ -145,6 +149,10 @@ async function initializeMap() {
 				canvas.style.display = 'block';
 				canvas.style.visibility = 'visible';
 			}
+
+			// Ensure proper dimensions after map loads
+			resizeFrame();
+
 
 			// Remove debug border after map loads
 			setTimeout(() => {
@@ -214,11 +222,19 @@ async function initializeDoubleMaps() {
 	// Remove loading state
 	map1Container.classList.remove('map-loading');
 	map2Container.classList.remove('map-loading');
-	
-	// Load the Minimal style from JSON
-	const minimalStyle = await loadMapStyle('minimal');
-	const styleToUse = minimalStyle || 'mapbox://styles/mapbox/streets-v12';
-	
+
+	// Load the current style (or fallback to Minimal)
+	const styleKey = currentStyle || 'minimal';
+	const styleConfig = mapStyles[styleKey] || mapStyles['minimal'];
+	let styleToUse;
+
+	if (typeof styleConfig === 'string' && styleConfig.includes('mapbox://')) {
+		styleToUse = styleConfig;
+	} else {
+		const loadedStyle = await loadMapStyle(styleConfig);
+		styleToUse = loadedStyle || 'mapbox://styles/mapbox/streets-v12';
+	}
+
 	try {
 		// Initialize first map (e.g., Sophia's location)
 		map1 = new mapboxgl.Map({
@@ -227,7 +243,7 @@ async function initializeDoubleMaps() {
 			center: [-80.1918, 25.7617], // Default: Miami
 			zoom: 12
 		});
-		
+
 		// Initialize second map (e.g., Michael's location)
 		map2 = new mapboxgl.Map({
 			container: 'map2',
@@ -290,9 +306,17 @@ async function initializeTripleMaps() {
 	map2Container.classList.remove('map-loading');
 	map3Container.classList.remove('map-loading');
 
-	// Load the Minimal style from JSON
-	const minimalStyle = await loadMapStyle('minimal');
-	const styleToUse = minimalStyle || 'mapbox://styles/mapbox/streets-v12';
+	// Load the current style (or fallback to Minimal)
+	const styleKey = currentStyle || 'minimal';
+	const styleConfig = mapStyles[styleKey] || mapStyles['minimal'];
+	let styleToUse;
+
+	if (typeof styleConfig === 'string' && styleConfig.includes('mapbox://')) {
+		styleToUse = styleConfig;
+	} else {
+		const loadedStyle = await loadMapStyle(styleConfig);
+		styleToUse = loadedStyle || 'mapbox://styles/mapbox/streets-v12';
+	}
 
 	try {
 		// Initialize first map
@@ -395,7 +419,8 @@ function switchMapLayout(isDouble, isTriple = false) {
 			}
 		}
 		if (doubleDetails) {
-			doubleDetails.style.display = 'block';
+			// Keep it hidden initially - will show when user clicks Details tab
+			doubleDetails.style.display = 'none';
 			// Hide marker info sections in double layout by default
 			$(doubleDetails).find('.marker__info').hide();
 		}
@@ -436,12 +461,18 @@ function switchMapLayout(isDouble, isTriple = false) {
 		if (!map1 || !map2) {
 			setTimeout(() => {
 				initializeDoubleMaps();
+				// Apply current style and font after maps are initialized
+				setTimeout(() => {
+					applyCurrentStyleAndFont();
+				}, 500);
 			}, 100);
 		} else {
 			// Resize existing maps
 			setTimeout(() => {
 				if (map1) map1.resize();
 				if (map2) map2.resize();
+				// Apply current style and font
+				applyCurrentStyleAndFont();
 			}, 150);
 		}
 
@@ -473,7 +504,8 @@ function switchMapLayout(isDouble, isTriple = false) {
 			$(doubleDetails).find('.marker__info').hide();
 		}
 		if (tripleDetails) {
-			tripleDetails.style.display = 'block';
+			// Keep it hidden initially - will show when user clicks Details tab
+			tripleDetails.style.display = 'none';
 			$(tripleDetails).find('.marker__info').hide();
 		}
 
@@ -505,6 +537,10 @@ function switchMapLayout(isDouble, isTriple = false) {
 		if (!map1Triple || !map2Triple || !map3Triple) {
 			setTimeout(() => {
 				initializeTripleMaps();
+				// Apply current style and font after maps are initialized
+				setTimeout(() => {
+					applyCurrentStyleAndFont();
+				}, 500);
 			}, 100);
 		} else {
 			// Resize existing maps
@@ -512,6 +548,8 @@ function switchMapLayout(isDouble, isTriple = false) {
 				if (map1Triple) map1Triple.resize();
 				if (map2Triple) map2Triple.resize();
 				if (map3Triple) map3Triple.resize();
+				// Apply current style and font
+				applyCurrentStyleAndFont();
 			}, 150);
 		}
 
@@ -1060,6 +1098,14 @@ function showLocationSuggestions(suggestions, inputElement) {
 			const isDoubleMarker1 = inputElement.id === 'double-marker-address-1';
 			const isDoubleMarker2 = inputElement.id === 'double-marker-address-2';
 
+			// Check if this is a triple map input
+			const isTripleMap1 = inputElement.id === 'triple-map-place-1';
+			const isTripleMap2 = inputElement.id === 'triple-map-place-2';
+			const isTripleMap3 = inputElement.id === 'triple-map-place-3';
+			const isTripleMarker1 = inputElement.id === 'triple-marker-address-1';
+			const isTripleMarker2 = inputElement.id === 'triple-marker-address-2';
+			const isTripleMarker3 = inputElement.id === 'triple-marker-address-3';
+
 			if (isDoubleMap1 && map1) {
 				// Update first map
 				map1.jumpTo({
@@ -1157,6 +1203,111 @@ function showLocationSuggestions(suggestions, inputElement) {
 				// Update display titles
 				$('.map-2-title h3').text(place.place_name);
 				$('.map-2-title p').text(`${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`);
+
+			} else if (isTripleMap1 && map1Triple) {
+				// Update first triple map
+				map1Triple.jumpTo({
+					center: coordinates,
+					zoom: 14
+				});
+
+				// Add or update marker only if checkbox is checked
+				const markerCheckbox = document.getElementById('triple-marker-1');
+				if (markerCheckbox && markerCheckbox.checked) {
+					if (currentMarker1Triple) currentMarker1Triple.remove();
+					currentMarker1Triple = new mapboxgl.Marker({ color: currentMarkerColor })
+						.setLngLat(coordinates)
+						.addTo(map1Triple);
+				}
+
+				// Update title fields for first map
+				const titleInput = document.getElementById('triple-large-text-1');
+				const subtitleInput = document.getElementById('triple-small-text-1');
+				if (titleInput) titleInput.value = place.place_name;
+				if (subtitleInput) subtitleInput.value = `${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`;
+
+			} else if (isTripleMap2 && map2Triple) {
+				// Update second triple map
+				map2Triple.jumpTo({
+					center: coordinates,
+					zoom: 14
+				});
+
+				// Add or update marker only if checkbox is checked
+				const markerCheckbox = document.getElementById('triple-marker-2');
+				if (markerCheckbox && markerCheckbox.checked) {
+					if (currentMarker2Triple) currentMarker2Triple.remove();
+					currentMarker2Triple = new mapboxgl.Marker({ color: currentMarkerColor })
+						.setLngLat(coordinates)
+						.addTo(map2Triple);
+				}
+
+				// Update title fields for second map
+				const titleInput = document.getElementById('triple-large-text-2');
+				const subtitleInput = document.getElementById('triple-small-text-2');
+				if (titleInput) titleInput.value = place.place_name;
+				if (subtitleInput) subtitleInput.value = `${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`;
+
+			} else if (isTripleMap3 && map3Triple) {
+				// Update third triple map
+				map3Triple.jumpTo({
+					center: coordinates,
+					zoom: 14
+				});
+
+				// Add or update marker only if checkbox is checked
+				const markerCheckbox = document.getElementById('triple-marker-3');
+				if (markerCheckbox && markerCheckbox.checked) {
+					if (currentMarker3Triple) currentMarker3Triple.remove();
+					currentMarker3Triple = new mapboxgl.Marker({ color: currentMarkerColor })
+						.setLngLat(coordinates)
+						.addTo(map3Triple);
+				}
+
+				// Update title fields for third map
+				const titleInput = document.getElementById('triple-large-text-3');
+				const subtitleInput = document.getElementById('triple-small-text-3');
+				if (titleInput) titleInput.value = place.place_name;
+				if (subtitleInput) subtitleInput.value = `${coordinates[1].toFixed(5)}°N / ${Math.abs(coordinates[0]).toFixed(5)}°W`;
+
+			} else if (isTripleMarker1 && map1Triple) {
+				// Update first triple map for marker
+				map1Triple.jumpTo({
+					center: coordinates,
+					zoom: 14
+				});
+
+				// Add marker
+				if (currentMarker1Triple) currentMarker1Triple.remove();
+				currentMarker1Triple = new mapboxgl.Marker({ color: currentMarkerColor })
+					.setLngLat(coordinates)
+					.addTo(map1Triple);
+
+			} else if (isTripleMarker2 && map2Triple) {
+				// Update second triple map for marker
+				map2Triple.jumpTo({
+					center: coordinates,
+					zoom: 14
+				});
+
+				// Add marker
+				if (currentMarker2Triple) currentMarker2Triple.remove();
+				currentMarker2Triple = new mapboxgl.Marker({ color: currentMarkerColor })
+					.setLngLat(coordinates)
+					.addTo(map2Triple);
+
+			} else if (isTripleMarker3 && map3Triple) {
+				// Update third triple map for marker
+				map3Triple.jumpTo({
+					center: coordinates,
+					zoom: 14
+				});
+
+				// Add marker
+				if (currentMarker3Triple) currentMarker3Triple.remove();
+				currentMarker3Triple = new mapboxgl.Marker({ color: currentMarkerColor })
+					.setLngLat(coordinates)
+					.addTo(map3Triple);
 
 			} else if (map) {
 				// Update single map (existing functionality)
@@ -1340,107 +1491,161 @@ function updatePreviewTitle(title, subtitle) {
 
 async function changeMapStyle(styleKey) {
 	const styleConfig = mapStyles[styleKey] || mapStyles['minimal'];
-	currentStyle = styleConfig;
+	currentStyle = styleKey; // Save the style key, not the config
 
-	if (map) {
+	// Helper function to apply style to a single map instance
+	const applyStyleToMap = async (mapInstance) => {
+		if (!mapInstance) return;
+
 		// Check if it's a style name to load from JSON or a URL
 		if (typeof styleConfig === 'string' && styleConfig.includes('mapbox://')) {
 			// It's a Mapbox URL
-			map.setStyle(styleConfig);
+			mapInstance.setStyle(styleConfig);
 		} else {
 			// It's a style name, load from JSON file
 			const styleData = await loadMapStyle(styleConfig);
 			if (styleData) {
-				map.setStyle(styleData);
+				mapInstance.setStyle(styleData);
 			} else {
 				console.error(`Failed to load style: ${styleConfig}`);
 				// Fallback to default Mapbox style
-				map.setStyle('mapbox://styles/mapbox/streets-v12');
+				mapInstance.setStyle('mapbox://styles/mapbox/streets-v12');
 			}
 		}
 
 		// Wait for style to load before trying to modify layers
-		map.once('styledata', () => {
+		mapInstance.once('styledata', () => {
 			try {
 				// Add custom styling for specific themes only if layers exist
 				if (styleKey === 'pink') {
-					if (map.getLayer('water')) {
-						map.setPaintProperty('water', 'fill-color', '#e8b4d6');
+					if (mapInstance.getLayer('water')) {
+						mapInstance.setPaintProperty('water', 'fill-color', '#e8b4d6');
 					}
-					if (map.getLayer('landuse')) {
-						map.setPaintProperty('landuse', 'fill-color', '#f7e8f1');
+					if (mapInstance.getLayer('landuse')) {
+						mapInstance.setPaintProperty('landuse', 'fill-color', '#f7e8f1');
 					}
 				} else if (styleKey === 'green') {
-					if (map.getLayer('water')) {
-						map.setPaintProperty('water', 'fill-color', '#a8d8a8');
+					if (mapInstance.getLayer('water')) {
+						mapInstance.setPaintProperty('water', 'fill-color', '#a8d8a8');
 					}
-					if (map.getLayer('landuse')) {
-						map.setPaintProperty('landuse', 'fill-color', '#e8f5e8');
+					if (mapInstance.getLayer('landuse')) {
+						mapInstance.setPaintProperty('landuse', 'fill-color', '#e8f5e8');
 					}
 				} else if (styleKey === 'custom') {
 					// Apply custom colors for custom style
-					applyCustomMapColors();
+					applyCustomMapColorsToInstance(mapInstance);
 				}
 			} catch (error) {
 				console.warn('Could not apply custom layer styling:', error);
 			}
 		});
+	};
+
+	// Apply to single map
+	if (map) {
+		await applyStyleToMap(map);
+	}
+
+	// Apply to double map layout
+	if (map1) {
+		await applyStyleToMap(map1);
+	}
+	if (map2) {
+		await applyStyleToMap(map2);
+	}
+
+	// Apply to triple map layout
+	if (map1Triple) {
+		await applyStyleToMap(map1Triple);
+	}
+	if (map2Triple) {
+		await applyStyleToMap(map2Triple);
+	}
+	if (map3Triple) {
+		await applyStyleToMap(map3Triple);
 	}
 }
 
-// Apply custom colors to map layers
-function applyCustomMapColors() {
-	if (!map) return;
-	
+// Helper function to apply custom colors to a specific map instance
+function applyCustomMapColorsToInstance(mapInstance) {
+	if (!mapInstance) return;
+
 	// Function to apply colors
 	const applyColors = () => {
 		try {
 			// Apply land/landuse color
-			if (map.getLayer('landuse')) {
-				map.setPaintProperty('landuse', 'fill-color', customColors.land);
+			if (mapInstance.getLayer('landuse')) {
+				mapInstance.setPaintProperty('landuse', 'fill-color', customColors.land);
 			}
-			if (map.getLayer('landcover')) {
-				map.setPaintProperty('landcover', 'fill-color', customColors.land);
+			if (mapInstance.getLayer('landcover')) {
+				mapInstance.setPaintProperty('landcover', 'fill-color', customColors.land);
 			}
-			if (map.getLayer('land')) {
-				map.setPaintProperty('land', 'background-color', customColors.land);
+			if (mapInstance.getLayer('land')) {
+				mapInstance.setPaintProperty('land', 'background-color', customColors.land);
 			}
-			
+
 			// Apply roads color - try multiple layer variations
 			const roadLayers = ['road', 'road-primary', 'road-secondary-tertiary', 'road-street',
 			                    'road-minor', 'road-arterial', 'road-highway', 'road-trunk',
 			                    'road-motorway', 'bridge-street', 'tunnel-street'];
 			roadLayers.forEach(layerId => {
-				if (map.getLayer(layerId)) {
-					map.setPaintProperty(layerId, 'line-color', customColors.roads);
+				if (mapInstance.getLayer(layerId)) {
+					mapInstance.setPaintProperty(layerId, 'line-color', customColors.roads);
 				}
 			});
-			
+
 			// Apply water color
-			if (map.getLayer('water')) {
-				map.setPaintProperty('water', 'fill-color', customColors.water);
+			if (mapInstance.getLayer('water')) {
+				mapInstance.setPaintProperty('water', 'fill-color', customColors.water);
 			}
-			if (map.getLayer('waterway')) {
-				map.setPaintProperty('waterway', 'line-color', customColors.water);
+			if (mapInstance.getLayer('waterway')) {
+				mapInstance.setPaintProperty('waterway', 'line-color', customColors.water);
 			}
-			
+
 			// Apply background color
-			if (map.getLayer('background')) {
-				map.setPaintProperty('background', 'background-color', customColors.background);
+			if (mapInstance.getLayer('background')) {
+				mapInstance.setPaintProperty('background', 'background-color', customColors.background);
 			}
-			
+
 			console.log('Custom colors applied:', customColors);
 		} catch (error) {
 			console.warn('Could not apply custom colors:', error);
 		}
 	};
-	
+
 	// If map is loaded, apply immediately
-	if (map.loaded()) {
+	if (mapInstance.loaded()) {
 		applyColors();
 	} else {
 		// Otherwise wait for load
-		map.once('load', applyColors);
+		mapInstance.once('load', applyColors);
+	}
+}
+
+// Apply custom colors to all active map layers
+function applyCustomMapColors() {
+	// Apply to single map
+	if (map) {
+		applyCustomMapColorsToInstance(map);
+	}
+
+	// Apply to double map layout
+	if (map1) {
+		applyCustomMapColorsToInstance(map1);
+	}
+	if (map2) {
+		applyCustomMapColorsToInstance(map2);
+	}
+
+	// Apply to triple map layout
+	if (map1Triple) {
+		applyCustomMapColorsToInstance(map1Triple);
+	}
+	if (map2Triple) {
+		applyCustomMapColorsToInstance(map2Triple);
+	}
+	if (map3Triple) {
+		applyCustomMapColorsToInstance(map3Triple);
 	}
 }
 
@@ -1448,6 +1653,23 @@ function resetMapStyle() {
 	if (map) {
 		// Reset to original style
 		map.setStyle(currentStyle);
+	}
+}
+
+// Function to apply current style and font to all active maps
+function applyCurrentStyleAndFont() {
+	console.log('Applying current style and font:', currentStyle, currentFont);
+
+	// Apply current map style to all active maps
+	if (currentStyle) {
+		console.log('Changing map style to:', currentStyle);
+		changeMapStyle(currentStyle);
+	}
+
+	// Apply current font to all layouts
+	if (currentFont) {
+		console.log('Applying font to all layouts:', currentFont);
+		applyFontToAllLayouts(currentFont);
 	}
 }
 
@@ -1629,6 +1851,9 @@ function updateMapTitle() {
 function changeMapLayout(layoutType) {
 	console.log('changeMapLayout called with:', layoutType);
 
+	// Update current layout tracker
+	currentLayout = layoutType;
+
 	// Check if switching to double or triple map layout
 	if (layoutType === 'double-map') {
 		switchMapLayout(true, false);
@@ -1660,15 +1885,24 @@ function changeMapLayout(layoutType) {
 		"max-height": document.querySelector('#map canvas')?.clientWidth*100 + "px",
 	});
 
+	// Add new layout class
+	if (layoutType !== 'default') {
+		mapContainer.classList.add(`layout-${layoutType}`);
+	}
+
+	// Ensure proper dimensions for the new layout
+	resizeFrame();
+
+	// Ensure map container is always visible
+	mapContainer.style.display = 'block';
+	mapContainer.style.visibility = 'visible';
+	mapContainer.style.opacity = '1';
+
 	if (map && map.loaded()) {
 		setTimeout(function() {
 			map.resize();
 			console.log('Map resized - Mapbox handling canvas dimensions for crisp rendering');
 		}, 150);
-	}
-	// Add new layout class
-	if (layoutType !== 'default') {
-		mapContainer.classList.add(`layout-${layoutType}`);
 	}
 
 	// Handle photo upload interface for "With Photo" and "Valentine" layouts
@@ -1739,12 +1973,6 @@ function changeMapLayout(layoutType) {
 				"max-height": document.querySelector('#map canvas').clientWidth + "px",
 			});
 
-			if (map && map.loaded()) {
-				setTimeout(function() {
-					map.resize();
-					console.log('Map resized - Mapbox handling canvas dimensions for crisp rendering');
-				}, 150);
-			}
 
 			// previewTitle.classList.add('with-circle')
 		}else if (layoutType === 'full-heart') {
@@ -1767,12 +1995,6 @@ function changeMapLayout(layoutType) {
 				"max-height": document.querySelector('#map canvas').clientWidth + "px",
 			});
 
-			if (map && map.loaded()) {
-				setTimeout(function() {
-					map.resize();
-					console.log('Map resized - Mapbox handling canvas dimensions for crisp rendering');
-				}, 150);
-			}
 
 			// previewTitle.classList.add('with-circle')
 		}
@@ -2976,6 +3198,7 @@ function resizeFrame(){
 	// Check if we're on mobile
 	const isMobile = window.innerWidth <= 767;
 	const isSmallMobile = window.innerWidth <= 480;
+	const isLandscapeMobile = isMobile && window.innerWidth > window.innerHeight;
 
 	// Adjust max dimensions based on screen size
 	const screenPadding = isSmallMobile ? 20 : (isMobile ? 30 : 0);
@@ -2985,8 +3208,8 @@ function resizeFrame(){
 	const maxWidth = isMobile ? availableWidth : 520;  // Maximum poster width for portrait
 	const maxLandscapeWidth = isMobile ? availableWidth : 800; // Maximum width for landscape
 
-	// Get the preview title height (approximate)
-	const titleHeight = isSmallMobile ? 60 : 70; // Approximate height of map-preview-title section
+	// Get the preview title height (approximate) - smaller on landscape mobile
+	const titleHeight = isLandscapeMobile ? 50 : (isSmallMobile ? 60 : 70); // Approximate height of map-preview-title section
 
 	let width, mapHeight, totalHeight;
 
@@ -3030,24 +3253,27 @@ function resizeFrame(){
 	}
 
 	// Round dimensions
-	const finalWidth = Math.round(width);
-	const finalHeight = Math.round(mapHeight);
+	let finalWidth = Math.round(width);
+	let finalHeight = Math.round(mapHeight);
 
-	// Apply dimensions to map container ONLY
-	// Let Mapbox handle canvas sizing internally for proper rendering
+	// Apply dimensions to map container - keep full width for all layouts
+	// The canvas inside will be made square via JavaScript for circle/heart
 	$("#map").css({
 		"height": finalHeight + "px",
 		"width": finalWidth + "px",
-		"max-width": "100%"
+		"max-width": "100%",
+		"display": "block",
+		"visibility": "visible"
 	});
 
-	// Also resize preview title container to match width
+	// Also resize preview title container to match poster width
 	$('.map-preview-title').css({
 		"width": finalWidth + "px",
 		"max-width": "100%"
 	});
 
 	console.log('Resize:', resizeType, 'Ratio:', currentAspectRatio,
+	           'Layout:', currentLayout,
 	           'Map container:', finalWidth + 'w x ' + finalHeight + 'h',
 	           'Total poster (map+title):', finalWidth + 'w x ' + Math.round(totalHeight) + 'h',
 	           'Actual ratio:', (totalHeight / width).toFixed(3),
@@ -3058,6 +3284,8 @@ function resizeFrame(){
 	if (map && map.loaded()) {
 		setTimeout(function() {
 			map.resize();
+
+
 			console.log('Map resized - Mapbox handling canvas dimensions for crisp rendering');
 		}, 150);
 	}
@@ -3278,6 +3506,7 @@ $(document).ready(function(){
 			'pink': 'pink',
 			'green': 'green',
 			'intense': 'intense',
+			'atlas': 'atlas',
 			'custom': 'custom'
 		};
 
@@ -3311,6 +3540,9 @@ $(document).ready(function(){
 		}
 	});
 
+	// Track previous layout to detect transitions from double/triple to single
+	let previousLayoutText = '';
+
 	// Layout picker functionality - target layout options specifically
 	$('.design__info .elem__picker:first-child ul li a').on('click', function(e) {
 		e.preventDefault();
@@ -3335,6 +3567,10 @@ $(document).ready(function(){
 			console.log('Switching to layout:', layoutMap[layoutText]);
 			changeMapLayout(layoutMap[layoutText]);
 
+			// Check if we're switching FROM double/triple map TO single layout
+			const wasDoubleOrTriple = previousLayoutText === 'double map' || previousLayoutText === 'triple map';
+			const isNowSingle = layoutText !== 'double map' && layoutText !== 'triple map';
+
 			// For double and triple map, hide portrait/square options and show only landscape
 			if (layoutText === 'double map' || layoutText === 'triple map') {
 				// Auto-select landscape orientation
@@ -3345,7 +3581,14 @@ $(document).ready(function(){
 			} else {
 				// Show all orientation options for other layouts
 				$('.elem__picker .type__switcher li').show();
+				// Only auto-select portrait if switching from double/triple to single
+				if (wasDoubleOrTriple && isNowSingle) {
+					$('.elem__picker .type__switcher li a[data-type="portrait"]').click();
+				}
 			}
+
+			// Update previous layout tracker
+			previousLayoutText = layoutText;
 		} else {
 			console.log('Layout not found in mapping:', layoutText);
 		}
@@ -3986,6 +4229,106 @@ $(document).ready(function(){
 		}, 300);
 	});
 
+	// Triple map place search inputs
+	$('#triple-map-place-1').on('input', function() {
+		const query = $(this).val().trim();
+		const $input = $(this);
+		const inputElement = this;
+		const $span = $input.next('span');
+
+		if (query.length < 3) {
+			$span.text('minimum 3 characters needed to search').css('color', '#666');
+			return;
+		}
+
+		$span.text('searching...').css('color', '#f77147');
+
+		clearTimeout(window.tripleMapSearchTimeout1);
+		window.tripleMapSearchTimeout1 = setTimeout(() => {
+			if (map1Triple && map1Triple.loaded()) {
+				searchLocation(query, false).then(suggestions => {
+					if (suggestions && suggestions.length > 0) {
+						showLocationSuggestions(suggestions, inputElement);
+						$span.text(`${suggestions.length} locations found`).css('color', '#4CAF50');
+					} else {
+						$span.text('no locations found').css('color', '#f77147');
+					}
+				}).catch(error => {
+					console.error('Triple map search error:', error);
+					$span.text('search error, please try again').css('color', '#f77147');
+				});
+			} else {
+				$span.text('map not ready, please wait').css('color', '#f77147');
+			}
+		}, 300);
+	});
+
+	$('#triple-map-place-2').on('input', function() {
+		const query = $(this).val().trim();
+		const $input = $(this);
+		const inputElement = this;
+		const $span = $input.next('span');
+
+		if (query.length < 3) {
+			$span.text('minimum 3 characters needed to search').css('color', '#666');
+			return;
+		}
+
+		$span.text('searching...').css('color', '#f77147');
+
+		clearTimeout(window.tripleMapSearchTimeout2);
+		window.tripleMapSearchTimeout2 = setTimeout(() => {
+			if (map2Triple && map2Triple.loaded()) {
+				searchLocation(query, false).then(suggestions => {
+					if (suggestions && suggestions.length > 0) {
+						showLocationSuggestions(suggestions, inputElement);
+						$span.text(`${suggestions.length} locations found`).css('color', '#4CAF50');
+					} else {
+						$span.text('no locations found').css('color', '#f77147');
+					}
+				}).catch(error => {
+					console.error('Triple map search error:', error);
+					$span.text('search error, please try again').css('color', '#f77147');
+				});
+			} else {
+				$span.text('map not ready, please wait').css('color', '#f77147');
+			}
+		}, 300);
+	});
+
+	$('#triple-map-place-3').on('input', function() {
+		const query = $(this).val().trim();
+		const $input = $(this);
+		const inputElement = this;
+		const $span = $input.next('span');
+
+		if (query.length < 3) {
+			$span.text('minimum 3 characters needed to search').css('color', '#666');
+			return;
+		}
+
+		$span.text('searching...').css('color', '#f77147');
+
+		clearTimeout(window.tripleMapSearchTimeout3);
+		window.tripleMapSearchTimeout3 = setTimeout(() => {
+			if (map3Triple && map3Triple.loaded()) {
+				searchLocation(query, false).then(suggestions => {
+					if (suggestions && suggestions.length > 0) {
+						showLocationSuggestions(suggestions, inputElement);
+						$span.text(`${suggestions.length} locations found`).css('color', '#4CAF50');
+					} else {
+						$span.text('no locations found').css('color', '#f77147');
+					}
+				}).catch(error => {
+					console.error('Triple map search error:', error);
+					$span.text('search error, please try again').css('color', '#f77147');
+				});
+			} else {
+				$span.text('map not ready, please wait').css('color', '#f77147');
+			}
+		}, 300);
+	});
+
 	// Double map marker toggle functionality using delegated events
 	$(document).on('change', '#double-marker-1', function() {
 		const isChecked = $(this).prop('checked');
@@ -4228,4 +4571,68 @@ $(document).ready(function(){
 		$('.double-map-container .map-wrapper:last .map-label h3').text(largeText);
 		$('.double-map-container .map-wrapper:last .map-label p').text(smallText);
 	});
+
+	// Font picker functionality
+	$('.font__picker .font-options li a').on('click', function(e) {
+		e.preventDefault();
+		console.log('Font picker clicked!');
+
+		// Remove current class from all font options
+		$('.font__picker .font-options li a').removeClass('current');
+		$(this).addClass('current');
+
+		// Get selected font
+		const selectedFont = $(this).attr('data-font');
+		console.log('Selected font:', selectedFont);
+
+		// Save current font globally
+		currentFont = selectedFont;
+
+		// Apply font to all text elements in the map preview areas
+		applyFontToAllLayouts(selectedFont);
+	});
+
+	// Function to apply font to all layouts
+	function applyFontToAllLayouts(fontFamily) {
+		// For serif fonts
+		const isSerif = fontFamily === 'Playfair Display';
+		// For cursive fonts
+		const isCursive = fontFamily === 'Dancing Script' || fontFamily === 'Pacifico' ||
+		                  fontFamily === 'Great Vibes' || fontFamily === 'Sacramento' ||
+		                  fontFamily === 'Allura' || fontFamily === 'Satisfy' ||
+		                  fontFamily === 'Amatic SC' || fontFamily === 'Permanent Marker' ||
+		                  fontFamily === 'Caveat' || fontFamily === 'Indie Flower';
+		// For display fonts
+		const isDisplay = fontFamily === 'Bebas Neue' || fontFamily === 'Lobster' ||
+		                  fontFamily === 'Righteous';
+
+		let fontStyle;
+		if (isSerif) {
+			fontStyle = `"${fontFamily}", serif`;
+		} else if (isCursive) {
+			fontStyle = `"${fontFamily}", cursive`;
+		} else if (isDisplay) {
+			fontStyle = `"${fontFamily}", cursive`; // Display fonts use cursive fallback
+		} else {
+			fontStyle = `"${fontFamily}", sans-serif`;
+		}
+
+		console.log('Applying font:', fontStyle);
+
+		// Apply to single map layout - target all title elements
+		$('.map-preview-title h3, .map-preview-title p, #preview-title, #preview-subtitle').each(function() {
+			$(this).css('font-family', fontStyle);
+			console.log('Applied to:', this, 'Font:', $(this).css('font-family'));
+		});
+
+		// Apply to double map layout
+		$('.double-map-title h2').css('font-family', fontStyle);
+		$('.double-map-container .map-label h3, .double-map-container .map-label p').css('font-family', fontStyle);
+
+		// Apply to triple map layout
+		$('.triple-map-title h2').css('font-family', fontStyle);
+		$('.triple-map-container .map-label h3, .triple-map-container .map-label p').css('font-family', fontStyle);
+
+		console.log('Font changed to:', fontFamily);
+	}
 });
