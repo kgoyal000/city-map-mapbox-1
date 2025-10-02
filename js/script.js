@@ -1817,18 +1817,177 @@ function toggleMapMarker() {
 	const markerCheckbox = document.querySelector('.details__wrapper .map__marker input[type="checkbox"]');
 
 	if (markerCheckbox && markerCheckbox.checked) {
-		if (currentMarker && map) {
-			currentMarker.addTo(map);
-		}
+		// Enable click-to-place marker mode
+		enableMarkerPlacement();
 		// Show marker info section for single layout
 		$('.details__wrapper .marker__info').slideDown(300);
+		// Show instruction message
+		showMarkerInstruction('Click or tap on the map to place a marker');
 	} else {
+		// Disable marker placement mode
+		disableMarkerPlacement();
 		if (currentMarker) {
 			currentMarker.remove();
+			currentMarker = null;
 		}
 		// Hide marker info section for single layout
 		$('.details__wrapper .marker__info').slideUp(300);
 	}
+}
+
+// Enable click/tap to place marker on map
+function enableMarkerPlacement() {
+	if (!map) return;
+
+	// Change cursor to indicate marker placement mode
+	map.getCanvas().style.cursor = 'crosshair';
+
+	// Remove existing click handler if any
+	if (map._markerClickHandler) {
+		map.off('click', map._markerClickHandler);
+	}
+
+	// Add click handler for marker placement
+	map._markerClickHandler = function(e) {
+		const coordinates = [e.lngLat.lng, e.lngLat.lat];
+		placeMarkerAtLocation(coordinates);
+	};
+
+	map.on('click', map._markerClickHandler);
+}
+
+// Disable marker placement mode
+function disableMarkerPlacement() {
+	if (!map) return;
+
+	// Reset cursor
+	map.getCanvas().style.cursor = '';
+
+	// Remove click handler
+	if (map._markerClickHandler) {
+		map.off('click', map._markerClickHandler);
+		map._markerClickHandler = null;
+	}
+}
+
+// Place marker at specific coordinates
+function placeMarkerAtLocation(coordinates) {
+	if (!map) return;
+
+	// Remove existing marker
+	if (currentMarker) {
+		currentMarker.remove();
+	}
+
+	// Create custom marker element if icon is selected
+	let markerElement = null;
+	if (currentMarkerIcon) {
+		const el = document.createElement('div');
+		el.className = 'custom-marker';
+		el.innerHTML = currentMarkerIcon;
+		el.style.width = '40px';
+		el.style.height = '40px';
+		el.style.cursor = 'move';
+		el.style.display = 'flex';
+		el.style.alignItems = 'center';
+		el.style.justifyContent = 'center';
+
+		// Apply color to SVG elements
+		const svg = el.querySelector('svg');
+		if (svg) {
+			svg.style.width = '100%';
+			svg.style.height = '100%';
+
+			const fills = svg.querySelectorAll('.marker-fill');
+			fills.forEach(path => path.setAttribute('fill', currentMarkerColor));
+
+			const strokes = svg.querySelectorAll('.marker-stroke');
+			strokes.forEach(path => path.setAttribute('stroke', currentMarkerColor));
+
+			const st0Elements = svg.querySelectorAll('.st0');
+			st0Elements.forEach(el => el.setAttribute('fill', currentMarkerColor));
+
+			if (fills.length === 0 && strokes.length === 0 && st0Elements.length === 0) {
+				const allPaths = svg.querySelectorAll('path');
+				allPaths.forEach(path => {
+					path.setAttribute('fill', currentMarkerColor);
+					path.setAttribute('stroke', currentMarkerColor);
+				});
+			}
+		}
+
+		markerElement = el;
+	}
+
+	// Create marker with draggable option
+	currentMarker = markerElement
+		? new mapboxgl.Marker(markerElement, { draggable: true })
+		: new mapboxgl.Marker({ color: currentMarkerColor, draggable: true });
+
+	currentMarker
+		.setLngLat(coordinates)
+		.addTo(map);
+
+	// Update marker position on drag end
+	currentMarker.on('dragend', function() {
+		const lngLat = currentMarker.getLngLat();
+		console.log('Marker dragged to:', lngLat);
+		// Update address fields if needed
+		updateMarkerAddress(lngLat);
+	});
+
+	console.log('✓ Marker placed at:', coordinates);
+	hideMarkerInstruction();
+}
+
+// Show instruction message
+function showMarkerInstruction(message) {
+	let instructionDiv = document.querySelector('.marker-instruction');
+	if (!instructionDiv) {
+		instructionDiv = document.createElement('div');
+		instructionDiv.className = 'marker-instruction';
+		instructionDiv.style.cssText = `
+			position: fixed;
+			top: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			background: rgba(0, 0, 0, 0.8);
+			color: white;
+			padding: 12px 24px;
+			border-radius: 8px;
+			z-index: 10000;
+			font-size: 14px;
+			font-weight: 500;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+		`;
+		document.body.appendChild(instructionDiv);
+	}
+	instructionDiv.textContent = message;
+	instructionDiv.style.display = 'block';
+}
+
+// Hide instruction message
+function hideMarkerInstruction() {
+	const instructionDiv = document.querySelector('.marker-instruction');
+	if (instructionDiv) {
+		instructionDiv.style.display = 'none';
+	}
+}
+
+// Update marker address via reverse geocoding
+function updateMarkerAddress(lngLat) {
+	fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lngLat.lng},${lngLat.lat}.json?access_token=${mapboxgl.accessToken}`)
+		.then(response => response.json())
+		.then(data => {
+			if (data.features && data.features.length > 0) {
+				const place = data.features[0];
+				const addressInput = document.querySelector('.details__wrapper .marker__info .address__info input[type="text"]');
+				if (addressInput) {
+					addressInput.value = place.place_name;
+				}
+			}
+		})
+		.catch(error => console.error('Reverse geocoding error:', error));
 }
 
 function updateMapTitle() {
