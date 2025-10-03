@@ -1729,6 +1729,48 @@ function applyCustomMapColors() {
 	}
 }
 
+// Helper function to convert RGB to Hex
+function rgbToHex(rgb) {
+	const result = rgb.match(/\d+/g);
+	if (!result || result.length < 3) return rgb;
+
+	const r = parseInt(result[0]);
+	const g = parseInt(result[1]);
+	const b = parseInt(result[2]);
+
+	return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+}
+
+// Helper function to determine if text should be white or black based on background color
+function getContrastTextColor(backgroundColor) {
+	// Convert hex to RGB if needed
+	let r, g, b;
+
+	if (backgroundColor.startsWith('#')) {
+		const hex = backgroundColor.replace('#', '');
+		r = parseInt(hex.substr(0, 2), 16);
+		g = parseInt(hex.substr(2, 2), 16);
+		b = parseInt(hex.substr(4, 2), 16);
+	} else if (backgroundColor.startsWith('rgb')) {
+		const result = backgroundColor.match(/\d+/g);
+		if (result && result.length >= 3) {
+			r = parseInt(result[0]);
+			g = parseInt(result[1]);
+			b = parseInt(result[2]);
+		} else {
+			return '#000'; // Default to black
+		}
+	} else {
+		return '#000'; // Default to black
+	}
+
+	// Calculate relative luminance (perceived brightness)
+	const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+	// Return white for dark backgrounds, black for light backgrounds
+	return luminance > 0.5 ? '#000000' : '#FFFFFF';
+}
+
 // Helper function to apply current background color to all relevant elements
 function applyBackgroundColorToAllElements() {
 	// Always use a background color, default to white if not set
@@ -4796,51 +4838,8 @@ $(document).ready(function(){
 			$(this).addClass('current');
 		}
 	});
-	
-	// Helper function to convert RGB to Hex
-	function rgbToHex(rgb) {
-		const result = rgb.match(/\d+/g);
-		if (!result || result.length < 3) return rgb;
-		
-		const r = parseInt(result[0]);
-		const g = parseInt(result[1]);
-		const b = parseInt(result[2]);
-		
-		return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
-	}
-	
-	// Helper function to determine if text should be white or black based on background color
-	function getContrastTextColor(backgroundColor) {
-		// Convert hex to RGB if needed
-		let r, g, b;
-		
-		if (backgroundColor.startsWith('#')) {
-			const hex = backgroundColor.replace('#', '');
-			r = parseInt(hex.substr(0, 2), 16);
-			g = parseInt(hex.substr(2, 2), 16);
-			b = parseInt(hex.substr(4, 2), 16);
-		} else if (backgroundColor.startsWith('rgb')) {
-			const result = backgroundColor.match(/\d+/g);
-			if (result && result.length >= 3) {
-				r = parseInt(result[0]);
-				g = parseInt(result[1]);
-				b = parseInt(result[2]);
-			} else {
-				return '#000'; // Default to black
-			}
-		} else {
-			return '#000'; // Default to black
-		}
-		
-		// Calculate relative luminance (perceived brightness)
-		const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-		
-		// Return white for dark backgrounds, black for light backgrounds
-		return luminance > 0.5 ? '#000000' : '#FFFFFF';
-	}
 
 
-	
 	// Set first size as selected if none is selected
 	if ($('.elem__picker .size__picker > a.current').length === 0) {
 		$('.elem__picker .size__picker > a').first().addClass('current');
