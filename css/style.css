@@ -1268,7 +1268,7 @@ body * {
   align-items: flex-start;
   text-decoration: none;
   width: 100%;
-  max-width: 100px;
+  max-width: 85px;
   position: relative;
   margin: 8px 10px;
 }
@@ -2794,6 +2794,7 @@ body * {
   .main__wrapper .outer__main .canvas__wrapper .inn {
     max-width: 100%;
     width: auto;
+    min-width: 70vw;
     margin-right: auto;
     margin-left: auto;
     padding: 0 15px;
@@ -2824,12 +2825,18 @@ body * {
 }
 
 @media (max-width: 480px) {
+  .elem__picker ul{
+    grid-template-columns: repeat(4, 1fr);
+  }
+
   .main__wrapper .outer__main .canvas__wrapper .inn {
     max-width: 100%;
     width: auto;
+    min-width: 90vw;
     margin-right: auto;
     margin-left: auto;
     padding: 0 10px;
+    padding-top: 10px;
   }
 
   .main__wrapper .outer__main .canvas__wrapper canvas {
@@ -2892,13 +2899,13 @@ body * {
   }
 
   .map-preview-title h3 {
-    font-size: 15px;
-    line-height: 20px;
+    font-size: 15px !important;
+    line-height: 16px !important;
   }
 
   .map-preview-title p {
-    font-size: 11px;
-    line-height: 14px;
+    font-size: 12px !important;
+    line-height: 14px !important;
   }
 }
 
@@ -3264,6 +3271,10 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
   display: none;
 }
 
+.triple-map-container .mapboxgl-ctrl-group button, .double-map-container .mapboxgl-ctrl-group button{
+  display: none !important;
+}
+
 .with-valentine.photo-preview {
   position: absolute;
   top: -70%;
@@ -3544,10 +3555,11 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 
 /* Double Map Layout Styles */
 .double-map-view {
-  max-width: 500px;
+  max-width: 1100px;
+  /* min-width: 50vw; */
   width: auto;
   background-color: white;
-  padding: 20px;
+  padding: 40px 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3573,9 +3585,9 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  gap: 15px;
+  gap: 30px;
   width: 100%;
-  max-width: 460px;
+  max-width: 860px;
   padding: 10px;
 }
 
@@ -3587,8 +3599,8 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 }
 
 .double-map-container .double-map {
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   border-radius: 50%;
   overflow: hidden;
   position: relative;
@@ -3751,6 +3763,7 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 @media (max-width: 991px) {
   .double-map-view {
     max-width: 95%;
+    min-width: 70vw;
     width: 100%;
     padding: 15px;
   }
@@ -3813,6 +3826,7 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 @media (max-width: 768px) {
   .double-map-view {
     max-width: 95%;
+    min-width: auto;
     width: 100%;
     padding: 12px;
   }
@@ -3877,6 +3891,7 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 @media (max-width: 480px) {
   .double-map-view {
     max-width: 98%;
+    min-width: auto;
     width: 100%;
     padding: 10px;
   }
@@ -4251,14 +4266,14 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
 
   /* Style grid - 3 columns on mobile */
   .style-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 5px !important;
   }
 
   /* Font grid - 3 columns on mobile */
   .font-options-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 5px !important;
   }
 
   .font-options-grid .abc-preview {
