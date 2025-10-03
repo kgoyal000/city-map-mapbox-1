@@ -35,7 +35,7 @@ let customColors = {
 	land: '#F5F5DC',
 	roads: '#FFFFFF',
 	water: '#87CEEB',
-	background: '#F0F0F0'
+	background: '#FFFFFF'
 };
 let currentMarkerIcon = null; // Store the current marker icon element
 let currentMarkerColor = '#E53422'; // Default red color
@@ -271,20 +271,30 @@ async function initializeDoubleMaps() {
 		// Set up first map
 		map1.on('load', function() {
 			console.log('Map 1 loaded successfully!');
-			
+
 			// Add navigation controls to map1
 			map1.addControl(new mapboxgl.NavigationControl(), 'top-left');
-			
+
+			// Apply background color after map loads
+			setTimeout(function() {
+				applyBackgroundColorToAllElements();
+			}, 100);
+
 			console.log('Map 1 setup complete');
 		});
-		
+
 		// Set up second map
 		map2.on('load', function() {
 			console.log('Map 2 loaded successfully!');
-			
+
 			// Add navigation controls to map2
 			map2.addControl(new mapboxgl.NavigationControl(), 'top-left');
-			
+
+			// Apply background color after map loads
+			setTimeout(function() {
+				applyBackgroundColorToAllElements();
+			}, 100);
+
 			console.log('Map 2 setup complete');
 		});
 		
@@ -363,18 +373,33 @@ async function initializeTripleMaps() {
 		map1Triple.on('load', function() {
 			console.log('Map 1 (triple) loaded successfully!');
 			map1Triple.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+			// Apply background color after map loads
+			setTimeout(function() {
+				applyBackgroundColorToAllElements();
+			}, 100);
 		});
 
 		// Set up second map
 		map2Triple.on('load', function() {
 			console.log('Map 2 (triple) loaded successfully!');
 			map2Triple.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+			// Apply background color after map loads
+			setTimeout(function() {
+				applyBackgroundColorToAllElements();
+			}, 100);
 		});
 
 		// Set up third map
 		map3Triple.on('load', function() {
 			console.log('Map 3 (triple) loaded successfully!');
 			map3Triple.addControl(new mapboxgl.NavigationControl(), 'top-left');
+
+			// Apply background color after map loads
+			setTimeout(function() {
+				applyBackgroundColorToAllElements();
+			}, 100);
 		});
 
 		// Error handlers
@@ -640,6 +665,11 @@ function switchMapLayout(isDouble, isTriple = false) {
 			}, 100);
 		}
 	}
+
+	// Apply current background color to all elements after switching layouts
+	setTimeout(function() {
+		applyBackgroundColorToAllElements();
+	}, 300);
 }
 
 function fixCanvasSize() {
@@ -1693,6 +1723,46 @@ function applyCustomMapColors() {
 	}
 }
 
+// Helper function to apply current background color to all relevant elements
+function applyBackgroundColorToAllElements() {
+	// Always use a background color, default to white if not set
+	const backgroundColor = customColors.background || '#FFFFFF';
+
+	// Apply background color to all canvas and preview elements
+	$('.map-preview-title').css('background-color', backgroundColor);
+	$('.main__wrapper .outer__main .canvas__wrapper canvas').css('background-color', backgroundColor);
+	$('.main__wrapper .outer__main .canvas__wrapper .inn').css('background-color', backgroundColor);
+	$('canvas.mapboxgl-canvas').css('background-color', backgroundColor);
+	$('.photo-preview').css('background-color', backgroundColor);
+	$('div#map.layout-circle').css('background-color', backgroundColor);
+	$('div#map.layout-full-heart').css('background-color', backgroundColor);
+
+	// Apply background color to double and triple map layouts
+	$('.double-map-view').css('background-color', backgroundColor);
+	$('.triple-map-view').css('background-color', backgroundColor);
+	$('.double-map-container').css('background-color', backgroundColor);
+	$('.triple-map-container').css('background-color', backgroundColor);
+	$('.double-map').css('background-color', backgroundColor);
+	$('.triple-map').css('background-color', backgroundColor);
+	$('#map1, #map2').css('background-color', backgroundColor);
+	$('#map1-triple, #map2-triple, #map3-triple').css('background-color', backgroundColor);
+
+	// Apply background color to photo preview areas
+	$('.with-photo .photo-preview').css('background-color', backgroundColor);
+	$('.photo-preview.with-valentine path.outline').css('fill', backgroundColor);
+
+	// Automatically adjust text color based on background brightness
+	const textColor = getContrastTextColor(backgroundColor);
+	$('.map-preview-title h3, .map-preview-title p').css('color', textColor);
+
+	// Apply text color to double and triple map labels
+	$('.double-map-title h2').css('color', textColor);
+	$('.triple-map-title h2').css('color', textColor);
+	$('.map-label h3, .map-label p').css('color', textColor);
+
+	console.log('Background color applied to all elements:', backgroundColor, 'Text color:', textColor);
+}
+
 function resetMapStyle() {
 	if (map) {
 		// Reset to original style
@@ -2233,6 +2303,11 @@ function changeMapLayout(layoutType) {
 				mapContainer.style.borderRadius = '8px';
 		}
 	}
+
+	// Apply current background color to all elements after layout change
+	setTimeout(function() {
+		applyBackgroundColorToAllElements();
+	}, 200);
 }
 
 // Function to show photo in title area
@@ -3566,9 +3641,20 @@ $(document).ready(function(){
 			// Auto-select first frame option when Framed Poster is clicked
 			if ($(this).attr("data-id") === '2') {
 				const $frameOptions = $('.el__format[data-id="2"] .image__changer ul li a');
-				if ($frameOptions.length > 0 && !$frameOptions.hasClass('current')) {
-					$frameOptions.first().addClass('current').trigger('click');
+				if ($frameOptions.length > 0) {
+					// Find the current frame option, or use the first one
+					const $currentFrame = $frameOptions.filter('.current');
+					if ($currentFrame.length > 0) {
+						// Trigger click on the already selected frame to show it
+						$currentFrame.trigger('click');
+					} else {
+						// No frame selected, select the first one
+						$frameOptions.first().addClass('current').trigger('click');
+					}
 				}
+			} else {
+				// Remove frame when switching to other product types
+				$('.main__wrapper .outer__main .canvas__wrapper .inn > .media img').remove();
 			}
 		}
 	});
@@ -4583,11 +4669,18 @@ $(document).ready(function(){
 	$('.elem__picker.image__changer ul li a').on('click' ,function(e){
 		if ($(this).closest('.image__changer').length) {
 			if ($(this).hasClass('current')) {
-				if ($('.main__wrapper .outer__main .canvas__wrapper .inn > .media>img').length) {
-					$('.main__wrapper .outer__main .canvas__wrapper .inn > .media>img').attr("src" ,$(this).attr("data-src"));
-				} else {
-					$('.main__wrapper .outer__main .canvas__wrapper .inn > .media').append("<img src="+ $(this).attr("data-src") +">");				
-				}
+				// Update frame for all visible map layouts (single, double, triple)
+				const frameSrc = $(this).attr("data-src");
+				const $allMediaContainers = $('.main__wrapper .outer__main .canvas__wrapper .inn > .media');
+
+				$allMediaContainers.each(function() {
+					const $media = $(this);
+					if ($media.find('img').length) {
+						$media.find('img').attr("src", frameSrc);
+					} else {
+						$media.append("<img src='"+ frameSrc +"'>");
+					}
+				});
 			}
 		}
 	});
@@ -4652,6 +4745,17 @@ $(document).ready(function(){
 					// Apply background color to preview title and canvas element
 					$('.map-preview-title').css('background-color', selectedColor);
 					$('.main__wrapper .outer__main .canvas__wrapper canvas').css('background-color', selectedColor);
+					$('.main__wrapper .outer__main .canvas__wrapper .inn').css('background-color', selectedColor);
+
+					// Apply background color to double and triple map layouts
+					$('.double-map-view').css('background-color', selectedColor);
+					$('.triple-map-view').css('background-color', selectedColor);
+					$('.double-map-container').css('background-color', selectedColor);
+					$('.triple-map-container').css('background-color', selectedColor);
+					$('.double-map').css('background-color', selectedColor);
+					$('.triple-map').css('background-color', selectedColor);
+					$('#map1, #map2').css('background-color', selectedColor);
+					$('#map1-triple, #map2-triple, #map3-triple').css('background-color', selectedColor);
 
 					// Apply background color to photo preview areas
 					$('.with-photo .photo-preview').css('background-color', selectedColor);
@@ -4664,6 +4768,11 @@ $(document).ready(function(){
 					// Automatically adjust text color based on background brightness
 					const textColor = getContrastTextColor(selectedColor);
 					$('.map-preview-title h3, .map-preview-title p').css('color', textColor);
+
+					// Apply text color to double and triple map labels
+					$('.double-map-title h2').css('color', textColor);
+					$('.triple-map-title h2').css('color', textColor);
+					$('.map-label h3, .map-label p').css('color', textColor);
 
 					console.log('Background color applied:', selectedColor, 'Text color:', textColor);
 				}
@@ -5488,6 +5597,9 @@ $(document).ready(function(){
 		console.log('Font changed to:', fontFamily);
 	}
 
+	// Debounce timer for custom color picker
+	let customColorDebounceTimer = null;
+
 	// Custom color picker functionality - handle both input and change events for immediate feedback
 	$(document).on('input change', '.custom-color-picker', function(e) {
 		e.stopPropagation();
@@ -5496,6 +5608,7 @@ $(document).ready(function(){
 
 		// Check if this is a marker color picker or style color picker
 		const isMarkerColor = $(this).closest('.marker__color').length > 0;
+		const isCustomStyle = $(this).closest('.custom__style').length > 0;
 
 		if (isMarkerColor) {
 			// Handle marker color
@@ -5518,6 +5631,75 @@ $(document).ready(function(){
 			$('.marker-fill').css('fill', selectedColor);
 
 			console.log('Custom marker color selected:', selectedColor);
+		} else if (isCustomStyle) {
+			// Handle custom map style colors (land, roads, water, background)
+			const colorType = $customLink.attr('data-type');
+
+			// Remove current class from all options in this box
+			$(this).closest('.box').find('a').removeClass('current');
+			$customLink.addClass('current');
+
+			// Update the visual color swatch immediately for instant feedback
+			$customLink.find('.color').css('background-color', selectedColor);
+
+			// Update custom color for the specific type
+			if (colorType && customColors[colorType] !== undefined) {
+				customColors[colorType] = selectedColor;
+				console.log('Custom map color selected:', selectedColor, 'for type:', colorType);
+
+				// Special handling for background color - apply to all necessary elements
+				if (colorType === 'background') {
+					// Apply background color to all canvas and preview elements immediately
+					$('.map-preview-title').css('background-color', selectedColor);
+					$('.main__wrapper .outer__main .canvas__wrapper canvas').css('background-color', selectedColor);
+					$('.main__wrapper .outer__main .canvas__wrapper .inn').css('background-color', selectedColor);
+					$('canvas.mapboxgl-canvas').css('background-color', selectedColor);
+					$('.photo-preview').css('background-color', selectedColor);
+					$('div#map.layout-circle').css('background-color', selectedColor);
+					$('div#map.layout-full-heart').css('background-color', selectedColor);
+
+					// Apply background color to double and triple map layouts
+					$('.double-map-view').css('background-color', selectedColor);
+					$('.triple-map-view').css('background-color', selectedColor);
+					$('.double-map-container').css('background-color', selectedColor);
+					$('.triple-map-container').css('background-color', selectedColor);
+					$('.double-map').css('background-color', selectedColor);
+					$('.triple-map').css('background-color', selectedColor);
+					$('#map1, #map2').css('background-color', selectedColor);
+					$('#map1-triple, #map2-triple, #map3-triple').css('background-color', selectedColor);
+
+					// Apply background color to photo preview areas
+					$('.with-photo .photo-preview').css('background-color', selectedColor);
+					$('.photo-preview.with-valentine path.outline').css('fill', selectedColor);
+
+					// Automatically adjust text color based on background brightness
+					const textColor = getContrastTextColor(selectedColor);
+					$('.map-preview-title h3, .map-preview-title p').css('color', textColor);
+
+					// Apply text color to double and triple map labels
+					$('.double-map-title h2').css('color', textColor);
+					$('.triple-map-title h2').css('color', textColor);
+					$('.map-label h3, .map-label p').css('color', textColor);
+
+					console.log('Background color applied:', selectedColor, 'Text color:', textColor);
+				}
+
+				// Clear previous timer
+				if (customColorDebounceTimer) {
+					clearTimeout(customColorDebounceTimer);
+				}
+
+				// Apply the color to the map after debounce (only on 'input' event)
+				// For 'change' event (when user closes picker), apply immediately
+				if (e.type === 'change') {
+					applyCustomMapColors();
+				} else {
+					// Debounce for 'input' event (while dragging)
+					customColorDebounceTimer = setTimeout(function() {
+						applyCustomMapColors();
+					}, 300);
+				}
+			}
 		} else {
 			// Handle style color
 			// Remove current class from all color options
