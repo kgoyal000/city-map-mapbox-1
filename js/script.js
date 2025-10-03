@@ -642,6 +642,36 @@ function switchMapLayout(isDouble, isTriple = false) {
 	}
 }
 
+function fixCanvasSize() {
+	const mapContainer = document.getElementById('map');
+	const canvas = mapContainer.querySelector('canvas');
+	$("#map canvas").removeClass('circle-landscape');
+	$("#map canvas").removeClass('circle-normal');
+		if (canvas && ($('.design__info .elem__picker:first-child ul li a.current').text().toLowerCase().trim() === 'circle' || $('.design__info .elem__picker:first-child ul li a.current').text().toLowerCase().trim() === 'heart')) {
+		if($("#map canvas").innerWidth() > $("#map canvas").innerHeight()){
+			$("#map canvas").addClass('circle-landscape');
+			
+			// Wait for canvas to render
+			setTimeout(() => {
+				const canvasHeight = $('#map canvas').innerHeight();
+				if(canvasHeight > 0) {
+					$("#map canvas").css({'--max-width': canvasHeight + "px"});
+				}
+			}, 100);
+		}else{
+			$("#map canvas").addClass('circle-normal');
+			
+			// Wait for canvas to render
+			setTimeout(() => {
+				const canvasWidth = $('#map canvas').innerWidth();
+				if(canvasWidth > 0) {
+					$("#map canvas").css({'--max-height': canvasWidth + "px"});
+				}
+			}, 100);
+		}
+	}
+}
+
 // Function to reinitialize map with current state preserved
 async function reinitializeMap() {
 	if (!map) {
@@ -799,11 +829,11 @@ async function reinitializeMap() {
 						
 						const canvas = mapContainer.querySelector('canvas');
 						if (canvas) {
-							canvas.style.width = containerWidth + 'px';
-							canvas.style.height = containerHeight + 'px';
+							fixCanvasSize();
 							// Reapply background color to canvas
 							canvas.style.backgroundColor = savedState.backgroundColor;
 						}
+						
 						
 						console.log(`Resize attempt ${index + 1} completed`);
 					}, delay);
@@ -2023,7 +2053,7 @@ function updateMapTitle() {
 
 function changeMapLayout(layoutType) {
 	console.log('changeMapLayout called with:', layoutType);
-
+	$("#map canvas").removeClass('circle-landscape');
 	// Update current layout tracker
 	currentLayout = layoutType;
 
@@ -2143,8 +2173,10 @@ function changeMapLayout(layoutType) {
 			// shapeOverLay.innerHTML = document.querySelector('#circle-svg').value;
 
 			$("#map canvas").css({
-				"max-height": document.querySelector('#map canvas').clientWidth + "px",
+				"max-height": $('#map canvas').width() + "px",
 			});
+
+			fixCanvasSize()
 
 
 			// previewTitle.classList.add('with-circle')
@@ -3452,6 +3484,7 @@ function resizeFrame(){
 	           'Actual ratio:', (totalHeight / width).toFixed(3),
 	           'Mobile:', isMobile);
 
+	fixCanvasSize();
 	// Force Mapbox to resize - it will handle canvas dimensions properly
 	// Mapbox automatically sizes the canvas with correct device pixel ratio
 	if (map && map.loaded()) {
@@ -4573,6 +4606,11 @@ $(document).ready(function(){
 
 
 	$('.marker__color .wrap a').on("click" ,function(e){
+		// Don't prevent default for custom color picker links - let the color picker work
+		if ($(this).hasClass('custom')) {
+			return;
+		}
+
 		e.preventDefault();
 		if (!$(this).hasClass('current')) {
 			$(this).closest(".marker__color").find('.current').removeClass('current');
@@ -4582,6 +4620,11 @@ $(document).ready(function(){
 
 
 	$('.custom__style .wrap a').on("click" ,function(e){
+		// Don't prevent default for custom color picker links - let the color picker work
+		if ($(this).hasClass('custom')) {
+			return;
+		}
+
 		e.preventDefault();
 		if (!$(this).hasClass('current')) {
 			// Get the active tab to determine which property we're changing
@@ -5444,4 +5487,60 @@ $(document).ready(function(){
 
 		console.log('Font changed to:', fontFamily);
 	}
+
+	// Custom color picker functionality - handle both input and change events for immediate feedback
+	$(document).on('input change', '.custom-color-picker', function(e) {
+		e.stopPropagation();
+		const selectedColor = $(this).val();
+		const $customLink = $(this).closest('a.custom');
+
+		// Check if this is a marker color picker or style color picker
+		const isMarkerColor = $(this).closest('.marker__color').length > 0;
+
+		if (isMarkerColor) {
+			// Handle marker color
+			// Remove current class from all marker color options in this section
+			$(this).closest('.marker__color').find('a').removeClass('current');
+			$customLink.addClass('current');
+
+			// Update the marker color globally
+			currentMarkerColor = selectedColor;
+
+			// Update existing marker if it exists
+			if (currentMarker) {
+				currentMarker.remove();
+				currentMarker = new mapboxgl.Marker({ color: selectedColor })
+					.setLngLat(currentMarker.getLngLat())
+					.addTo(map);
+			}
+
+			// Update marker fill color in SVG previews
+			$('.marker-fill').css('fill', selectedColor);
+
+			console.log('Custom marker color selected:', selectedColor);
+		} else {
+			// Handle style color
+			// Remove current class from all color options
+			$(this).closest('.elem__picker').find('a').removeClass('current');
+			$customLink.addClass('current');
+
+			// Determine which color section this is (outline, cover, border, custom)
+			const $colorSection = $(this).closest('.color').parent().parent();
+			const sectionTitle = $colorSection.find('p').first().text().trim();
+
+			console.log('Custom color selected:', selectedColor, 'for section:', sectionTitle);
+
+			// Apply color based on section type
+			if (sectionTitle.includes('Outline')) {
+				$('.outline').css('fill', selectedColor);
+			} else if (sectionTitle.includes('Cover')) {
+				$('.cover').css('fill', selectedColor);
+			} else if (sectionTitle.includes('Border')) {
+				$('.bor').css('fill', selectedColor);
+			} else if (sectionTitle.includes('Custom')) {
+				$('.cust').css('fill', selectedColor);
+			}
+		}
+	});
+
 });
