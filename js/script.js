@@ -1567,6 +1567,12 @@ async function changeMapStyle(styleKey) {
 	const styleConfig = mapStyles[styleKey] || mapStyles['minimal'];
 	currentStyle = styleKey; // Save the style key, not the config
 
+	// Reset background to white when switching from custom to other styles
+	if (styleKey !== 'custom') {
+		customColors.background = '#FFFFFF';
+		applyBackgroundColorToAllElements();
+	}
+
 	// Helper function to apply style to a single map instance
 	const applyStyleToMap = async (mapInstance) => {
 		if (!mapInstance) return;
