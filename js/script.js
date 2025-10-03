@@ -1734,6 +1734,7 @@ function applyBackgroundColorToAllElements() {
 	$('.main__wrapper .outer__main .canvas__wrapper .inn').css('background-color', backgroundColor);
 	$('canvas.mapboxgl-canvas').css('background-color', backgroundColor);
 	$('.photo-preview').css('background-color', backgroundColor);
+	$('div#map').css('background-color', backgroundColor);
 	$('div#map.layout-circle').css('background-color', backgroundColor);
 	$('div#map.layout-full-heart').css('background-color', backgroundColor);
 
@@ -4746,6 +4747,7 @@ $(document).ready(function(){
 					$('.map-preview-title').css('background-color', selectedColor);
 					$('.main__wrapper .outer__main .canvas__wrapper canvas').css('background-color', selectedColor);
 					$('.main__wrapper .outer__main .canvas__wrapper .inn').css('background-color', selectedColor);
+					$('div#map').css('background-color', selectedColor);
 
 					// Apply background color to double and triple map layouts
 					$('.double-map-view').css('background-color', selectedColor);
@@ -5655,6 +5657,7 @@ $(document).ready(function(){
 					$('.main__wrapper .outer__main .canvas__wrapper .inn').css('background-color', selectedColor);
 					$('canvas.mapboxgl-canvas').css('background-color', selectedColor);
 					$('.photo-preview').css('background-color', selectedColor);
+					$('div#map').css('background-color', selectedColor);
 					$('div#map.layout-circle').css('background-color', selectedColor);
 					$('div#map.layout-full-heart').css('background-color', selectedColor);
 
