@@ -3073,7 +3073,7 @@ body * {
   top: 0 !important;
   left: 50% !important;
   transform: translate(-50%, 0) !important;
-  padding: 0 !important;
+  padding: 20px !important;
 }
 
 /* Mapbox controls positioning */
