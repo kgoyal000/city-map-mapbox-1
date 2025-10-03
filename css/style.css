@@ -2392,6 +2392,7 @@ body * {
   position: absolute;
   z-index: 2;
   pointer-events: none;
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
 }
 
 .main__wrapper .outer__main .canvas__wrapper .inn>.media img {
