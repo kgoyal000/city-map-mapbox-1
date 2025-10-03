@@ -2393,13 +2393,14 @@ body * {
   position: absolute;
   z-index: 2;
   pointer-events: none;
-  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+  
 }
 
 .main__wrapper .outer__main .canvas__wrapper .inn>.media img {
   width: 100%;
   max-width: 100%;
   height: 100%;
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
 }
 
 .elem__picker ul li a {
