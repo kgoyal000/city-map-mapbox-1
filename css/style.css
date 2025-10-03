@@ -2379,10 +2379,10 @@ body * {
   -ms-flex-pack: center;
   justify-content: center;
   position: absolute;
-  top: -3.5%;
-  left: -3.5%;
-  width: 107%;
-  height: 107%;
+  top: -4.5%;
+  left: -3.4%;
+  width: 106.5%;
+  height: 108.5%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
