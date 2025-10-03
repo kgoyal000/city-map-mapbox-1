@@ -85,6 +85,7 @@ body * {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
+  margin: auto;
 }
 
 .main__wrapper .outer__main .canvas__wrapper .gallery {
@@ -2838,8 +2839,8 @@ body * {
     min-width: 90vw;
     margin-right: auto;
     margin-left: auto;
-    padding: 0 10px;
-    padding-top: 10px;
+    padding: 0;
+    padding-top: 0px;
   }
 
   .main__wrapper .outer__main .canvas__wrapper canvas {
