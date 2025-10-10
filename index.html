@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700;900&family=Bebas+Neue&family=Dancing+Script:wght@400;500;600;700&family=Pacifico&family=Great+Vibes&family=Sacramento&family=Allura&family=Satisfy&family=Lobster&family=Righteous&family=Amatic+SC:wght@400;700&family=Permanent+Marker&family=Caveat:wght@400;500;600;700&family=Indie+Flower&display=swap" rel="stylesheet">
+
+	<!-- Mapbox CSS -->
+	<link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+	<!-- Mapbox JS -->
+	<script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+
+	<!-- Cropper.js CSS and JS (v1.6.2 - stable version) -->
+	<link href='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css' rel='stylesheet' />
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js'></script>
+
+	<!--
+	MAP EDITOR SETUP INSTRUCTIONS:
+
+	1. Get a free Mapbox token from: https://account.mapbox.com/
+	2. Replace the token in js/script.js line 18
+	3. Open index.html in your browser
+	4. The interactive map should load automatically
+
+	If the map doesn't appear, check the browser console (F12) for error messages.
+	-->
+</head>
+<body>
+
+	<textarea name="" id="circle-svg" style="display: none;">
+		<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="svgLayer" x="0px" y="0px" viewBox="0 0 400 400" style="enable-background:new 0 0 400 400;" xml:space="preserve" class="editor-color-53 small-little">
+			<style type="text/css">
+			  .st0{fill:#ffffff;}
+	  
+			  .editor-color-1 .st0{fill:#ffffff;}
+			  .editor-custom-color1-whitewhite .st0{fill:#a9a9a9;}
+			  .editor-color-52 .st0{fill:#ffffff;}
+			  .editor-color-53 .st0{fill:#ffffff;}
+			  .star-editor-gradient-1 .st0{fill:none;}
+			  .star-editor-gradient-2 .st0{fill:none;}
+			  .star-editor-gradient-3 .st0{fill:none;}
+	  
+			  .editor-color-1 .st1{fill:#FFFFFF;}
+			  .editor-custom-color1-whitewhite .st1{fill:#FFFFFF;}
+			  .editor-color-52 .st1{fill:#FFFFFF;}
+			  .editor-color-53 .st1{fill:#FFFFFF;}
+			  .editor-color-11 .st1{fill:#000000;}
+			  .editor-color-47 .st1{fill:#191d29;}
+			  .editor-color-48 .st1{fill:#0f404c;}
+			  .editor-color-26 .st1{fill:#3b4248;}
+			  .editor-color-49 .st1{fill:#280a2e;}
+			  .editor-color-56 .st1{fill:#ffffff;}
+			  .star-editor-gradient-1 .st1{fill:#ffffff;}
+			  .star-editor-gradient-2 .st1{fill:#ffffff;}
+			  .star-editor-gradient-3 .st1{fill:#080327;}
+			</style>
+			<g>
+			  <path class="st1 cust" d="M0,0v400h400V0H0z M199.9,393.7C93,393.7,6.3,307,6.3,200.1S93,6.6,199.9,6.6s193.6,86.7,193.6,193.6   S306.8,393.7,199.9,393.7z" style="fill: rgb(1, 2, 3);"></path>
+			</g>
+			<g>
+			  <path class="st0 bor" d="M199.9,394.9C92.5,394.9,5.1,307.5,5.1,200.1S92.5,5.3,199.9,5.3c107.4,0,194.8,87.4,194.8,194.8   S307.3,394.9,199.9,394.9z M199.9,7.8C93.9,7.8,7.6,94.1,7.6,200.1c0,106,86.3,192.3,192.3,192.3s192.3-86.3,192.3-192.3   C392.2,94.1,305.9,7.8,199.9,7.8z" style="fill: rgb(255, 255, 255);"></path>
+			</g>
+			</svg>
+	</textarea>
+
+	<textarea name="" id="valentine-svg" style="display: none;">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 204.37 185" style="
+    fill: transparent;
+">
+  <defs>
+    <clipPath id="photo-heart">
+      <path d="M197.19,79.91c-12.89,55.16-89.21,97.44-95,100.39-5.78-2.95-82.09-45.23-95-100.39-2.52-10.78-5.65-31.82,6.23-50.08,1.4-2.16,7.5-10.68,18.8-17.44C48.35,2.72,78.73-3.65,102.19,30.51,125.67-3.67,156.03,2.72,172.16,12.39c11.3,6.76,17.4,15.29,18.8,17.44,11.88,18.25,8.75,39.3,6.23,50.08Z"></path>
+    </clipPath>
+  </defs>
+  <image width="100%" height="100%" preserveAspectRatio="xMidYMid slice" clip-path="url(#photo-heart)" href=""></image>
+  <path class="cover" d="M.01,0v185h204.36V0H.01ZM197.19,79.91c-12.89,55.16-89.21,97.44-95,100.39-5.78-2.95-82.09-45.23-95-100.39-2.52-10.78-5.65-31.82,6.23-50.08,1.4-2.16,7.5-10.68,18.8-17.44C48.35,2.72,78.73-3.65,102.19,30.51,125.67-3.67,156.03,2.72,172.16,12.39c11.3,6.76,17.4,15.29,18.8,17.44,11.88,18.25,8.75,39.3,6.23,50.08Z"></path>
+  <path class="outline" d="M203.9,57.21c-.49-11.3-3.6-21.42-9.23-30.08-1.69-2.58-8.15-11.59-20.23-18.81-5.18-3.11-15.87-8.32-29.21-8.32-8.4,0-16.42,2.06-23.86,6.13-6.98,3.81-13.41,9.4-19.18,16.65-5.76-7.24-12.2-12.83-19.18-16.65C75.57,2.07,67.55.01,59.15.01,45.81.01,35.12,5.21,29.94,8.31c-12.47,7.47-19.05,17-20.24,18.83C4.08,35.8.97,45.91.48,57.21c-.05,1.05-.07,2.1-.07,3.17,0,6.44.83,13.25,2.47,20.27,3.1,13.24,9.92,26.78,20.28,40.23,8.27,10.74,18.82,21.49,31.37,31.94,23.67,19.7,45.43,31.04,45.64,31.15l2.02,1.03,2.01-1.03c5.52-2.81,25.74-14.57,45.66-31.15,12.55-10.45,23.1-21.2,31.37-31.94,10.36-13.45,17.18-26.99,20.27-40.23,1.64-7.02,2.47-13.83,2.47-20.27,0-1.07-.02-2.12-.07-3.17ZM102.19,179.74c-4.7-2.51-81.48-44.24-94.52-99.95-4.52-19.35-2.39-36.54,6.17-49.68,1.08-1.67,7.04-10.35,18.64-17.3,4.74-2.84,14.51-7.6,26.67-7.6,16.4,0,31.14,8.85,42.63,25.58l.41.6.42-.6c11.5-16.74,26.23-25.59,42.61-25.59,12.13,0,21.92,4.77,26.68,7.61,11.52,6.9,17.55,15.62,18.64,17.3,8.56,13.13,10.69,30.31,6.17,49.68-13.08,55.97-89.82,97.45-94.52,99.95Z" style="
+    fill: white;
+"></path>
+</svg>
+	</textarea>
+	<div class="main__wrapper">
+		<div class="container">
+			<div class="outer__main">
+				<div class="main__switcher">
+					<ul>
+						<li><a href="#" class="current" data-tab="design__info"><span>
+					<img src="img/icons/paint-palette (2).png" alt="design icon" style="width: 20px;">
+					</span>Design</a></li>
+						<li><a href="#" data-tab="location__wrapper">
+							<span>
+						<img src="img/icons/placeholder (3).png" alt="location icon" style="width: 20px;">
+						</svg>
+					</span>Location</a></li>
+						<li><a href="#" data-tab="markers__wrapper"><span>
+						<img src="img/icons/select (1).png" alt="marker icon" style="width: 20px;">
+					</span>Markers</a></li>
+						<li><a href="#" data-tab="format__wrapper"><span>
+						<img src="img/icons/frame (1).png" alt="format icon" style="width: 20px;">
+					</span>Format</a></li>
+					</ul>
+					<div class="design__info">
+						<div class="elem__picker">
+							<p>Layout</p>
+							<ul>
+								<li><a href="#" class="current"><span class="media"><span class="img"><img src="img/frames/square (1).png" alt="asset" style="height: 74%; top: 10px;"></span></span>Square</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/frames/portrait.png" alt="asset" style="height: 74%; top: 10px;"></span></span>With Photo</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/frames/photo.png" alt="asset" style="height: 74%; top: 10px;"></span></span>Valentine</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/frames/circle.png" alt="asset" style="height: 74%; top: 10px;"></span></span>Circle</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/frames/heart.png" alt="asset" style="height: 74%; top: 10px;"></span></span>Heart</a></li>
+								<!-- <li><a href="#"><span class="media"><span class="img"><img src="img/asset6.png" alt="asset"></span></span>House</a></li> -->
+								<li class="double">
+									<p>also available as:</p>
+									<div class="dbl">
+										<a href="#"><span class="media"><span class="img"><img src="img/frames/glazed (1).png" alt="asset" style="height: 74%; top: 10px;"></span></span></span>Double Map</a>
+										<a href="#"><span class="media"><span class="img"><img src="img/frames/board.png" alt="asset" style="height: 74%; top: 10px;"></span></span>Triple Map</a>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="elem__picker">
+							<div class="top">
+								<p>Style</p>
+								<a href="#" class="info__button" data-id="template1">
+									<img src="img/frames/danger (1).png" alt="info" style="width: 20px;">
+								</a>
+							</div>
+							<ul class="style-grid">
+								<li><a href="#" class="current"><span class="media"><span class="img"><img src="img/l1.png" alt="asset"></span></span>Minimal</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l2.png" alt="asset"></span></span>Beachglass</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l3.png" alt="asset"></span></span>Carbon</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l4.png" alt="asset"></span></span>Black</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l6.png" alt="asset"></span></span>Vintage</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l7.png" alt="asset"></span></span>Atlas</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l8.png" alt="asset"></span></span>Classic</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l9.png" alt="asset"></span></span>Pink</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l10.png" alt="asset"></span></span>Green</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/l11.png" alt="asset"></span></span>Intense</a></li>
+								<li><a href="#"><span class="media"><span class="img"><img src="img/icons/photo-edit.png" alt="asset" style="height: 48px; top: 8px; left: 2px;"></span></span>Custom</a></li>
+							</ul>
+						</div>
+						<div class="custom__style">
+							<div class="switcher">
+								<a href="#" class="current" data-id="land">LAND</a>
+								<a href="#" data-id="roads">ROADS</a>
+								<a href="#" data-id="water">WATER</a>
+								<a href="#" data-id="background">BACKGROUND</a>
+							</div>
+							<div class="box" data-id="land">
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#F5DEB3;"></span><span>BEIGE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#8B7355;"></span><span>TAN</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#90EE90;"></span><span>LIGHT GREEN</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#228B22;"></span><span>FOREST GREEN</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#D2B48C;"></span><span>SANDY BROWN</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#8FBC8F;"></span><span>DARK SEA GREEN</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#DEB887;"></span><span>BURLYWOOD</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#F5F5DC;"></span><span>CREAM</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#E5E5E5;"></span><span>LIGHT GRAY</span></a></div>
+								<div class="wrap custom-color-wrap">
+									<a href="#" class="custom" data-type="land">
+										<span class="color">
+											<label for="custom-color-land">
+												<input type="color" class="custom-color-picker" id="custom-color-land" value="#F5DEB3">
+											</label>
+										</span>
+										<span>CUSTOM</span>
+									</a>
+								</div>
+							</div>
+
+							<div class="box" data-id="roads" style="display:none;">
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#FFFFFF;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#000000;"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#D3D3D3;"></span><span>LIGHT GRAY</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#808080;"></span><span>GRAY</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#696969;"></span><span>DIM GRAY</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#FFD700;"></span><span>GOLD</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#FF4500;"></span><span>ORANGE RED</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#FFA500;"></span><span>ORANGE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#8B4513;"></span><span>SADDLE BROWN</span></a></div>
+								<div class="wrap custom-color-wrap">
+									<a href="#" class="custom" data-type="roads">
+										<span class="color">
+											<label for="custom-color-roads">
+												<input type="color" class="custom-color-picker" id="custom-color-roads" value="#FFFFFF">
+											</label>
+										</span>
+										<span>CUSTOM</span>
+									</a>
+								</div>
+							</div>
+
+							<div class="box" data-id="water" style="display:none;">
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#87CEEB;"></span><span>SKY BLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#1E90FF;"></span><span>DODGER BLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#4169E1;"></span><span>ROYAL BLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#0000CD;"></span><span>MEDIUM BLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#000080;"></span><span>NAVY</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#20B2AA;"></span><span>LIGHT SEA GREEN</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#40E0D0;"></span><span>TURQUOISE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#008B8B;"></span><span>DARK CYAN</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#5F9EA0;"></span><span>CADET BLUE</span></a></div>
+								<div class="wrap custom-color-wrap">
+									<a href="#" class="custom" data-type="water">
+										<span class="color">
+											<label for="custom-color-water">
+												<input type="color" class="custom-color-picker" id="custom-color-water" value="#87CEEB">
+											</label>
+										</span>
+										<span>CUSTOM</span>
+									</a>
+								</div>
+							</div>
+
+							<div class="box" data-id="background" style="display:none;">
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#FFFFFF;"></span><span>WHITE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#F8F8F8;"></span><span>ALABASTER</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#F5F5F5;"></span><span>WHITE SMOKE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#FFF5E1;"></span><span>CREAM</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#F0F8FF;"></span><span>ALICE BLUE</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#000000;"></span><span>BLACK</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#1C1C1C;"></span><span>CHARCOAL</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#696969;"></span><span>DIM GRAY</span></a></div>
+								<div class="wrap"><a href="#"><span class="color" style="background-color:#2F4F4F;"></span><span>DARK SLATE GRAY</span></a></div>
+								<div class="wrap custom-color-wrap">
+									<a href="#" class="custom" data-type="background">
+										<span class="color">
+											<label for="custom-color-background">
+												<input type="color" class="custom-color-picker" id="custom-color-background" value="#FFFFFF">
+											</label>
+										</span>
+										<span>CUSTOM</span>
+									</a>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+
+					<!-- Location Wrapper for Single Map (hidden by default) -->
+					<div class="location__wrapper" style="display:none;">
+						<div class="group__input">
+							<p>PLACE *</p>
+							<input type="text" placeholder="For e.g. city, street address or building">
+							<span>minimum 3 characters needed to search</span>
+						</div>
+
+						<!-- Font Picker with ABC Preview -->
+						<div class="elem__picker font__picker">
+							<p>Font</p>
+							<ul class="font-options-grid">
+								<li><a href="#" class="current" data-font="Poppins"><span class="media"><span class="abc-preview" style="font-family: 'Poppins', sans-serif;">ABC</span></span><span class="font-name">Poppins</span></a></li>
+								<li><a href="#" data-font="Montserrat"><span class="media"><span class="abc-preview" style="font-family: 'Montserrat', sans-serif;">ABC</span></span><span class="font-name">Montserrat</span></a></li>
+								<li><a href="#" data-font="Playfair Display"><span class="media"><span class="abc-preview" style="font-family: 'Playfair Display', serif;">ABC</span></span><span class="font-name">Playfair Display</span></a></li>
+								<li><a href="#" data-font="Bebas Neue"><span class="media"><span class="abc-preview" style="font-family: 'Bebas Neue', display;">ABC</span></span><span class="font-name">Bebas Neue</span></a></li>
+								<li><a href="#" data-font="Dancing Script"><span class="media"><span class="abc-preview" style="font-family: 'Dancing Script', cursive;">ABC</span></span><span class="font-name">Dancing Script</span></a></li>
+								<li><a href="#" data-font="Pacifico"><span class="media"><span class="abc-preview" style="font-family: 'Pacifico', cursive;">ABC</span></span><span class="font-name">Pacifico</span></a></li>
+								<li><a href="#" data-font="Great Vibes"><span class="media"><span class="abc-preview" style="font-family: 'Great Vibes', cursive;">ABC</span></span><span class="font-name">Great Vibes</span></a></li>
+								<li><a href="#" data-font="Sacramento"><span class="media"><span class="abc-preview" style="font-family: 'Sacramento', cursive;">ABC</span></span><span class="font-name">Sacramento</span></a></li>
+								<li><a href="#" data-font="Allura"><span class="media"><span class="abc-preview" style="font-family: 'Allura', cursive;">ABC</span></span><span class="font-name">Allura</span></a></li>
+								<li><a href="#" data-font="Satisfy"><span class="media"><span class="abc-preview" style="font-family: 'Satisfy', cursive;">ABC</span></span><span class="font-name">Satisfy</span></a></li>
+								<li><a href="#" data-font="Lobster"><span class="media"><span class="abc-preview" style="font-family: 'Lobster', display;">ABC</span></span><span class="font-name">Lobster</span></a></li>
+								<li><a href="#" data-font="Righteous"><span class="media"><span class="abc-preview" style="font-family: 'Righteous', display;">ABC</span></span><span class="font-name">Righteous</span></a></li>
+								<li><a href="#" data-font="Amatic SC"><span class="media"><span class="abc-preview" style="font-family: 'Amatic SC', cursive;">ABC</span></span><span class="font-name">Amatic SC</span></a></li>
+								<li><a href="#" data-font="Permanent Marker"><span class="media"><span class="abc-preview" style="font-family: 'Permanent Marker', cursive;">ABC</span></span><span class="font-name">Permanent Marker</span></a></li>
+								<li><a href="#" data-font="Caveat"><span class="media"><span class="abc-preview" style="font-family: 'Caveat', cursive;">ABC</span></span><span class="font-name">Caveat</span></a></li>
+								<li><a href="#" data-font="Indie Flower"><span class="media"><span class="abc-preview" style="font-family: 'Indie Flower', cursive;">ABC</span></span><span class="font-name">Indie Flower</span></a></li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Markers Wrapper for Single Map (hidden by default) -->
+					<div class="markers__wrapper" style="display:none;">
+						<div class="map__marker">
+							<label class="container__checkbox">
+							  <input type="checkbox" id="single-marker">
+							  <span class="checkmark"></span>
+							  <p>Add map marker</p>
+							</label>
+                             <a href="#" class="info__button" data-id="template2"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2131842148="" aria-hidden="true">
+							  <circle cx="12" cy="12" r="10.25" stroke="#16212C" stroke-width="1.5" _ngcontent-ng-c2131842148=""></circle>
+							  <rect x="11.25" y="10" width="1.5" height="8" fill="#16212C" _ngcontent-ng-c2131842148=""></rect>
+							  <rect x="11.25" y="7" width="1.5" height="1.5" fill="#16212C" _ngcontent-ng-c2131842148=""></rect>
+							</svg></a>
+						</div>
+						<div class="marker__info" style="display:none;">
+							<div class="marker__switcher">
+								<div class="elem__picker">
+									<ul>
+										<li><a href="#" class="current"><span class="media">
+											<span class="img"><svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="32.946" viewBox="0 0 35.908 32.946" _ngcontent-ng-c919487964="" aria-hidden="true">
+										  <path class="marker-fill" fill="#E53422" data-name="Path 515" d="M19.954,35.946l-2.6-2.37C8.1,25.191,2,19.661,2,12.875A9.779,
+										  9.779,0,0,1,11.875,3a10.752,10.752,0,0,1,8.079,3.752A10.752,10.752,0,0,1,28.033,3a9.779,9.779,0,0,1,9.875,9.875c0,
+										  6.787-6.1,12.316-15.351,20.719Z" transform="translate(-2 -3)" _ngcontent-ng-c919487964=""></path>
+										</svg></span>
+										</span></a></li>
+										<li><a href="#"><span class="media">
+											<span class="img">
+												<svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="30.522" viewBox="0 0 35.908 30.522" _ngcontent-ng-c919487964="" aria-hidden="true">
+										  <path class="marker-fill" fill="#E53422" d="M30.5,18.1v13.1h-8.9v-9.3h-7.4v9.3H5.4V18.1L18,6.1L30.5,18.1z M18,3.9l-15,14.3c-1.6,1.6-4-0.9-2.4-2.5
+											L16.8,0.5c0.7-0.6,1.7-0.6,2.4,0l7.6,7.2V4.3c0-0.4,0.4-0.8,0.8-0.8h2.2c0.4,0,0.8,0.4,0.8,0.8v6.9l4.8,4.5c1.7,1.6-0.7,4.1-2.4,2.5
+											C28,13.4,23,8.7,18,3.9L18,3.9z" _ngcontent-ng-c919487964=""></path>
+										</svg>
+											</span>
+										</span></a></li>
+										<!-- Additional marker icons will be here, truncated for brevity -->
+									</ul>
+								</div>
+								<div class="marker__color">
+									<p>Marker color</p>
+									<div>
+										<div class="wrap"><a href="#" class="current"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+										<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+										<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+										<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+										<div class="wrap custom-color-wrap">
+									<a href="#" class="custom">
+										<span class="color">
+											<label for="custom-color-{{INDEX}}">
+												<input type="color" class="custom-color-picker" id="custom-color-{{INDEX}}" value="#ff0000">
+											</label>
+										</span>
+										<span>CUSTOM</span>
+									</a>
+								</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="map__title">
+							<div class="title">
+								<label class="container__checkbox">
+								  <input type="checkbox" id="single-title" checked>
+								  <span class="checkmark"></span>
+								  <p>Map title</p>
+								</label>
+							</div>
+							<div class="content" style="display:block;">
+								<span>The default title and coordinates can be edited</span>
+								<div class="group__input">
+									<div class="top">
+										<p>Large text</p>
+										<a href="#" class="open__popup--ideas">Our ideas for titles</a>
+									</div>
+									<textarea name="" id="">MIAMI, UNITED STATES</textarea>
+								</div>
+								<div class="group__input">
+									<textarea name="" id="">25.76168°N / 80.19179°W</textarea>
+								</div>
+								<div class="btn">
+									<a href="#" class="select__format">Select format <span><svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c3263369692="" aria-hidden="true">
+									  <path d="M5.172 7.00026L0.222001 2.05026L1.636 0.636257L8 7.00026L1.636 13.3643L0.222 11.9503L5.172 7.00026Z" fill="#16212C" _ngcontent-ng-c3263369692=""></path>
+									</svg></span></a>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Double Map Design Panel (hidden by default) -->
+					<div class="details__wrapper--double" style="display:none;">
+						<div class="group__input">
+							<p>MAIN TITLE</p>
+							<input type="text" id="double-map-main-title" value="Love knows no distance">
+						</div>
+					</div>
+
+					<!-- Location Wrapper for Double Layout (hidden by default) -->
+					<div class="location__wrapper--double" style="display:none;">
+						<!-- Place inputs at the top -->
+						<div class="group__input">
+							<p>Map (left) - PLACE *</p>
+							<input type="text" id="double-map-place-1" placeholder="For e.g. city, street address or building" value="Miami, FL, USA">
+							<span>minimum 3 characters needed to search</span>
+						</div>
+
+						<div class="group__input">
+							<p>Map (right) - PLACE *</p>
+							<input type="text" id="double-map-place-2" placeholder="For e.g. city, street address or building" value="London, UK">
+							<span>minimum 3 characters needed to search</span>
+						</div>
+
+						<!-- Font Picker below location inputs -->
+						<div class="elem__picker font__picker">
+							<p>Font</p>
+							<ul class="font-options-grid">
+								<li><a href="#" class="current" data-font="Poppins"><span class="media"><span class="abc-preview" style="font-family: 'Poppins', sans-serif;">ABC</span></span><span class="font-name">Poppins</span></a></li>
+								<li><a href="#" data-font="Montserrat"><span class="media"><span class="abc-preview" style="font-family: 'Montserrat', sans-serif;">ABC</span></span><span class="font-name">Montserrat</span></a></li>
+								<li><a href="#" data-font="Playfair Display"><span class="media"><span class="abc-preview" style="font-family: 'Playfair Display', serif;">ABC</span></span><span class="font-name">Playfair Display</span></a></li>
+								<li><a href="#" data-font="Bebas Neue"><span class="media"><span class="abc-preview" style="font-family: 'Bebas Neue', display;">ABC</span></span><span class="font-name">Bebas Neue</span></a></li>
+								<li><a href="#" data-font="Dancing Script"><span class="media"><span class="abc-preview" style="font-family: 'Dancing Script', cursive;">ABC</span></span><span class="font-name">Dancing Script</span></a></li>
+								<li><a href="#" data-font="Pacifico"><span class="media"><span class="abc-preview" style="font-family: 'Pacifico', cursive;">ABC</span></span><span class="font-name">Pacifico</span></a></li>
+								<li><a href="#" data-font="Great Vibes"><span class="media"><span class="abc-preview" style="font-family: 'Great Vibes', cursive;">ABC</span></span><span class="font-name">Great Vibes</span></a></li>
+								<li><a href="#" data-font="Sacramento"><span class="media"><span class="abc-preview" style="font-family: 'Sacramento', cursive;">ABC</span></span><span class="font-name">Sacramento</span></a></li>
+								<li><a href="#" data-font="Allura"><span class="media"><span class="abc-preview" style="font-family: 'Allura', cursive;">ABC</span></span><span class="font-name">Allura</span></a></li>
+								<li><a href="#" data-font="Satisfy"><span class="media"><span class="abc-preview" style="font-family: 'Satisfy', cursive;">ABC</span></span><span class="font-name">Satisfy</span></a></li>
+								<li><a href="#" data-font="Lobster"><span class="media"><span class="abc-preview" style="font-family: 'Lobster', display;">ABC</span></span><span class="font-name">Lobster</span></a></li>
+								<li><a href="#" data-font="Righteous"><span class="media"><span class="abc-preview" style="font-family: 'Righteous', display;">ABC</span></span><span class="font-name">Righteous</span></a></li>
+								<li><a href="#" data-font="Amatic SC"><span class="media"><span class="abc-preview" style="font-family: 'Amatic SC', cursive;">ABC</span></span><span class="font-name">Amatic SC</span></a></li>
+								<li><a href="#" data-font="Permanent Marker"><span class="media"><span class="abc-preview" style="font-family: 'Permanent Marker', cursive;">ABC</span></span><span class="font-name">Permanent Marker</span></a></li>
+								<li><a href="#" data-font="Caveat"><span class="media"><span class="abc-preview" style="font-family: 'Caveat', cursive;">ABC</span></span><span class="font-name">Caveat</span></a></li>
+								<li><a href="#" data-font="Indie Flower"><span class="media"><span class="abc-preview" style="font-family: 'Indie Flower', cursive;">ABC</span></span><span class="font-name">Indie Flower</span></a></li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Markers Wrapper for Double Layout (hidden by default) -->
+					<div class="markers__wrapper--double" style="display:none;">
+						<div class="group__input">
+							<p>MAIN TITLE</p>
+							<input type="text" id="double-main-title" placeholder="Main title" value="Love knows no distance">
+						</div>
+
+						<h4>Map (left)</h4>
+						<div class="map__marker">
+							<label class="container__checkbox">
+								<input type="checkbox" id="double-marker-1">
+								<span class="checkmark"></span>
+								<p>Add map marker</p>
+							</label>
+						</div>
+						<div class="marker__info" style="display:none;">
+							<div class="marker__switcher">
+								<div class="elem__picker">
+									<ul>
+										<li><a href="#" class="current double-marker-icon-1" data-map="double-1"><span class="media">
+											<span class="img"><svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="32.946" viewBox="0 0 35.908 32.946">
+										  <path class="marker-fill" fill="#E53422" data-name="Path 515" d="M19.954,35.946l-2.6-2.37C8.1,25.191,2,19.661,2,12.875A9.779,
+										  9.779,0,0,1,11.875,3a10.752,10.752,0,0,1,8.079,3.752A10.752,10.752,0,0,1,28.033,3a9.779,9.779,0,0,1,9.875,9.875c0,
+										  6.787-6.1,12.316-15.351,20.719Z" transform="translate(-2 -3)"></path>
+										</svg></span>
+										</span></a></li>
+										<li><a href="#" class="double-marker-icon-1" data-map="double-1"><span class="media">
+											<span class="img">
+												<svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="30.522" viewBox="0 0 35.908 30.522">
+										  <path class="marker-fill" fill="#E53422" d="M30.5,18.1v13.1h-8.9v-9.3h-7.4v9.3H5.4V18.1L18,6.1L30.5,18.1z M18,3.9l-15,14.3c-1.6,1.6-4-0.9-2.4-2.5
+											L16.8,0.5c0.7-0.6,1.7-0.6,2.4,0l7.6,7.2V4.3c0-0.4,0.4-0.8,0.8-0.8h2.2c0.4,0,0.8,0.4,0.8,0.8v6.9l4.8,4.5c1.7,1.6-0.7,4.1-2.4,2.5
+											C28,13.4,23,8.7,18,3.9L18,3.9z"></path>
+										</svg>
+											</span>
+										</span></a></li>
+									</ul>
+								</div>
+								<div class="marker__color">
+									<p>Marker color</p>
+									<div>
+										<div class="wrap"><a href="#" class="current double-marker-color-1" data-map="double-1"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+										<div class="wrap"><a href="#" class="double-marker-color-1" data-map="double-1"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+										<div class="wrap"><a href="#" class="double-marker-color-1" data-map="double-1"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+										<div class="wrap"><a href="#" class="double-marker-color-1" data-map="double-1"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="map__title">
+							<div class="title">
+								<label class="container__checkbox">
+									<input type="checkbox" id="double-title-1" checked>
+									<span class="checkmark"></span>
+									<p>Map title</p>
+								</label>
+							</div>
+							<div class="content" style="display:block;">
+								<span>The default title and coordinates can be edited</span>
+								<div class="group__input">
+									<p>Large text</p>
+									<input type="text" id="double-large-text-1" value="Sophia">
+								</div>
+								<div class="group__input">
+									<p>Small text</p>
+									<input type="text" id="double-small-text-1" value="small text, map 1">
+								</div>
+							</div>
+						</div>
+
+						<h4>Map (right)</h4>
+						<div class="map__marker">
+							<label class="container__checkbox">
+								<input type="checkbox" id="double-marker-2">
+								<span class="checkmark"></span>
+								<p>Add map marker</p>
+							</label>
+						</div>
+						<div class="marker__info" style="display:none;">
+							<div class="marker__switcher">
+								<div class="elem__picker">
+									<ul>
+										<li><a href="#" class="current double-marker-icon-2" data-map="double-2"><span class="media">
+											<span class="img"><svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="32.946" viewBox="0 0 35.908 32.946">
+										  <path class="marker-fill" fill="#E53422" data-name="Path 515" d="M19.954,35.946l-2.6-2.37C8.1,25.191,2,19.661,2,12.875A9.779,
+										  9.779,0,0,1,11.875,3a10.752,10.752,0,0,1,8.079,3.752A10.752,10.752,0,0,1,28.033,3a9.779,9.779,0,0,1,9.875,9.875c0,
+										  6.787-6.1,12.316-15.351,20.719Z" transform="translate(-2 -3)"></path>
+										</svg></span>
+										</span></a></li>
+										<li><a href="#" class="double-marker-icon-2" data-map="double-2"><span class="media">
+											<span class="img">
+												<svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="30.522" viewBox="0 0 35.908 30.522">
+										  <path class="marker-fill" fill="#E53422" d="M30.5,18.1v13.1h-8.9v-9.3h-7.4v9.3H5.4V18.1L18,6.1L30.5,18.1z M18,3.9l-15,14.3c-1.6,1.6-4-0.9-2.4-2.5
+											L16.8,0.5c0.7-0.6,1.7-0.6,2.4,0l7.6,7.2V4.3c0-0.4,0.4-0.8,0.8-0.8h2.2c0.4,0,0.8,0.4,0.8,0.8v6.9l4.8,4.5c1.7,1.6-0.7,4.1-2.4,2.5
+											C28,13.4,23,8.7,18,3.9L18,3.9z"></path>
+										</svg>
+											</span>
+										</span></a></li>
+									</ul>
+								</div>
+								<div class="marker__color">
+									<p>Marker color</p>
+									<div>
+										<div class="wrap"><a href="#" class="current double-marker-color-2" data-map="double-2"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+										<div class="wrap"><a href="#" class="double-marker-color-2" data-map="double-2"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+										<div class="wrap"><a href="#" class="double-marker-color-2" data-map="double-2"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+										<div class="wrap"><a href="#" class="double-marker-color-2" data-map="double-2"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="map__title">
+							<div class="title">
+								<label class="container__checkbox">
+									<input type="checkbox" id="double-title-2" checked>
+									<span class="checkmark"></span>
+									<p>Map title</p>
+								</label>
+							</div>
+							<div class="content" style="display:block;">
+								<span>The default title and coordinates can be edited</span>
+								<div class="group__input">
+									<p>Large text</p>
+									<input type="text" id="double-large-text-2" value="Michael">
+								</div>
+								<div class="group__input">
+									<p>Small text</p>
+									<input type="text" id="double-small-text-2" value="small text, map 2">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Triple Map Design Panel (hidden by default) -->
+					<div class="details__wrapper--triple" style="display:none;">
+						<div class="group__input">
+							<p>MAIN TITLE</p>
+							<input type="text" id="triple-map-main-title" value="Three amazing places">
+						</div>
+					</div>
+
+					<!-- Location Wrapper for Triple Layout (hidden by default) -->
+					<div class="location__wrapper--triple" style="display:none;">
+						<!-- Place inputs at the top -->
+						<div class="group__input">
+							<p>Map 1 (left) - PLACE *</p>
+							<input type="text" id="triple-map-place-1" placeholder="For e.g. city, street address or building" value="Miami, FL, USA">
+							<span>minimum 3 characters needed to search</span>
+						</div>
+
+						<div class="group__input">
+							<p>Map 2 (center) - PLACE *</p>
+							<input type="text" id="triple-map-place-2" placeholder="For e.g. city, street address or building" value="London, UK">
+							<span>minimum 3 characters needed to search</span>
+						</div>
+
+						<div class="group__input">
+							<p>Map 3 (right) - PLACE *</p>
+							<input type="text" id="triple-map-place-3" placeholder="For e.g. city, street address or building" value="Tokyo, Japan">
+							<span>minimum 3 characters needed to search</span>
+						</div>
+
+						<!-- Font Picker below location inputs -->
+						<div class="elem__picker font__picker">
+							<p>Font</p>
+							<ul class="font-options-grid">
+								<li><a href="#" class="current" data-font="Poppins"><span class="media"><span class="abc-preview" style="font-family: 'Poppins', sans-serif;">ABC</span></span><span class="font-name">Poppins</span></a></li>
+								<li><a href="#" data-font="Montserrat"><span class="media"><span class="abc-preview" style="font-family: 'Montserrat', sans-serif;">ABC</span></span><span class="font-name">Montserrat</span></a></li>
+								<li><a href="#" data-font="Playfair Display"><span class="media"><span class="abc-preview" style="font-family: 'Playfair Display', serif;">ABC</span></span><span class="font-name">Playfair Display</span></a></li>
+								<li><a href="#" data-font="Bebas Neue"><span class="media"><span class="abc-preview" style="font-family: 'Bebas Neue', display;">ABC</span></span><span class="font-name">Bebas Neue</span></a></li>
+								<li><a href="#" data-font="Dancing Script"><span class="media"><span class="abc-preview" style="font-family: 'Dancing Script', cursive;">ABC</span></span><span class="font-name">Dancing Script</span></a></li>
+								<li><a href="#" data-font="Pacifico"><span class="media"><span class="abc-preview" style="font-family: 'Pacifico', cursive;">ABC</span></span><span class="font-name">Pacifico</span></a></li>
+								<li><a href="#" data-font="Great Vibes"><span class="media"><span class="abc-preview" style="font-family: 'Great Vibes', cursive;">ABC</span></span><span class="font-name">Great Vibes</span></a></li>
+								<li><a href="#" data-font="Sacramento"><span class="media"><span class="abc-preview" style="font-family: 'Sacramento', cursive;">ABC</span></span><span class="font-name">Sacramento</span></a></li>
+								<li><a href="#" data-font="Allura"><span class="media"><span class="abc-preview" style="font-family: 'Allura', cursive;">ABC</span></span><span class="font-name">Allura</span></a></li>
+								<li><a href="#" data-font="Satisfy"><span class="media"><span class="abc-preview" style="font-family: 'Satisfy', cursive;">ABC</span></span><span class="font-name">Satisfy</span></a></li>
+								<li><a href="#" data-font="Lobster"><span class="media"><span class="abc-preview" style="font-family: 'Lobster', display;">ABC</span></span><span class="font-name">Lobster</span></a></li>
+								<li><a href="#" data-font="Righteous"><span class="media"><span class="abc-preview" style="font-family: 'Righteous', display;">ABC</span></span><span class="font-name">Righteous</span></a></li>
+								<li><a href="#" data-font="Amatic SC"><span class="media"><span class="abc-preview" style="font-family: 'Amatic SC', cursive;">ABC</span></span><span class="font-name">Amatic SC</span></a></li>
+								<li><a href="#" data-font="Permanent Marker"><span class="media"><span class="abc-preview" style="font-family: 'Permanent Marker', cursive;">ABC</span></span><span class="font-name">Permanent Marker</span></a></li>
+								<li><a href="#" data-font="Caveat"><span class="media"><span class="abc-preview" style="font-family: 'Caveat', cursive;">ABC</span></span><span class="font-name">Caveat</span></a></li>
+								<li><a href="#" data-font="Indie Flower"><span class="media"><span class="abc-preview" style="font-family: 'Indie Flower', cursive;">ABC</span></span><span class="font-name">Indie Flower</span></a></li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- Markers Wrapper for Triple Layout (hidden by default) -->
+					<div class="markers__wrapper--triple" style="display:none;">
+						<div class="group__input">
+							<p>MAIN TITLE</p>
+							<input type="text" id="triple-main-title" placeholder="Main title" value="Three amazing places">
+						</div>
+
+						<h4>Map 1 (left)</h4>
+						<div class="map__marker">
+							<label class="container__checkbox">
+								<input type="checkbox" id="triple-marker-1">
+								<span class="checkmark"></span>
+								<p>Add map marker</p>
+							</label>
+						</div>
+						<div class="marker__info" style="display:none;">
+							<div class="marker__switcher">
+								<div class="elem__picker">
+									<ul>
+										<li><a href="#" class="current triple-marker-icon-1" data-map="triple-1"><span class="media">
+											<span class="img"><svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="32.946" viewBox="0 0 35.908 32.946">
+												<path class="marker-fill" fill="#E53422" data-name="Path 515" d="M19.954,35.946l-2.6-2.37C8.1,25.191,2,19.661,2,12.875A9.779,
+												9.779,0,0,1,11.875,3a10.752,10.752,0,0,1,8.079,3.752A10.752,10.752,0,0,1,28.033,3a9.779,9.779,0,0,1,9.875,9.875c0,
+												6.787-6.1,12.316-15.351,20.719Z" transform="translate(-2 -3)"></path>
+											</svg></span>
+											</span></a></li>
+										<li><a href="#" class="triple-marker-icon-1" data-map="triple-1"><span class="media">
+											<span class="img">
+												<svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="30.522" viewBox="0 0 35.908 30.522">
+												<path class="marker-fill" fill="#E53422" d="M30.5,18.1v13.1h-8.9v-9.3h-7.4v9.3H5.4V18.1L18,6.1L30.5,18.1z M18,3.9l-15,14.3c-1.6,1.6-4-0.9-2.4-2.5
+												L16.8,0.5c0.7-0.6,1.7-0.6,2.4,0l7.6,7.2V4.3c0-0.4,0.4-0.8,0.8-0.8h2.2c0.4,0,0.8,0.4,0.8,0.8v6.9l4.8,4.5c1.7,1.6-0.7,4.1-2.4,2.5
+												C28,13.4,23,8.7,18,3.9L18,3.9z"></path>
+											</svg>
+											</span>
+											</span></a></li>
+									</ul>
+								</div>
+								<div class="marker__color">
+									<p>Marker color</p>
+									<div>
+										<div class="wrap"><a href="#" class="current triple-marker-color-1" data-map="triple-1"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+										<div class="wrap"><a href="#" class="triple-marker-color-1" data-map="triple-1"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+										<div class="wrap"><a href="#" class="triple-marker-color-1" data-map="triple-1"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+										<div class="wrap"><a href="#" class="triple-marker-color-1" data-map="triple-1"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="map__title">
+							<div class="title">
+								<label class="container__checkbox">
+									<input type="checkbox" id="triple-title-1" checked>
+									<span class="checkmark"></span>
+									<p>Map title</p>
+								</label>
+							</div>
+							<div class="content" style="display:block;">
+								<span>The default title and coordinates can be edited</span>
+								<div class="group__input">
+									<p>Large text</p>
+									<input type="text" id="triple-large-text-1" value="Location 1">
+								</div>
+								<div class="group__input">
+									<p>Small text</p>
+									<input type="text" id="triple-small-text-1" value="small text, map 1">
+								</div>
+							</div>
+						</div>
+
+						<h4>Map 2 (center)</h4>
+						<div class="map__marker">
+							<label class="container__checkbox">
+								<input type="checkbox" id="triple-marker-2">
+								<span class="checkmark"></span>
+								<p>Add map marker</p>
+							</label>
+						</div>
+						<div class="marker__info" style="display:none;">
+							<div class="marker__switcher">
+								<div class="elem__picker">
+									<ul>
+										<li><a href="#" class="current triple-marker-icon-2" data-map="triple-2"><span class="media">
+											<span class="img"><svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="32.946" viewBox="0 0 35.908 32.946">
+												<path class="marker-fill" fill="#E53422" data-name="Path 515" d="M19.954,35.946l-2.6-2.37C8.1,25.191,2,19.661,2,12.875A9.779,
+												9.779,0,0,1,11.875,3a10.752,10.752,0,0,1,8.079,3.752A10.752,10.752,0,0,1,28.033,3a9.779,9.779,0,0,1,9.875,9.875c0,
+												6.787-6.1,12.316-15.351,20.719Z" transform="translate(-2 -3)"></path>
+											</svg></span>
+											</span></a></li>
+										<li><a href="#" class="triple-marker-icon-2" data-map="triple-2"><span class="media">
+											<span class="img">
+												<svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="30.522" viewBox="0 0 35.908 30.522">
+												<path class="marker-fill" fill="#E53422" d="M30.5,18.1v13.1h-8.9v-9.3h-7.4v9.3H5.4V18.1L18,6.1L30.5,18.1z M18,3.9l-15,14.3c-1.6,1.6-4-0.9-2.4-2.5
+												L16.8,0.5c0.7-0.6,1.7-0.6,2.4,0l7.6,7.2V4.3c0-0.4,0.4-0.8,0.8-0.8h2.2c0.4,0,0.8,0.4,0.8,0.8v6.9l4.8,4.5c1.7,1.6-0.7,4.1-2.4,2.5
+												C28,13.4,23,8.7,18,3.9L18,3.9z"></path>
+											</svg>
+											</span>
+											</span></a></li>
+									</ul>
+								</div>
+								<div class="marker__color">
+									<p>Marker color</p>
+									<div>
+										<div class="wrap"><a href="#" class="current triple-marker-color-2" data-map="triple-2"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+										<div class="wrap"><a href="#" class="triple-marker-color-2" data-map="triple-2"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+										<div class="wrap"><a href="#" class="triple-marker-color-2" data-map="triple-2"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+										<div class="wrap"><a href="#" class="triple-marker-color-2" data-map="triple-2"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="map__title">
+							<div class="title">
+								<label class="container__checkbox">
+									<input type="checkbox" id="triple-title-2" checked>
+									<span class="checkmark"></span>
+									<p>Map title</p>
+								</label>
+							</div>
+							<div class="content" style="display:block;">
+								<span>The default title and coordinates can be edited</span>
+								<div class="group__input">
+									<p>Large text</p>
+									<input type="text" id="triple-large-text-2" value="Location 2">
+								</div>
+								<div class="group__input">
+									<p>Small text</p>
+									<input type="text" id="triple-small-text-2" value="small text, map 2">
+								</div>
+							</div>
+						</div>
+
+						<h4>Map 3 (right)</h4>
+						<div class="map__marker">
+							<label class="container__checkbox">
+								<input type="checkbox" id="triple-marker-3">
+								<span class="checkmark"></span>
+								<p>Add map marker</p>
+							</label>
+						</div>
+						<div class="marker__info" style="display:none;">
+							<div class="marker__switcher">
+								<div class="elem__picker">
+									<ul>
+										<li><a href="#" class="current triple-marker-icon-3" data-map="triple-3"><span class="media">
+											<span class="img"><svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="32.946" viewBox="0 0 35.908 32.946">
+												<path class="marker-fill" fill="#E53422" data-name="Path 515" d="M19.954,35.946l-2.6-2.37C8.1,25.191,2,19.661,2,12.875A9.779,
+												9.779,0,0,1,11.875,3a10.752,10.752,0,0,1,8.079,3.752A10.752,10.752,0,0,1,28.033,3a9.779,9.779,0,0,1,9.875,9.875c0,
+												6.787-6.1,12.316-15.351,20.719Z" transform="translate(-2 -3)"></path>
+											</svg></span>
+											</span></a></li>
+										<li><a href="#" class="triple-marker-icon-3" data-map="triple-3"><span class="media">
+											<span class="img">
+												<svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="30.522" viewBox="0 0 35.908 30.522">
+												<path class="marker-fill" fill="#E53422" d="M30.5,18.1v13.1h-8.9v-9.3h-7.4v9.3H5.4V18.1L18,6.1L30.5,18.1z M18,3.9l-15,14.3c-1.6,1.6-4-0.9-2.4-2.5
+												L16.8,0.5c0.7-0.6,1.7-0.6,2.4,0l7.6,7.2V4.3c0-0.4,0.4-0.8,0.8-0.8h2.2c0.4,0,0.8,0.4,0.8,0.8v6.9l4.8,4.5c1.7,1.6-0.7,4.1-2.4,2.5
+												C28,13.4,23,8.7,18,3.9L18,3.9z"></path>
+											</svg>
+											</span>
+											</span></a></li>
+									</ul>
+								</div>
+								<div class="marker__color">
+									<p>Marker color</p>
+									<div>
+										<div class="wrap"><a href="#" class="current triple-marker-color-3" data-map="triple-3"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></div>
+										<div class="wrap"><a href="#" class="triple-marker-color-3" data-map="triple-3"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></div>
+										<div class="wrap"><a href="#" class="triple-marker-color-3" data-map="triple-3"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></div>
+										<div class="wrap"><a href="#" class="triple-marker-color-3" data-map="triple-3"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="map__title">
+							<div class="title">
+								<label class="container__checkbox">
+									<input type="checkbox" id="triple-title-3" checked>
+									<span class="checkmark"></span>
+									<p>Map title</p>
+								</label>
+							</div>
+							<div class="content" style="display:block;">
+								<span>The default title and coordinates can be edited</span>
+								<div class="group__input">
+									<p>Large text</p>
+									<input type="text" id="triple-large-text-3" value="Location 3">
+								</div>
+								<div class="group__input">
+									<p>Small text</p>
+									<input type="text" id="triple-small-text-3" value="small text, map 3">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="details__wrapper" style="display:none;">
+						<div class="group__input">
+							<p>PLACE *</p>
+							<input type="text" placeholder="For e.g. city, street address or building">
+							<span>minimum 3 characters needed to search</span>
+						</div>
+						<div class="map__marker">
+							<label class="container__checkbox">
+							  <input type="checkbox" >
+							  <span class="checkmark"></span>
+							  <p>Add map marker</p>
+							</label>
+                             <a href="#" class="info__button" data-id="template2"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2131842148="" aria-hidden="true">
+							  <circle cx="12" cy="12" r="10.25" stroke="#16212C" stroke-width="1.5" _ngcontent-ng-c2131842148=""></circle>
+							  <rect x="11.25" y="10" width="1.5" height="8" fill="#16212C" _ngcontent-ng-c2131842148=""></rect>
+							  <rect x="11.25" y="7" width="1.5" height="1.5" fill="#16212C" _ngcontent-ng-c2131842148=""></rect>
+							</svg></a>
+						</div>
+						<div class="marker__info">
+							<div class="marker__switcher">
+								<div class="elem__picker">
+									<ul>
+										<li><a href="#" class="current"><span class="media">
+											<span class="img"><svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="32.946" viewBox="0 0 35.908 32.946" _ngcontent-ng-c919487964="" aria-hidden="true">
+										  <path class="marker-fill" fill="#E53422" data-name="Path 515" d="M19.954,35.946l-2.6-2.37C8.1,25.191,2,19.661,2,12.875A9.779,
+										  9.779,0,0,1,11.875,3a10.752,10.752,0,0,1,8.079,3.752A10.752,10.752,0,0,1,28.033,3a9.779,9.779,0,0,1,9.875,9.875c0,
+										  6.787-6.1,12.316-15.351,20.719Z" transform="translate(-2 -3)" _ngcontent-ng-c919487964=""></path>
+										</svg></span>
+										</span></a></li>
+										<li><a href="#"><span class="media">
+											<span class="img">
+												<svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="30.522" viewBox="0 0 35.908 30.522" _ngcontent-ng-c919487964="" aria-hidden="true">
+										  <path class="marker-fill" fill="#E53422" d="M30.5,18.1v13.1h-8.9v-9.3h-7.4v9.3H5.4V18.1L18,6.1L30.5,18.1z M18,3.9l-15,14.3c-1.6,1.6-4-0.9-2.4-2.5
+											L16.8,0.5c0.7-0.6,1.7-0.6,2.4,0l7.6,7.2V4.3c0-0.4,0.4-0.8,0.8-0.8h2.2c0.4,0,0.8,0.4,0.8,0.8v6.9l4.8,4.5c1.7,1.6-0.7,4.1-2.4,2.5
+											C28,13.4,23,8.7,18,3.9L18,3.9z" _ngcontent-ng-c919487964=""></path>
+										</svg>
+											</span>
+										</span></a></li>
+										<li><a href="#"><span class="media">
+											<span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24.9 24.9" style="enable-background:new 0 0 24.9 24.9;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+										<style type="text/css" _ngcontent-ng-c919487964="">
+											.st0{fill:#E53422;}
+										</style>
+										  <path class="st0" d="M12.4,24.9C5.6,24.9,0,19.3,0,12.4S5.6,0,12.4,0s12.4,5.6,12.4,12.4S19.3,24.9,12.4,24.9z M12.4,6.2
+											C9,6.2,6.2,9,6.2,12.4s2.8,6.2,6.2,6.2s6.2-2.8,6.2-6.2S15.9,6.2,12.4,6.2z" _ngcontent-ng-c919487964=""></path>
+										</svg></span>
+										</span></a></li>
+										<li><a href="#"><span class="media">
+											<span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 38.91 36.47" style="enable-background:new 0 0 38.91 36.47;" xml:space="preserve" width="35.908" height="32.946" _ngcontent-ng-c919487964="" aria-hidden="true">
+											<path class="marker-stroke" stroke-width="3" d="M19.45,34.45l-2.6-2.37C7.6,23.69,1.5,18.16,1.5,11.38c-0.05-5.4,4.28-9.82,9.68-9.88
+												c0.06,0,0.13,0,0.19,0c3.11,0.02,6.06,1.39,8.08,3.75c2.02-2.36,4.97-3.73,8.08-3.75c5.4-0.05,9.82,4.28,9.87,9.68
+												c0,0.06,0,0.13,0,0.19c0,6.79-6.1,12.32-15.35,20.72L19.45,34.45z" _ngcontent-ng-c919487964=""></path>
+										</svg></span>
+										</span></a></li>
+										<li><a href="#"><span class="media"><span class="img">
+											<svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 980.36 839.49" style="enable-background:new 0 0 980.36 839.49;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+										<path class="marker-fill" fill="#E53422" d="M979.64,451.35c-0.01,0.07-0.01,0.13-0.01,0.18c-0.28,3.18-0.63,6.34-1.18,9.47
+											c-3.85,21.56-9.11,42.72-16.64,63.39c-10.55,28.95-24.71,55.94-41.39,81.73c-16.55,25.6-35.68,49.24-56.6,71.29
+											c-15.18,15.99-31.19,31.3-47.82,45.76c-16.56,14.41-34.16,27.67-51.68,40.94c-32.03,24.28-66.11,45.38-101.59,64.24
+											c-6.74,3.58-13.33,7.42-19.99,11.14h-2c-3.63-2.05-7.27-4.06-10.88-6.14c-23.4-13.52-47.38-26.13-70.01-40.82
+											c-23.33-15.14-45.77-31.75-67.82-48.74c-16.93-13.06-32.92-27.39-48.8-41.75c-9.22-8.33-17.63-17.6-25.97-26.85
+											c-10.8-12-21.55-24.08-31.64-36.68c-18.49-23.08-34.47-47.88-47.67-74.34c-5.83-11.69-10.83-23.84-15.64-36
+											c-12.08-30.51-19.53-62.25-21.18-94.95c-1.56-30.85-0.66-61.72,7.7-91.92c7.09-25.63,18.1-49.28,35.46-69.43
+											c16.66-19.34,36.85-34.16,60.7-43.96c19.61-8.06,39.94-12.71,60.94-14.09c10.7-0.7,21.53,0.37,32.3,0.84
+											c15.82,0.68,31.09,4.27,46.14,8.99c22.48,7.04,43.05,17.82,60.8,33.23c15.89,13.79,28.83,30.1,35.93,50.71
+											c0.61-0.97,1.06-1.48,1.29-2.07c9.64-24.79,26.45-43.88,48.09-58.65c29.93-20.44,63.58-30.72,99.51-33.08
+											c21.13-1.39,42.15,0.47,62.82,5.79c36.54,9.42,67.09,28.34,90.15,58.14c14.79,19.12,24.65,40.34,30.66,63.03
+											C983.07,384.74,979.91,446.35,979.64,451.35z M682.59,194.67c-0.64-11.04-0.52-22.2-2.18-33.09c-2.22-14.66-4.97-29.35-9.02-43.6
+											c-7.14-25.14-20.19-47.23-38.17-66.26c-16.18-17.11-35.46-29.71-57.31-38.41c-11.07-4.42-22.36-7.83-33.93-10.02
+											c0,0-0.09-0.02-0.26-0.05c-0.19-0.04-0.38-0.07-0.57-0.11c-0.86-0.15-1.72-0.31-2.59-0.45c-0.31-0.05-0.64-0.11-0.99-0.16
+											c-0.28-0.05-0.56-0.09-0.84-0.13c-10.4-1.53-35.37-4.09-67.26,0.31c-15.99,2.38-31.53,6.61-46.24,13.4
+											c-11.84,5.47-23.43,11.83-34.25,19.1c-20.81,13.99-36.31,32.67-45.53,56.25c-0.23,0.6-0.68,1.11-0.94,1.53
+											c-4.2-7.56-8.07-15.42-12.74-22.76c-7.08-11.11-15.77-20.48-25.63-28.61c0,0-0.01-0.01-0.03-0.03c-4.88-4.01-10.04-7.73-15.44-11.2
+											c-0.07-0.05-0.14-0.09-0.22-0.14c-2.26-1.46-4.56-2.86-6.89-4.23c-20.18-11.82-42.03-18.81-64.8-23.18
+											c-3.66-0.7-7.37-1.07-11.1-1.37c-3.33-0.28-6.68-0.49-9.99-0.86c-0.25-0.03-0.51-0.07-0.76-0.13h-0.04
+											c-11.59-0.78-24.01-0.64-37.17,0.73c-1.06,0.15-2.12,0.29-3.18,0.4c-2.11,0.22-4.2,0.49-6.29,0.79c-0.05,0-0.09,0.01-0.14,0.02
+											c-14.73,2.14-28.98,6.19-42.66,12.1C85.34,23.18,67.25,34.92,52,50.87C40.55,62.84,31.26,76.11,23.95,90.6c0,0,0,0,0,0.01
+											c-0.01,0.01-0.01,0.01-0.02,0.02c-1.11,1.85-55.59,93.23,3.62,235.49c0.34,0.83,0.69,1.66,1.05,2.5c0.35,0.83,0.71,1.67,1.07,2.51
+											c0.72,1.67,1.46,3.36,2.22,5.05c10.79,24.06,24.24,46.83,39.64,68.64c19.83,28.08,41.78,54.26,66.97,77.63
+											c15.73,14.6,31.4,29.35,48.06,42.85c18.57,15.05,37.87,29.27,57.5,42.92c16.38,11.39,33.62,21.55,50.62,32.02
+											c6.89,4.25,14.15,7.88,21.24,11.79c-4.07-8.83-8.91-16.77-13.13-25.04c-16.03-31.44-28.45-64.25-36.12-98.76
+											c-4.71-21.2-7.61-42.69-7.97-64.41c-0.23-13.1,0.39-26.21,0.96-39.3c0.34-7.72,0.77-15.51,2.13-23.1
+											c3.27-18.32,7.21-36.49,13.8-54.01c8.87-23.56,21.18-45.16,37.74-63.98c19.79-22.51,43.5-40,71.14-52.13
+											c27.03-11.87,55.31-18.29,84.61-19.74c12.8-0.63,25.74,0.94,38.6,1.8c18.73,1.25,36.79,5.88,54.39,12.14
+											c28.43,10.12,54.46,24.4,76.12,45.81c2.32,2.29,3.59,2.07,6.12,0.07c10.03-7.9,20.03-15.93,30.71-22.89
+											C680.54,204.89,682.94,200.84,682.59,194.67z" _ngcontent-ng-c919487964=""></path>
+										</svg>
+										</span></span></a></li>
+										<li><a href="#"><span class="media">
+											<span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 867.2 839.5" style="enable-background:new 0 0 867.2 839.5;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+										<style type="text/css" _ngcontent-ng-c919487964="">
+											.st0{fill:#E53422;}
+										</style>
+										<path class="st0" d="M835.1,119.7c-24.2-27.9-56.6-39.3-91.9-40.6c-8.2-2.8-17.8-3.6-28-1.6c-8.9,1.7-17.5,3.9-25.9,6.5
+											c-54.6,10.9-109.8,37.4-148.8,59.7c-41.1,23.6-77.1,51.5-107.1,82.6c-17.3-40.6-43.6-79.1-78.3-113.5
+											C299.2,57.4,200.1-15.1,95.8,2.8C40.3,12.2,16,46.7,8.9,85.5c-8.8,48-10.9,96.4-7,144.7c7.9,97,38.2,192.4,79.8,284.4
+											c47.8,105.7,109.9,207.5,172.4,308.8c18.9,30.5,73.2,13,76.6-14.8c10,1.7,20.6,0.9,28.7-3.7C551.3,695.6,704.2,553,799.4,388.2
+											C845,309.3,905.4,200.7,835.1,119.7z M540,289.6c29-30.7,59.6-60.6,92-89.4c6.3-5.6,12.6-11.3,19.2-16.9
+											c-55.6,105.9-147.4,200.6-217,302.5c-0.3-11.1-0.6-22.2-0.9-33.3c-0.2-8.9-4.6-15.8-11.2-20.7C457.6,382.9,496.8,335.3,540,289.6z
+											 M188.1,152.6c0.5,0.4,0.8,0.8,1,1c7,7.2,13.7,14.6,20.3,22c3.9,4.4,7.7,8.9,11.5,13.4c-5.2,4.8-8.3,11.2-7.7,19
+											c2.4,31.9,4.5,63.7,6.5,95.5c-0.9-3.3-1.9-6.6-2.8-10c-11.5-41.4-24-82.8-28.9-125C187.6,164,187.9,158.3,188.1,152.6z M439.3,671.5
+											c0.2,0,0.4,0.1,0.5,0.1c-0.2,0.1-0.3,0.2-0.5,0.4C439.3,671.9,439.3,671.7,439.3,671.5z M491.1,559.4
+											c40.5-51.3,85.3-100.4,134.1-147.3C584.8,463,538.7,511.8,491.1,559.4z M782.4,212.7c-13-2.2-27.4-0.2-38.4,7.7
+											c-14.2,10.2-28.1,20.6-41.9,31.1c21.7-33.9,40.6-68.7,54.5-105.2c6.3,4.1,11.2,10,15.4,17.5C780.6,179.3,783.2,195.9,782.4,212.7z
+											 M349.3,235.6c-20-33-43.6-64.7-70.6-94.9C309.6,169.1,333.3,201.3,349.3,235.6z M91.4,94.5c2.5-12.5,4-27.2,22.7-31.2
+											c14.8-3.2,33.7,0.8,48.1,5.1c-12.9,0.8-26,5.4-38.6,15.4c-38.3,30.2-20.3,86.7-13.5,122.8c19.6,103.5,54.5,206.1,83,308.5
+											c8,28.7,14.1,57.5,21,86.1C167,514.3,127,425.5,103.5,333.4C83.7,255.5,75.8,173.2,91.4,94.5z" _ngcontent-ng-c919487964=""></path>
+										</svg></span>
+										</span></a></li>
+										<li><a href="#"><span class="media"><span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 986.4 839.5" style="enable-background:new 0 0 986.4 839.5;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+									      <path class="marker-fill" fill="#E53422" d="M855.3,12.4L711.8,53.1l-23.8,6.8l17.5,17.5l29.3,29.3l-47.7,47c-25.7-14.1-54.8-21.8-83.3-21.8
+									        c-52.4,0-101.5,23-137.4,63.6c-35.9-40.7-85.1-63.6-137.4-63.6c-21.7,0-42.9,4-63.2,12c-20.9,8.2-39.7,20.2-55.7,35.6
+									        c-17,16.4-30.3,36.1-39.6,58.5c-9.9,24-14.9,50.7-14.9,79.5c0,68.2,44.5,146.7,132.3,233.3l-64.3,64.3l-39-14.9l-8.8-3.4l-6.7,6.6
+									        L62.2,709.3l-15.9,15.8l20.9,8.1l56.8,22l20.2,57.8l7.5,21.5l16.3-15.9L276,713.7l6.6-6.4l-3-8.7l-13.4-39.3l66.4-66.4
+									        c58.4,50.5,110.8,85.5,117.1,89.3l10.2,6.1l7.5,4.5l7.5-4.5l10.2-6.1l0.6-0.3l0.5-0.4c0.4-0.3,1.7-1.2,3.2-2.2
+									        c73.3-50.5,125.2-96.9,155.9-126.9c38.7-37.8,69.4-74.7,91.3-109.5c27.6-43.9,41.6-85.4,41.6-123.3c0-28.7-4.9-55.3-14.4-79
+									        c-7.1-17.5-16.7-33.6-28.8-47.8l43-43l29.4,29.4l17.3,17.3l6.9-23.5l41.7-142.5l7.4-25.3L855.3,12.4z M711.4,319.7
+									        c0.2,26.1-10.2,56.1-31,89.2c-17.9,28.5-43.4,59.2-75.7,91.3c-56.1,55.7-116.2,99-138.3,114.2c-22.2-15.4-82.7-58.9-138.4-114
+									        c-32.5-32.1-58-62.9-76-91.6c-21-33.4-31.6-63.8-31.6-90.4c0-37.5,11.9-68.9,34.3-90.9c9.9-9.7,21.6-17.3,34.7-22.4
+									        c12.7-5,26-7.5,39.7-7.5c42.9,0,81.7,24,106.3,65.8c0.8,1.6,1.6,2.7,2.2,3.6c0.4,0.5,0.5,0.8,0.6,1l0,0.1l0.1,0.1l15.3,29.5l12.9,25
+									        l12.9-25l15.3-29.5l0.1-0.1l0-0.1c0.3-0.5,0.7-1.4,1-2l0.6-0.6l0.9-1.5c12.5-20.8,28.2-37.1,46.5-48.4c18.2-11.2,38-16.8,59.1-16.8
+									        c27.6,0,54.7,11,74.3,30.3c22.5,22.1,34.3,53.4,34.3,90.5L711.4,319.7L711.4,319.7z" _ngcontent-ng-c919487964=""></path>
+									</svg></span></span></a></li>
+										<li><a href="#"><span class="media"><span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 576 576" style="enable-background:new 0 0 576 576;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+
+										<path class="marker-fill" d="M295.37,376.38c-4.72,2.14-10.13,2.14-14.85,0l-172.55-77.41V396c0,40.95,92.71,63.01,180.01,63.01
+											S468,436.95,468,396v-97.03L295.37,376.38z M540,323.99v-67.14l12.69-5.67v0c3.21-1.46,5.27-4.66,5.27-8.19s-2.06-6.73-5.27-8.19
+											L291.67,117.79c-2.35-1.06-5.03-1.06-7.38,0L23.27,234.8c-3.21,1.46-5.27,4.66-5.27,8.19s2.06,6.73,5.27,8.19l261.02,117.01
+											c2.35,1.06,5.03,1.06,7.38,0L522,264.95v59.04c-4.77,0-9.35,1.9-12.73,5.27s-5.27,7.96-5.27,12.73v27c0,2.39,0.95,4.68,2.64,6.36
+											c1.69,1.69,3.98,2.64,6.36,2.64h36c2.39,0,4.68-0.95,6.36-2.64c1.69-1.69,2.64-3.98,2.64-6.36v-27c0-4.77-1.9-9.35-5.27-12.73
+											C549.35,325.89,544.77,323.99,540,323.99L540,323.99z" _ngcontent-ng-c919487964=""></path>
+										</svg></span></span></a></li>
+										<li><a href="#"><span class="media"><span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 35.9 31.2" style="enable-background:new 0 0 35.9 31.2;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+										  <g _ngcontent-ng-c919487964="">
+											<path class="marker-fill" d="M14.8,14.6c-1.3,0-2.5,0.6-3.4,1.5c-0.8,0.9-1.3,2.1-1.3,3.3c0,1.2,0.5,2.4,1.4,3.2l5.8,5.8
+												c0.2,0.2,0.4,0.2,0.6,0.2c0.2,0,0.4-0.1,0.6-0.2l5.9-5.9c1.2-1.2,1.6-2.9,1.2-4.5c-0.4-1.6-1.7-2.9-3.3-3.3c-1.5-0.4-3.1,0-4.3,1
+												C17.1,14.9,16,14.6,14.8,14.6z M21.8,16.3c1,0.3,1.9,1.1,2.1,2.1c0.3,1,0,2.2-0.8,2.9l-5.3,5.3l-5.2-5.2c-0.6-0.6-0.9-1.3-0.9-2.1
+												c0-0.8,0.3-1.6,0.9-2.1c0.6-0.6,1.3-0.9,2.1-0.9l0.1,0c0.8,0,1.6,0.3,2.1,0.9l0.3,0.3c0.3,0.3,0.9,0.3,1.2,0l0.4-0.4
+												C19.7,16.3,20.8,16,21.8,16.3z" _ngcontent-ng-c919487964=""></path>
+										    <path class="marker-fill" d="M24.8,6.5L24.8,6.5l-6.1-6.1c-0.4-0.4-1-0.4-1.4,0L1.7,15.9l1.4,1.4L18,2.5l14.8,14.8l1.4-1.4L24.8,6.5z" _ngcontent-ng-c919487964=""></path>
+										    <path class="marker-fill" d="M18.6,4.8c-0.4-0.4-0.9-0.4-1.3,0L6.4,15.7c-0.2,0.2-0.3,0.4-0.3,0.6v13.8c0,0.2,0.1,0.5,0.3,0.7
+												C6.5,31,6.8,31.1,7,31.1h21.9c0.2,0,0.5-0.1,0.6-0.3c0.2-0.2,0.3-0.4,0.3-0.6V16.4c0-0.2-0.1-0.5-0.3-0.6L18.6,4.8z M28,16.8v12.5
+												H7.9V16.8l10-10L28,16.8z" _ngcontent-ng-c919487964=""></path>
+										</g>
+										</svg></span></span></a></li>
+										<li><a href="#"><span class="media"><span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 576 576" style="enable-background:new 0 0 576 576;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+
+										<path class="marker-fill" d="M557.95,75.54c0.4-4.99-1.33-9.93-4.72-13.61c-3.41-3.68-8.2-5.77-13.21-5.77h-72.69
+											c0.4-6.66,0.7-13.36,0.7-20.16c0-9.94-8.08-18-18.01-18H126c-9.94,0-18,8.06-18,18c0,6.8,0.27,13.5,0.69,20.16H36
+											c-5.02,0-9.8,2.08-13.21,5.77c-3.4,3.68-5.13,8.61-4.73,13.61c6.48,84.38,57.85,241.53,204.08,249.85
+											c20.24,29.74,38.87,59.82,38.87,84.12c0,74.45-102.04,112.72-103.08,112.96c-8.89,2.09-14.83,10.53-13.79,19.61
+											c1.05,9.07,8.72,15.93,17.87,15.93H414c0.14-0.01,0.26,0,0.38,0c9.95,0,18.01-8.04,18.01-18c0-9.1-6.74-16.59-15.45-17.81
+											C405.65,519.24,315,480.03,315,409.5c0-24.3,18.63-54.38,38.88-84.12C500.12,317.06,551.48,159.9,557.95,75.54L557.95,75.54z
+											 M56.37,92.16h56.51c12.79,76.38,49.13,141.87,82.45,193.22C93.12,260.63,63.91,140.14,56.37,92.16L56.37,92.16z M519.65,92.16
+											c-7.57,47.98-36.78,168.47-138.99,193.22c33.33-51.35,69.65-116.84,82.43-193.22L519.65,92.16z" _ngcontent-ng-c919487964=""></path>
+										</svg></span></span></a></li>
+										<li><a href="#"><span class="media"><span class="img"><svg version="1.1" id="Warstwa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 576 576" style="enable-background:new 0 0 576 576;" xml:space="preserve" _ngcontent-ng-c919487964="" aria-hidden="true">
+										<style type="text/css" _ngcontent-ng-c919487964="">
+
+										</style>
+										  <path class="st0" d="M419.4,19.3H156.3c-74.7,0-135.2,60.5-135.2,135.2v263.1c0,74.6,60.5,135.2,135.2,135.2h263.1
+											c74.7,0,135.2-60.5,135.2-135.2V154.4C554.6,79.8,494.1,19.3,419.4,19.3z M414.4,267.4l-56.2,51.2c-1.7,1.6-3.3,5-1.7,8.3l13.2,74.3
+											c1.6,6.6-5,11.6-11.6,8.3l-66.1-36.3c-3.3-1.7-6.6-1.7-8.3,0l-66.1,36.3c-6.6,3.3-13.2-1.6-13.2-8.3l14.9-74.3c0-3.3,0-6.6-1.6-8.3
+											l-56.2-51.2c-5-5-1.7-14.9,5-14.9l74.3-9.9c3.3,0,6.6-1.7,6.6-5l33-67.7c3.3-6.6,11.6-6.6,14.9,0h0l31.4,67.7c1.7,3.3,5,5,6.6,5
+											l76,9.9C416,252.5,419.3,262.4,414.4,267.4z" _ngcontent-ng-c919487964=""></path>
+										</svg></span></span></a></li>
+									</ul>
+								</div>
+								<div class="marker__color">
+									<p>Marker color</p>
+									<div>
+										<div class="wrap"><a href="#" class="current"><span class="color" style="background-color:rgb(211, 59, 62);"></span><span>RED</span></a></li></div>
+										<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(0, 58, 93)"></span><span>MARINBLUE</span></a></li></div>
+										<div class="wrap"><a href="#"><span class="color" style="background-color:rgb(27, 27, 27);"></span><span>BLACK</span></a></li></div>
+										<div class="wrap"><a href="#"><span class="color" style="background-color:#fff;"></span><span>WHITE</span></a></li></div>
+										<div class="wrap custom-color-wrap">
+											<a href="#" class="custom">
+												<span class="color">
+													<label for="custom-color-marker">
+														<input type="color" class="custom-color-picker" id="custom-color-marker" value="#ff0000">
+													</label>
+												</span>
+												<span>CUSTOM</span>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="map__title">
+							<div class="title">
+								<label class="container__checkbox">
+								  <input type="checkbox" >
+								  <span class="checkmark"></span>
+								  <p>Map title</p>
+								</label>
+							</div>
+							<div class="content">
+								<span>The default title and coordinates can be edited</span>
+								<div class="group__input">
+									<div class="top">
+										<p>Large text</p>
+										<a href="#" class="open__popup--ideas">Our ideas for titles</a>
+									</div>
+									<textarea name="" id="">MIAMI, UNITED STATES</textarea>
+									<!-- <label class="container__checkbox">
+									  <input type="checkbox" >
+									  <span class="checkmark"></span>
+									  <p>Script font</p>
+									</label> -->
+								</div>
+
+
+								<div class="group__input">
+									<!-- <div class="top">
+										<p>Small text</p>
+										<a href="#" class="open__popup--ideas">Our ideas for subtitles</a>
+									</div> -->
+									<textarea name="" id="">25.76168°N / 80.19179°W</textarea>
+								</div>
+								<div class="btn">
+									<a href="#" class="select__format">Select format <span><svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c3263369692="" aria-hidden="true">
+									  <path d="M5.172 7.00026L0.222001 2.05026L1.636 0.636257L8 7.00026L1.636 13.3643L0.222 11.9503L5.172 7.00026Z" fill="#16212C" _ngcontent-ng-c3263369692=""></path>
+									</svg></span></a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="format__wrapper" style="display:none;">
+						<div class="elem__picker tab__switcher">
+							<p>Product type</p>
+							<ul class="four">
+								<li>
+									<a href="#" class="current" data-id="1">
+										<span class="media">
+											<span class="img">
+												<img src="img/icons/poster (2).png" alt="" style="height: 50px; top: 4px;">
+											</span>
+										</span>
+										Fine Art Poster
+									</a>
+								</li>
+								<li>
+									<a href="#" data-id="2">
+									<span class="media">
+										<span class="img">
+											<img src="img/frames/frames.png" alt="" style="height: 50px; top: 4px;">
+										</span>
+									</span>
+									Framed Poster
+									</a>
+								</li>
+								<li>
+									<a href="#" data-id="3">
+										<span class="media">
+											<span class="img">
+												<img src="img/frames/window.png" alt="" style="height: 50px; top: 4px;">
+											</span>
+										</span>
+										Stretched Canvas
+									</a>
+								</li>
+								<li>
+									<a href="#" data-id="4">
+										<span class="media">
+											<span class="img">
+												<img src="img/frames/download (1).png" alt="" style="height: 50px; top: 4px;">
+											</span>
+										</span>
+										Digital Files
+									</a>
+								</li>
+							</ul>
+						</div>
+						<div class="el__format" data-id="1" >
+							<div class="estimated">
+							<a href="#">Estimated delivery: <span>Sep 21-27</span></a>
+							<ul>
+								<li>
+								Printed on museum-quality, thick, matte art paper of 200gsm</li>
+								<li>
+								 Responsibly sourced FSC certified paper from sustainably managed forests</li>
+								<li>
+								Shipped in sturdy packaging protecting the poster</li>
+								<li>
+								 Frame not included</li>
+							</ul>
+							<div class="show__more">
+								<a href="#">Show more</a>
+							</div>
+						</div>
+						<div class="elem__picker">
+							<p>Size</p>
+							<div class="size__picker">
+								<a href="#" class="current">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>A4</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>M</span>
+											<p>50x70cm</p>
+										</span>
+										<span class="content">
+											<span>93.24$</span>
+											<p>69.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>L</span>
+											<p>70x100cm</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>30x40cm</p>
+										</span>
+										<span class="content">
+											<span>79.73$</span>
+											<p>59.00$</p>
+										</span>
+									</div>
+								</a>
+							</div>
+						</div>
+
+						<div class="elem__picker">
+							<p>Print Layout</p>
+							<ul class="four type__switcher">
+								<li>
+									<a href="#" class="current" data-type="portrait">
+										<span class="media">
+											<span class="img">
+												<img src="img/frames/camera.png" alt="" style="height: 50px; top: 4px;">
+											</span>
+										</span>
+										Portrait
+									</a>
+								</li>
+								<li>
+									<a href="#" data-type="square">
+										<span class="media">
+											<span class="img">
+												<img src="img/frames/square.png" alt="" style="height: 50px; top: 4px;">
+											</span>
+										</span>
+										Square
+									</a>
+								</li>
+								<li>
+									<a href="#" data-type="landscape">
+										<span class="media">
+											<span class="img">
+												<img src="img/frames/image.png" alt="" style="height: 45px; top: 4px;">
+											</span>
+										</span>
+										Landscape
+									</a>
+								</li>
+							</ul>
+						</div>
+						</div>
+						<div class="el__format" data-id="2" style="display:none;">
+							<div class="estimated">
+							<a href="#">Estimated delivery: <span>Sep 21-27</span></a>
+							<ul>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Printed on museum-quality, thick, matte art paper of 200gsm</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Responsibly sourced FSC certified paper from sustainably managed forests</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Shipped in sturdy packaging protecting the poster</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Frame not included</li>
+							</ul>
+							<div class="show__more">
+								<a href="#">Show more</a>
+							</div>
+						</div>
+						<div class="elem__picker">
+							<p>Size</p>
+							<div class="size__picker">
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>A4</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>M</span>
+											<p>50x70cm</p>
+										</span>
+										<span class="content">
+											<span>93.24$</span>
+											<p>69.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>L</span>
+											<p>70x100cm</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>30x40cm</p>
+										</span>
+										<span class="content">
+											<span>79.73$</span>
+											<p>59.00$</p>
+										</span>
+									</div>
+								</a>
+							</div>
+						</div>
+
+						<div class="elem__picker">
+							<p>Print Layout</p>
+							<ul class="four type__switcher">
+								<li><a href="#" class="current" data-type="portrait"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M37.5 42.5V5.5H36.25H36H12H10.5V42.5H37.5ZM39 42.5V44H37.5H10.5H9V42.5V5.5V4H10.5H12H36H36.25H37.5H39V5.5V42.5ZM26.2536 18.4821L26.9029 19.631L33.4029 31.131C33.6067 31.4916 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8803C15.1864 32.2373 14.7268 32.3565 14.3697 32.1465C14.0127 31.9364 13.8935 31.4768 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								</svg></span></span>Portrait</a></li>
+								<li><a href="#" data-type="square"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1044)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 37.5L37.5 37.5V36.25V36L37.5 12V10.5L10.5 10.5L10.5 37.5ZM10.5 39H9V37.5V10.5L9 9H10.5H37.5H39V10.5V12L39 36V36.25V37.5V39H37.5L10.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1036 31.1197L19.1036 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1044" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Square</a></li>
+								<li><a href="#" data-type="landscape"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1043)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 37.5L42.5 37.5V36.25V36V12V10.5L5.5 10.5L5.5 37.5ZM5.5 39H4V37.5V10.5V9H5.5H42.5L44 9V10.5V12V36V36.25V37.5V39H42.5L5.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3964 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1043" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Landscape</a></li>
+
+							</ul>
+						</div>
+						<div class="elem__picker image__changer">
+							<p>Select frame color</p>
+							<ul class="four">
+								<li><a href="#" data-src="img/40x30-wood.png"><span class="media"><span class="img"><img src="img/w1.png" alt="w1"></span></span> natural <br> wood <br> frame</a></li>
+								<li><a href="#" data-src="img/40x30-white.png"><span class="media"><span class="img"><img src="img/w2.png" alt="w1"></span></span> white <br> frame</a></li>
+								<li><a href="#" data-src="img/40x30-black.png"><span class="media"><span class="img"><img src="img/w3.png" alt="w1"></span></span> black <br> frame</a></li>
+
+							</ul>
+						</div>
+						</div>
+
+
+
+						<div class="el__format" data-id="3" style="display:none;">
+							<div class="estimated">
+							<a href="#">Estimated delivery: <span>Sep 21-27</span></a>
+							<ul>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Printed on museum-quality, thick, matte art paper of 200gsm</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Responsibly sourced FSC certified paper from sustainably managed forests</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Shipped in sturdy packaging protecting the poster</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Frame not included</li>
+							</ul>
+							<div class="show__more">
+								<a href="#">Show more</a>
+							</div>
+						</div>
+						<div class="elem__picker">
+							<p>Size</p>
+							<div class="size__picker">
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>A4</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>M</span>
+											<p>50x70cm</p>
+										</span>
+										<span class="content">
+											<span>93.24$</span>
+											<p>69.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>L</span>
+											<p>70x100cm</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>30x40cm</p>
+										</span>
+										<span class="content">
+											<span>79.73$</span>
+											<p>59.00$</p>
+										</span>
+									</div>
+								</a>
+							</div>
+						</div>
+
+						<div class="elem__picker">
+							<p>Print Layout</p>
+							<ul class="four type__switcher">
+								<li><a href="#" class="current" data-type="portrait"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M37.5 42.5V5.5H36.25H36H12H10.5V42.5H37.5ZM39 42.5V44H37.5H10.5H9V42.5V5.5V4H10.5H12H36H36.25H37.5H39V5.5V42.5ZM26.2536 18.4821L26.9029 19.631L33.4029 31.131C33.6067 31.4916 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8803C15.1864 32.2373 14.7268 32.3565 14.3697 32.1465C14.0127 31.9364 13.8935 31.4768 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								</svg></span></span>Portrait</a></li>
+								<li><a href="#" data-type="square"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1044)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 37.5L37.5 37.5V36.25V36L37.5 12V10.5L10.5 10.5L10.5 37.5ZM10.5 39H9V37.5V10.5L9 9H10.5H37.5H39V10.5V12L39 36V36.25V37.5V39H37.5L10.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1036 31.1197L19.1036 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1044" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Square</a></li>
+								<li><a href="#" data-type="landscape"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1043)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 37.5L42.5 37.5V36.25V36V12V10.5L5.5 10.5L5.5 37.5ZM5.5 39H4V37.5V10.5V9H5.5H42.5L44 9V10.5V12V36V36.25V37.5V39H42.5L5.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3964 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1043" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Landscape</a></li>
+
+							</ul>
+						</div>
+						</div>
+
+
+
+						<div class="el__format" data-id="4" style="display:none;">
+							<div class="estimated">
+							<a href="#">Estimated delivery: <span>Sep 21-27</span></a>
+							<ul>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Printed on museum-quality, thick, matte art paper of 200gsm</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Responsibly sourced FSC certified paper from sustainably managed forests</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Shipped in sturdy packaging protecting the poster</li>
+								<li><svg width="11" height="8" viewBox="0 0 11 8" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c2120280965="" aria-hidden="true">
+								  <path d="M3.83343 6.34989L9.19543 0.987305L10.0208 1.81214L3.83343 7.99956L0.121094 4.28722L0.945927 3.46239L3.83343 6.34989Z" fill="black" _ngcontent-ng-c2120280965=""></path>
+								</svg> Frame not included</li>
+							</ul>
+							<div class="show__more">
+								<a href="#">Show more</a>
+							</div>
+						</div>
+						<div class="elem__picker">
+							<p>Size</p>
+							<div class="size__picker">
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>A4</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>M</span>
+											<p>50x70cm</p>
+										</span>
+										<span class="content">
+											<span>93.24$</span>
+											<p>69.00$</p>
+										</span>
+									</div>
+								</a>
+
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>L</span>
+											<p>70x100cm</p>
+										</span>
+										<span class="content">
+											<span>66.22$</span>
+											<p>49.00$</p>
+										</span>
+									</div>
+								</a>
+
+								<a href="#">
+									<div class="inn">
+										<span class="head">
+											<span>S</span>
+											<p>30x40cm</p>
+										</span>
+										<span class="content">
+											<span>79.73$</span>
+											<p>59.00$</p>
+										</span>
+									</div>
+								</a>
+							</div>
+						</div>
+
+						<div class="elem__picker">
+							<p>Print Layout</p>
+							<ul class="four type__switcher">
+								<li><a href="#" class="current" data-type="portrait"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M37.5 42.5V5.5H36.25H36H12H10.5V42.5H37.5ZM39 42.5V44H37.5H10.5H9V42.5V5.5V4H10.5H12H36H36.25H37.5H39V5.5V42.5ZM26.2536 18.4821L26.9029 19.631L33.4029 31.131C33.6067 31.4916 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8803C15.1864 32.2373 14.7268 32.3565 14.3697 32.1465C14.0127 31.9364 13.8935 31.4768 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								</svg></span></span>Portrait</a></li>
+								<li><a href="#" data-type="square"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1044)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5 37.5L37.5 37.5V36.25V36L37.5 12V10.5L10.5 10.5L10.5 37.5ZM10.5 39H9V37.5V10.5L9 9H10.5H37.5H39V10.5V12L39 36V36.25V37.5V39H37.5L10.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3965 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1036 31.1197L19.1036 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1044" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Square</a></li>
+								<li><a href="#" data-type="landscape"><span class="media"><span class="img"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" _ngcontent-ng-c1296751826="" aria-hidden="true">
+								  <g clip-path="url(#clip0_270:1043)" _ngcontent-ng-c1296751826="">
+								    <path fill-rule="evenodd" clip-rule="evenodd" d="M5.5 37.5L42.5 37.5V36.25V36V12V10.5L5.5 10.5L5.5 37.5ZM5.5 39H4V37.5V10.5V9H5.5H42.5L44 9V10.5V12V36V36.25V37.5V39H42.5L5.5 39ZM26.2536 18.4821L26.9029 19.6309L33.4029 31.1309C33.6067 31.4915 33.4796 31.9491 33.119 32.1529C32.7584 32.3567 32.3009 32.2296 32.0971 31.869L26.2464 21.5179L22.9012 27.3721L22.2788 28.4612L21.614 27.3975L19.7694 24.4462L15.3964 31.8802C15.1864 32.2373 14.7268 32.3564 14.3697 32.1464C14.0127 31.9364 13.8935 31.4767 14.1035 31.1197L19.1035 22.6197L19.7306 21.5538L20.386 22.6025L22.2212 25.5388L25.5988 19.6279L26.2536 18.4821ZM31.25 19C32.0784 19 32.75 18.3284 32.75 17.5C32.75 16.6716 32.0784 16 31.25 16C30.4216 16 29.75 16.6716 29.75 17.5C29.75 18.3284 30.4216 19 31.25 19Z" fill="#16212C" _ngcontent-ng-c1296751826=""></path>
+								  </g>
+								  <defs _ngcontent-ng-c1296751826="">
+								    <clipPath id="clip0_270:1043" _ngcontent-ng-c1296751826="">
+								      <rect width="48" height="48" fill="white" _ngcontent-ng-c1296751826=""></rect>
+								    </clipPath>
+								  </defs>
+								</svg></span></span>Landscape</a></li>
+
+							</ul>
+						</div>
+						</div>
+					</div>
+					<div class="bottom__controls">
+						<div class="desc">
+							<p>Price</p>
+							<div class="include">
+								<span>59.00 $</span>
+								<p>includes 0.00 $ VAT</p>
+							</div>
+							<span class="save">Save 27%</span>
+						</div>
+						<div class="btn-group">
+							<!-- <a href="#" class="export-btn" onclick="exportMap('png')">Export PNG</a>
+							<a href="#" class="export-btn" onclick="exportMap('jpg')">Export JPG</a>
+							<a href="#" class="save-btn" onclick="saveMapConfiguration()">Save Config</a>
+							<a href="#" class="load-btn" onclick="loadMapConfiguration()">Load Config</a> -->
+							<a href="#" class="cart-btn" onclick="generatePosterAndAddToCart(event)">Add to cart </a>
+						</div>
+					</div>
+				</div>
+
+				<div class="canvas__wrapper">
+					<div class="gallery">
+						<div class="elem current">
+							<img src="img/thumb.webp" alt="thumb">
+							<span>preview</span>
+						</div>
+						<div class="elem">
+							<img src="img/thumb.webp" alt="thumb">
+						</div>
+						<div class="elem">
+							<img src="img/thumb.webp" alt="thumb">
+						</div>
+						<div class="elem">
+							<img src="img/thumb.webp" alt="thumb">
+						</div>
+						<div class="elem">
+							<img src="img/thumb.webp" alt="thumb">
+						</div>
+						<div class="elem">
+							<img src="img/thumb.webp" alt="thumb">
+						</div>
+					</div>
+					<div class="inn single-map-view">
+						<div class="media">
+							<!-- <img src="img/40x30-black.png" alt="40x30-black"> -->
+						</div>
+						<div id="map" class="map-loading">
+							<div id="shape-overlay"></div>
+						</div>
+						<div class="map-preview-title">
+							<h3 id="preview-title">MIAMI, UNITED STATES</h3>
+							<p id="preview-subtitle">25.76168°N / 80.19179°W</p>
+						</div>
+					</div>
+					
+					<!-- Double Map Layout (hidden by default) -->
+					<div class="inn double-map-view" style="display: none;">
+						<div class="media">
+							<!-- Frame image for double map layout -->
+						</div>
+						<div class="double-map-title">
+							<h2>Love knows no distance</h2>
+						</div>
+						<div class="double-map-container">
+							<div class="map-wrapper">
+								<div id="map1" class="double-map">
+									<div class="shape-overlay"></div>
+								</div>
+								<div class="map-label">
+									<h3>Sophia</h3>
+									<p>small text, map 1</p>
+								</div>
+							</div>
+							<div class="map-wrapper">
+								<div id="map2" class="double-map">
+									<div class="shape-overlay"></div>
+								</div>
+								<div class="map-label">
+									<h3>Michael</h3>
+									<p>small text, map 2</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Triple Map Layout (hidden by default) -->
+					<div class="inn triple-map-view" style="display: none;">
+						<div class="media">
+							<!-- Frame image for triple map layout -->
+						</div>
+						<div class="triple-map-title">
+							<h2>Three amazing places</h2>
+						</div>
+						<div class="triple-map-container">
+							<div class="map-wrapper">
+								<div id="map1-triple" class="triple-map">
+									<div class="shape-overlay"></div>
+								</div>
+								<div class="map-label">
+									<h3>Location 1</h3>
+									<p>small text, map 1</p>
+								</div>
+							</div>
+							<div class="map-wrapper">
+								<div id="map2-triple" class="triple-map">
+									<div class="shape-overlay"></div>
+								</div>
+								<div class="map-label">
+									<h3>Location 2</h3>
+									<p>small text, map 2</p>
+								</div>
+							</div>
+							<div class="map-wrapper">
+								<div id="map3-triple" class="triple-map">
+									<div class="shape-overlay"></div>
+								</div>
+								<div class="map-label">
+									<h3>Location 3</h3>
+									<p>small text, map 3</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="info__popup" data-id="template1" style="display:none;">
+		<div class="inner">
+			<div class="box">
+				<div class="top">
+					<p>Style</p>
+					<a href="#">
+						<img src="img/close.png" alt="close">
+					</a>
+				</div>
+				<p>We are for the freedom of choice! You can choose one of our predesigned styles or create your very own - simply pick the custom scheme and choose the colors for land, water and streets.</p>
+				<p>We are sorry, but we are not able to show street names. <br> Our maps are not 3D.</p>
+				<p>All pictures shown are for illustration purposes only. Colours and line thickness may vary due to the monitor and printer calibrations, the printer itself and the paper you are using.</p>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="info__popup" data-id="template2" style="display:none;">
+		<div class="inner">
+			<div class="box">
+				<div class="top">
+					<p>Add map marker</p>
+					<a href="#">
+						<img src="img/close.png" alt="close">
+					</a>
+				</div>
+				<p>If the marker is not showing, please make sure that the address that you have selected is within the map scope.</p>
+				<p>The marker's placement is determined by the Google Maps address or coordinates in decimal format from Google Maps.</p>
+				<p>If you want to find the coordinates (latitude and longitude) of a specific location on Google Maps that doesn't have a formal address, you can use the following method:</p>
+				<ul>
+					<li>Open the Google Maps website or app.</li>
+					<li>Navigate to the desired location by zooming and dragging the map.</li>
+					<li>Click/Press & hold on the specific location on the map.</li>
+					<li>A small information box will appear, showing the coordinates (latitude and longitude) of the selected location.</li>
+				</ul>
+				<p> We are unable to add any additional marker' shapes or add more than 1 marker.<br> Our Triple map design allows for 3 maps with corresponding 3 markers.</p>
+			</div>
+		</div>
+	</div>
+	<div class="ideas__wrapper" style="display:none;">
+		<div class="inner">
+			<div class="popup">
+				<div class="top">
+					<div class="desc">
+						<p>Inspiration</p>
+						<span>Check out our ideas for personalizing your artwork.</span>
+					</div>
+					<a href="#">
+						<img src="img/close.png" alt="close">
+					</a>
+				</div>
+				<div class="content">
+					<ul>
+						<li><a href="#" data-id="1">Love</a></li>
+						<li><a href="#" data-id="2">Wedding</a></li>
+						<li><a href="#" data-id="3">Home</a></li>
+						<li><a href="#" data-id="4">Grandparents</a></li>
+						<li><a href="#" data-id="5">Travel</a></li>
+					</ul>
+					<span>Found 11 inspirations from category: <span>Love</span></span>
+				</div>
+				<div class="list">
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="1">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+
+					<div class="elem" data-id="2" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="2" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+
+
+					<div class="elem" data-id="3" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="3" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+
+					<div class="elem" data-id="4" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="4" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+
+					<div class="elem" data-id="5" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>Once a year, go someplace you’ve never been before. - Dalai Lama</p>
+						</label>
+					</div>
+					<div class="elem" data-id="5" style="display:none;">
+						<label class="container__checkbox">
+						  <input type="checkbox" >
+						  <span class="checkmark"></span>
+						  <p>The best journey takes you home.</p>
+						</label>
+					</div>
+				</div>
+				<div class="btn">
+					<a href="#">Select</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script
+  src="https://code.jquery.com/jquery-3.7.1.js"
+  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+  crossorigin="anonymous"></script>
+	<script src="js/script.js"></script>
+	<!-- <script src="js/print-mode.js"></script> -->
+</body>
+</html>

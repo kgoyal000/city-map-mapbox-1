@@ -1,0 +1,604 @@
+{
+    "version": 8,
+    "name": "GlobeTee Beachglass",
+    "metadata": {
+        "mapbox:autocomposite": false,
+        "mapbox:type": "template",
+        "mapbox:groups": {
+            "b6371a3f2f5a9932464fa3867530a2e5": {
+                "name": "Transportation",
+                "collapsed": false
+            },
+            "a14c9607bc7954ba1df7205bf660433f": {
+                "name": "Boundaries"
+            },
+            "101da9f13b64a08fa4b6ac1168e89e5f": {
+                "name": "Places",
+                "collapsed": false
+            }
+        },
+        "openmaptiles:version": "3.x",
+        "openmaptiles:mapbox:owner": "openmaptiles",
+        "openmaptiles:mapbox:source:url": "mapbox://openmaptiles.4qljc88t",
+        "maputnik:renderer": "mbgljs"
+    },
+    "center": [
+        10.184401828277089,
+        -1.1368683772161603e-13
+    ],
+    "zoom": 0.8902641636539237,
+    "bearing": 0,
+    "pitch": 0,
+    "sources": {
+        "openmaptiles": {
+            "type": "vector",
+            "url": "mapbox://mapbox.mapbox-streets-v8"
+        }
+    },
+    "glyphs": "https://api.mapbox.com/fonts/mapbox/{fontstack}/{range}.pbf",
+    "sprite": "https://api.mapbox.com/styles/v1/mapbox/streets-v12/sprite?access_token=pk.eyJ1IjoiZG9kbzc5MSIsImEiOiJjbWZianUyejEwNDNsMmpxdzBjZmZnbndtIn0.t5a9KzottI8eUYz396kfbQ",
+    "layers": [
+        {
+            "id": "bg",
+            "type": "background",
+            "metadata": {
+                "maputnik:comment": "This is the background layer"
+            },
+            "minzoom": 0,
+            "maxzoom": 24,
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "background-color": "rgba(255, 255, 255, 1)"
+            }
+        },
+        {
+            "id": "forest-outline",
+            "type": "line",
+            "source": "openmaptiles",
+            "source-layer": "landcover",
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "subclass",
+                    "forest"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "rgba(226, 224, 220, 1)"
+            }
+        },
+        {
+            "id": "forest-fill",
+            "type": "fill",
+            "source": "openmaptiles",
+            "source-layer": "landcover",
+            "minzoom": 0,
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "subclass",
+                    "forest"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "fill-color": "rgba(244, 244, 244, 1)"
+            }
+        },
+        {
+            "id": "water-rivers",
+            "type": "line",
+            "source": "openmaptiles",
+            "source-layer": "waterway",
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "rgba(169, 196, 196, 1)",
+                "line-width": [
+                    "interpolate",
+                    [
+                        "exponential",
+                        2
+                    ],
+                    [
+                        "zoom"
+                    ],
+                    6,
+                    [
+                        "*",
+                        2,
+                        [
+                            "^",
+                            2,
+                            -7
+                        ]
+                    ],
+                    24,
+                    [
+                        "*",
+                        2,
+                        [
+                            "^",
+                            2,
+                            11
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "id": "water",
+            "type": "fill",
+            "source": "openmaptiles",
+            "source-layer": "water",
+            "filter": [
+                "==",
+                "$type",
+                "Polygon"
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "fill-color": "rgba(169, 196, 196, 1)",
+                "fill-antialias": true,
+                "fill-translate-anchor": "map"
+            }
+        },
+        {
+            "id": "buildings",
+            "type": "line",
+            "source": "openmaptiles",
+            "source-layer": "building",
+            "minzoom": 11,
+            "layout": {
+                "visibility": "visible",
+                "line-cap": "square"
+            },
+            "paint": {
+                "line-color": "rgba(0, 0, 0, 1)",
+                "line-width": [
+                    "interpolate",
+                    [
+                        "exponential",
+                        2
+                    ],
+                    [
+                        "zoom"
+                    ],
+                    12,
+                    [
+                        "*",
+                        2,
+                        [
+                            "^",
+                            2,
+                            -4
+                        ]
+                    ],
+                    24,
+                    [
+                        "*",
+                        2,
+                        [
+                            "^",
+                            2,
+                            8
+                        ]
+                    ]
+                ],
+                "line-blur": 0
+            }
+        },
+        {
+            "id": "rails",
+            "type": "line",
+            "source": "openmaptiles",
+            "source-layer": "transportation",
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "class",
+                    "rail"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "rgba(0, 0, 0, 1)",
+                "line-dasharray": [
+                    3,
+                    0.5
+                ],
+                "line-gap-width": {
+                    "stops": [
+                        [
+                            10,
+                            0.25
+                        ],
+                        [
+                            11,
+                            0
+                        ]
+                    ]
+                },
+                "line-width": {
+                    "stops": [
+                        [
+                            8,
+                            0.1
+                        ],
+                        [
+                            11,
+                            0.2
+                        ],
+                        [
+                            12,
+                            0.5
+                        ],
+                        [
+                            16,
+                            1
+                        ],
+                        [
+                            20,
+                            5
+                        ]
+                    ]
+                },
+                "line-blur": 0
+            }
+        },
+        {
+            "id": "service",
+            "type": "line",
+            "source": "openmaptiles",
+            "source-layer": "transportation",
+            "minzoom": 8,
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "class",
+                    "service"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "rgba(65, 65, 65, 1)",
+                "line-width": {
+                    "stops": [
+                        [
+                            9,
+                            0.1
+                        ],
+                        [
+                            12,
+                            0.2
+                        ],
+                        [
+                            16,
+                            1
+                        ],
+                        [
+                            22,
+                            5
+                        ]
+                    ]
+                },
+                "line-blur": 0
+            }
+        },
+        {
+            "id": "track",
+            "type": "line",
+            "source": "openmaptiles",
+            "source-layer": "transportation",
+            "minzoom": 8,
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "class",
+                    "track"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "rgba(154, 154, 154, 1)",
+                "line-width": {
+                    "stops": [
+                        [
+                            2,
+                            0.8
+                        ],
+                        [
+                            11,
+                            0.1
+                        ],
+                        [
+                            12,
+                            0.1
+                        ],
+                        [
+                            13,
+                            0.5
+                        ],
+                        [
+                            15,
+                            1
+                        ]
+                    ]
+                },
+                "line-blur": 0,
+                "line-dasharray": [
+                    6,
+                    3
+                ]
+            }
+        },
+        {
+            "id": "streets",
+            "type": "line",
+            "source": "openmaptiles",
+            "source-layer": "transportation",
+            "minzoom": 6,
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "class",
+                    "minor"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "rgba(34, 34, 34, 1)",
+                "line-width": {
+                    "stops": [
+                        [
+                            10,
+                            0.1
+                        ],
+                        [
+                            12,
+                            0.4
+                        ],
+                        [
+                            14,
+                            2
+                        ],
+                        [
+                            16,
+                            3
+                        ],
+                        [
+                            20,
+                            20
+                        ]
+                    ]
+                },
+                "line-blur": 0
+            }
+        },
+        {
+            "id": "Primary-Motorway",
+            "type": "line",
+            "source": "openmaptiles",
+            "source-layer": "transportation",
+            "minzoom": 3,
+            "filter": [
+                "all",
+                [
+                    "in",
+                    "class",
+                    "primary",
+                    "motorway"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible",
+                "line-cap": "round",
+                "line-join": "round",
+                "line-round-limit": 1
+            },
+            "paint": {
+                "line-color": "rgba(0, 0, 0, 1)",
+                "line-width": [
+                    "interpolate",
+                    [
+                        "exponential",
+                        2
+                    ],
+                    [
+                        "zoom"
+                    ],
+                    0,
+                    [
+                        "*",
+                        2,
+                        [
+                            "^",
+                            2,
+                            -14
+                        ]
+                    ],
+                    24,
+                    [
+                        "*",
+                        2,
+                        [
+                            "^",
+                            2,
+                            10
+                        ]
+                    ]
+                ],
+                "line-opacity": 1
+            }
+        },
+        {
+            "id": "Trunks",
+            "type": "line",
+            "metadata": {
+                "maputnik:comment": "These are the trunk roads."
+            },
+            "source": "openmaptiles",
+            "source-layer": "transportation",
+            "minzoom": 3,
+            "maxzoom": 24,
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "class",
+                    "trunk"
+                ]
+            ],
+            "layout": {
+                "line-cap": "round",
+                "line-join": "round",
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "rgba(0, 0, 0, 1)",
+                "line-width": {
+                    "stops": [
+                        [
+                            6,
+                            0.1
+                        ],
+                        [
+                            8,
+                            0.5
+                        ],
+                        [
+                            11,
+                            1.2
+                        ],
+                        [
+                            13,
+                            1.6
+                        ],
+                        [
+                            16,
+                            4
+                        ],
+                        [
+                            18,
+                            12
+                        ],
+                        [
+                            20,
+                            40
+                        ]
+                    ]
+                },
+                "line-opacity": 1
+            }
+        },
+        {
+            "id": "teritary roads",
+            "type": "line",
+            "source": "openmaptiles",
+            "source-layer": "transportation",
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "class",
+                    "tertiary"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "rgba(12, 12, 12, 1)",
+                "line-width": {
+                    "stops": [
+                        [
+                            8,
+                            0.1
+                        ],
+                        [
+                            11,
+                            1
+                        ],
+                        [
+                            16,
+                            6
+                        ],
+                        [
+                            18,
+                            12
+                        ],
+                        [
+                            20,
+                            40
+                        ]
+                    ]
+                }
+            }
+        },
+        {
+            "id": "secondary roads",
+            "type": "line",
+            "source": "openmaptiles",
+            "source-layer": "transportation",
+            "filter": [
+                "all",
+                [
+                    "==",
+                    "class",
+                    "secondary"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "rgba(12, 12, 12, 1)",
+                "line-width": {
+                    "stops": [
+                        [
+                            9,
+                            0.1
+                        ],
+                        [
+                            11,
+                            0.8
+                        ],
+                        [
+                            16,
+                            6
+                        ],
+                        [
+                            20,
+                            30
+                        ]
+                    ]
+                }
+            }
+        }
+    ],
+    "id": "ciwf3o3u2008z2pmq7pmvm6xq"
+}
