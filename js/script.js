@@ -6002,41 +6002,10 @@ $(document).ready(function(){
 				}
 			}
 
-			console.log('Sending configuration to backend:', config);
+			console.log('Configuration prepared:', config);
 
-			// Send to backend
-			const response = await fetch('http://localhost:3000/api/generate-poster', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(config)
-			});
-
-			if (!response.ok) {
-				throw new Error(`Backend error: ${response.status} ${response.statusText}`);
-			}
-
-			const result = await response.json();
-
-			if (result.success) {
-				console.log('Poster generated successfully!');
-				console.log('Image metadata:', result.metadata);
-
-				// Download the generated image
-				const link = document.createElement('a');
-				link.href = result.image; // Base64 data URL from backend
-				link.download = `poster-${config.print.width}x${config.print.height}cm-${Date.now()}.png`;
-				document.body.appendChild(link);
-				link.click();
-				document.body.removeChild(link);
-
-				const sizeInMB = result.metadata.sizeInMB;
-				const dimensions = `${result.metadata.width}x${result.metadata.height}px`;
-				alert(`Poster generated successfully!\n\nDimensions: ${dimensions}\nSize: ${sizeInMB} MB\nDPI: ${result.metadata.dpi}\n\nThe high-resolution image is being downloaded.`);
-			} else {
-				throw new Error(result.error || 'Failed to generate poster');
-			}
+			// For GitHub Pages deployment, use browser screenshot instead of backend
+			alert('This feature requires a local backend server. Please use the browser\'s screenshot/print feature instead:\n\n1. Press Ctrl+P (or Cmd+P on Mac)\n2. Select "Save as PDF" or use browser screenshot tools\n\nFor high-resolution posters, run the backend server locally.');
 
 		} catch (error) {
 			console.error('Error generating poster:', error);
