@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+backend-python/venv/
+backend-python/__pycache__/
+
+# Backend directories (not needed for GitHub Pages)
+backend/
+backend-python/
+
+# Large font files
+fonts/noto-sans/*.otf
+fonts/noto-sans/*.ttf
+
+# Output and generated files
+*.png
+!img/**/*.png
+backend/output/
+backend-python/output/
+
+# Environment files
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build files
+dist/
+build/
