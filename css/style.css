@@ -2801,7 +2801,7 @@ body * {
     min-width: 70vw;
     margin-right: auto;
     margin-left: auto;
-    padding: 0 15px;
+    padding: 0px;
   }
 
   .main__wrapper .outer__main .canvas__wrapper canvas {
@@ -4399,3 +4399,42 @@ div#map.layout-full-heart canvas.mapboxgl-canvas {
   border-color: #333;
 }
 
+.print-mode .main__wrapper{
+  padding: 0 !important;
+}
+
+.print-mode .main__wrapper .outer__main .canvas__wrapper .inn{
+  box-shadow: none !important;  
+}
+
+.print-mode .mapboxgl-ctrl-top-right {
+  display: none !important;
+}
+.print-mode .map-preview-title h3 {
+    margin: 0 0 32px 0;
+    font-size: 60px;
+    line-height: 60px;
+    font-weight: bold;
+    color: #16212c;
+    font-family: "Poppins", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.print-mode .map-preview-title{
+  width: 100% !important;
+  padding: 60px;
+}
+
+.print-mode .container{
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.print-mode .map-preview-title p {
+    margin: 0;
+    font-size: 32px;
+    line-height: 32px;
+    color: #666;
+    font-weight: 500;
+}

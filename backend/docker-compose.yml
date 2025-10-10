@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  poster-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: map-poster-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+    volumes:
+      # Mount output directory to persist generated posters
+      - ./output:/app/output
+    # Increase shared memory size for Chrome/WebGL (CRITICAL!)
+    # Default 64MB is too small for Mapbox GL JS
+    shm_size: '2gb'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

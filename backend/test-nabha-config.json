@@ -1,0 +1,39 @@
+{
+  "layout": {
+    "type": "single",
+    "shape": "default"
+  },
+  "style": "mapbox://styles/dodo791/cmfdyppfj009701s3egb640uv",
+  "maps": [
+    {
+      "center": [76.15115616552049, 30.375335181807543],
+      "zoom": 12.914555399926938,
+      "bearing": 0,
+      "pitch": 0,
+      "previewWidth": 640,
+      "markers": [
+        {
+          "coordinates": [76.14510016883173, 30.374937436079946],
+          "icon": "heart",
+          "color": "#1B1B1B"
+        }
+      ],
+      "title": {
+        "enabled": true,
+        "largeText": "Nabha, Punjab, India",
+        "smallText": "30.375°N / 76.151°E",
+        "font": "Montserrat"
+      }
+    }
+  ],
+  "frame": {
+    "enabled": false
+  },
+  "print": {
+    "width": 50,
+    "height": 70,
+    "dpi": 200,
+    "orientation": "portrait",
+    "format": "PNG"
+  }
+}

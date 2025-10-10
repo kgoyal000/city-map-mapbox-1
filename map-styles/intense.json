@@ -32,10 +32,11 @@
     "sources": {
         "openmaptiles": {
             "type": "vector",
-            "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=proLzF1RzAv3VlPpmn90"
+            "url": "mapbox://mapbox.mapbox-streets-v8"
         }
     },
-    "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf",
+    "glyphs": "https://api.mapbox.com/fonts/mapbox/{fontstack}/{range}.pbf",
+    "sprite": "https://api.mapbox.com/styles/v1/mapbox/streets-v12/sprite?access_token=pk.eyJ1IjoiZG9kbzc5MSIsImEiOiJjbWZianUyejEwNDNsMmpxdzBjZmZnbndtIn0.t5a9KzottI8eUYz396kfbQ",
     "layers": [
         {
             "id": "background",

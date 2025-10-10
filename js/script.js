@@ -1,3 +1,11 @@
+// Query parameter support for print mode
+const urlParams = new URLSearchParams(window.location.search);
+const isPrintMode = urlParams.get('print') === 'true';
+const configData = urlParams.get('config');
+const printDPI = parseInt(urlParams.get('dpi') || '300');
+const printWidth = parseInt(urlParams.get('width') || '3937');  // pixels
+const printHeight = parseInt(urlParams.get('height') || '5511'); // pixels
+
 let map;
 let map1; // First map for double layout
 let map2; // Second map for double layout
@@ -89,17 +97,17 @@ async function loadMapStyle(styleName) {
 }
 
 let mapStyles = {
-	'minimal': 'minimal', // Load GlobeTee Minimal style from JSON
-	'beachglass': 'beachglass', // Load GlobeTee Beachglass style from JSON
-	'carbon': 'carbon', // Load GlobeTee Carbon style from JSON
-	'black': 'black', // Load GlobeTee Black style from JSON
-	'vintage': 'vintage', // Load GlobeTee Vintage style from JSON
-	'classic': 'classic', // Load GlobeTee Classic style from JSON
-	'pink': 'pink', // Load GlobeTee Wanderlust style from JSON
-	'green': 'green', // Load GlobeTee Cosy style from JSON
-	'intense': 'intense', // Load GlobeTee Intense style from JSON
-	'atlas': 'atlas', // Load GlobeTee Atlas style from JSON
-	'custom': 'mapbox://styles/mapbox/streets-v12' // Will be customized
+	'minimal': 'mapbox://styles/dodo791/cmfdyppfj009701s3egb640uv', // Light/Minimal style
+	'beachglass': 'mapbox://styles/dodo791/cmfe0avw9009q01sj85ode2tl', // Outdoor/Beach style
+	'carbon': 'mapbox://styles/dodo791/cmfe0rz5f009s01sjg82u8423', // Dark/Carbon style
+	'black': 'mapbox://styles/dodo791/cmfe0ftfe009e01sd8xttebxl', // Black/Dark style
+	'vintage': 'mapbox://styles/dodo791/cmfe0vz4u003k01r9aom052eo', // Vintage/Classic streets
+	'classic': 'mapbox://styles/dodo791/cmfdp6i9l001801s3flgs3y3x', // Classic streets
+	'pink': 'mapbox://styles/dodo791/cmfe0u9i4003i01r974l02y1x', // Light/Pink style
+	'green': 'mapbox://styles/dodo791/cmfdyq8q3002401s3hjc83tr6', // Green/Outdoor style
+	'intense': 'mapbox://styles/dodo791/cmfdp49us008a01s9h5zib2cp', // Intense/Satellite
+	'atlas': 'mapbox://styles/dodo791/cmfdp5bbt008v01qwculaabga', // Atlas/Streets
+	'custom': 'mapbox://styles/mapbox/streets-v12' // Customizable
 };
 
 // Mapbox access token - Get yours from https://account.mapbox.com/access-tokens/
@@ -129,17 +137,24 @@ async function initializeMap() {
 
 	// Remove loading state
 	mapContainer.classList.remove('map-loading');
-	
-	// Load the Minimal style from JSON
-	const minimalStyle = await loadMapStyle('minimal');
-	const styleToUse = minimalStyle || 'mapbox://styles/mapbox/streets-v12';
+
+	// Use Mapbox style directly (no JSON loading needed)
+	const styleToUse = mapStyles['minimal'] || 'mapbox://styles/mapbox/streets-v12';
 
 	try {
 		map = new mapboxgl.Map({
 			container: 'map',
 			style: styleToUse,
 			center: [-80.1918, 25.7617], // Miami coordinates
-			zoom: 12
+			zoom: 15, // Even higher zoom for maximum detail and clarity
+			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3), // Boost pixel ratio for ultra-sharp rendering (max 3x)
+			maxZoom: 22, // Allow maximum zoom for detailed views
+			minZoom: 10, // Prevent zooming too far out
+			antialias: true, // Enable antialiasing for smoother edges
+			optimizeForTerrain: false, // Disable terrain optimization for sharper vector tiles
+			renderWorldCopies: false, // Optimize performance
+			fadeDuration: 0, // Disable fade for immediate tile rendering
+			crossSourceCollisions: false // Improve label clarity
 		});
 
 		console.log('Map object created:', map);
@@ -255,7 +270,15 @@ async function initializeDoubleMaps() {
 			container: 'map1',
 			style: styleToUse,
 			center: [-80.1918, 25.7617], // Default: Miami
-			zoom: 12
+			zoom: 15,
+			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3),
+			maxZoom: 22,
+			minZoom: 10,
+			antialias: true,
+			optimizeForTerrain: false,
+			renderWorldCopies: false,
+			fadeDuration: 0,
+			crossSourceCollisions: false
 		});
 
 		// Initialize second map (e.g., Michael's location)
@@ -263,7 +286,15 @@ async function initializeDoubleMaps() {
 			container: 'map2',
 			style: styleToUse,
 			center: [-0.1276, 51.5074], // Default: London
-			zoom: 12
+			zoom: 15,
+			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3),
+			maxZoom: 22,
+			minZoom: 10,
+			antialias: true,
+			optimizeForTerrain: false,
+			renderWorldCopies: false,
+			fadeDuration: 0,
+			crossSourceCollisions: false
 		});
 		
 		console.log('Both maps created');
@@ -348,7 +379,15 @@ async function initializeTripleMaps() {
 			container: 'map1-triple',
 			style: styleToUse,
 			center: [-80.1918, 25.7617], // Default: Miami
-			zoom: 12
+			zoom: 15,
+			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3),
+			maxZoom: 22,
+			minZoom: 10,
+			antialias: true,
+			optimizeForTerrain: false,
+			renderWorldCopies: false,
+			fadeDuration: 0,
+			crossSourceCollisions: false
 		});
 
 		// Initialize second map
@@ -356,7 +395,15 @@ async function initializeTripleMaps() {
 			container: 'map2-triple',
 			style: styleToUse,
 			center: [-0.1276, 51.5074], // Default: London
-			zoom: 12
+			zoom: 15,
+			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3),
+			maxZoom: 22,
+			minZoom: 10,
+			antialias: true,
+			optimizeForTerrain: false,
+			renderWorldCopies: false,
+			fadeDuration: 0,
+			crossSourceCollisions: false
 		});
 
 		// Initialize third map
@@ -364,7 +411,15 @@ async function initializeTripleMaps() {
 			container: 'map3-triple',
 			style: styleToUse,
 			center: [139.6917, 35.6895], // Default: Tokyo
-			zoom: 12
+			zoom: 15,
+			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3),
+			maxZoom: 22,
+			minZoom: 10,
+			antialias: true,
+			optimizeForTerrain: false,
+			renderWorldCopies: false,
+			fadeDuration: 0,
+			crossSourceCollisions: false
 		});
 
 		console.log('All three maps created');
@@ -796,22 +851,22 @@ async function reinitializeMap() {
 		
 		console.log('Container explicit dimensions set:', containerWidth, 'x', containerHeight);
 		
-		// Load the style properly
+		// Load the style properly - use mapStyles mapping
 		let styleToUse = savedState.styleKey;
 		let isCustomStyle = false;
-		
-		// If it's a style name (not a URL), load from JSON
-		if (typeof styleToUse === 'string' && !styleToUse.includes('mapbox://')) {
-			isCustomStyle = (styleToUse === 'custom');
-			const styleData = await loadMapStyle(styleToUse);
-			if (styleData) {
-				styleToUse = styleData;
-			} else {
-				// Fallback to Mapbox default
-				styleToUse = 'mapbox://styles/mapbox/streets-v12';
-			}
-		} else if (styleToUse === 'mapbox://styles/mapbox/streets-v12' && savedState.customColors.land !== '#F5F5DC') {
-			// This is likely custom style using default Mapbox base
+
+		// Get the correct Mapbox style URL from mapStyles
+		if (styleToUse && mapStyles[styleToUse]) {
+			styleToUse = mapStyles[styleToUse];
+			isCustomStyle = (savedState.styleKey === 'custom');
+		} else if (typeof styleToUse === 'string' && !styleToUse.includes('mapbox://')) {
+			// Try to map it to a Mapbox style
+			styleToUse = mapStyles[styleToUse] || mapStyles['minimal'] || 'mapbox://styles/mapbox/light-v11';
+			isCustomStyle = (savedState.styleKey === 'custom');
+		}
+
+		// Check if this is custom style with custom colors
+		if (styleToUse === 'mapbox://styles/mapbox/streets-v12' && savedState.customColors.land !== '#F5F5DC') {
 			isCustomStyle = true;
 		}
 		
@@ -819,12 +874,20 @@ async function reinitializeMap() {
 		
 		// Wait for DOM to settle, then initialize map
 		setTimeout(function() {
-			// Reinitialize map with saved state
+			// Reinitialize map with saved state and ULTRA-HIGH QUALITY rendering
 			map = new mapboxgl.Map({
 				container: 'map',
 				style: styleToUse,
 				center: savedState.center,
-				zoom: savedState.zoom
+				zoom: savedState.zoom,
+				pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3), // Boost pixel ratio for ultra-sharp rendering (max 3x)
+				maxZoom: 22, // Allow maximum zoom for detailed views
+				minZoom: 10, // Prevent zooming too far out
+				antialias: true, // Enable antialiasing for smoother edges
+				optimizeForTerrain: false, // Disable terrain optimization for sharper vector tiles
+				renderWorldCopies: false,
+				fadeDuration: 0, // Disable fade for immediate tile rendering
+				crossSourceCollisions: false // Improve label clarity
 			});
 			
 			map.on('load', function() {
@@ -1664,13 +1727,38 @@ function applyCustomMapColorsToInstance(mapInstance) {
 				mapInstance.setPaintProperty('land', 'background-color', customColors.land);
 			}
 
-			// Apply roads color - try multiple layer variations
-			const roadLayers = ['road', 'road-primary', 'road-secondary-tertiary', 'road-street',
-			                    'road-minor', 'road-arterial', 'road-highway', 'road-trunk',
-			                    'road-motorway', 'bridge-street', 'tunnel-street'];
+			// Apply roads color - MAIN road layers only (no casing layers)
+			const roadLayers = [
+				// Standard roads (main layers only)
+				'road-simple', 'road-street', 'road-primary', 'road-secondary-tertiary',
+				'road-minor', 'road-major-link', 'road-minor-link', 'road-pedestrian',
+				'road-path', 'road-steps', 'road-construction', 'road-motorway-trunk',
+
+				// Bridges - MAIN LAYERS only
+				'bridge-simple', 'bridge-street', 'bridge-primary', 'bridge-secondary-tertiary',
+				'bridge-minor', 'bridge-major-link', 'bridge-minor-link',
+				'bridge-motorway-trunk', 'bridge-pedestrian', 'bridge-path', 'bridge-steps',
+				'bridge-construction',
+
+				// Tunnels - MAIN LAYERS only
+				'tunnel-street', 'tunnel-primary', 'tunnel-secondary-tertiary',
+				'tunnel-minor', 'tunnel-major-link', 'tunnel-minor-link',
+				'tunnel-motorway-trunk', 'tunnel-pedestrian', 'tunnel-path', 'tunnel-steps',
+				'tunnel-construction',
+
+				// Railways - MAIN LAYERS
+				'railway', 'railway-transit', 'railway-service',
+				'bridge-rail', 'tunnel-rail',
+
+				// Ferries
+				'ferry', 'ferry-auto'
+			];
+
+			// Apply road color to main layers only
 			roadLayers.forEach(layerId => {
 				if (mapInstance.getLayer(layerId)) {
 					mapInstance.setPaintProperty(layerId, 'line-color', customColors.roads);
+					console.log('✓ Applied road color to:', layerId);
 				}
 			});
 
@@ -5733,4 +5821,387 @@ $(document).ready(function(){
 		}
 	});
 
+	// Function to generate poster and add to cart
+	window.generatePosterAndAddToCart = async function(event) {
+		event.preventDefault();
+
+		// Show loading indicator
+		const cartBtn = event.target;
+		const originalText = cartBtn.textContent;
+		cartBtn.textContent = 'Generating poster...';
+		cartBtn.style.pointerEvents = 'none';
+
+		try {
+			// Collect all configuration details
+			// Get the actual Mapbox style URL from mapStyles mapping
+			const styleUrl = mapStyles[currentStyle] || currentStyle;
+
+			const config = {
+				layout: {
+					type: isTripleMapLayout ? 'triple' : (isDoubleMapLayout ? 'double' : 'single'),
+					shape: currentLayout || 'square'
+				},
+				style: styleUrl, // Send actual Mapbox URL (e.g., mapbox://styles/mapbox/streets-v12)
+				customColors: currentStyle === 'custom' ? customColors : null,
+				maps: [],
+				frame: {
+					enabled: false // You can add frame detection if needed
+				},
+				print: {
+					width: 80, // Will be updated with selected size below
+					height: 60,
+					dpi: 200,
+					orientation: resizeType || 'landscape',
+					format: 'PNG'
+				}
+			};
+
+			// Get selected size
+			const selectedSize = $('.elem__picker .size__picker > a.current .head p').text().trim();
+			console.log('Selected size text:', selectedSize, 'Orientation:', resizeType);
+
+			if (selectedSize) {
+				// Parse size (e.g., "30 x 40 cm" or "30 cm x 40 cm")
+				const sizeMatch = selectedSize.match(/(\d+)\s*(?:cm)?\s*x\s*(\d+)\s*(?:cm)?/i);
+				if (sizeMatch) {
+					const num1 = parseInt(sizeMatch[1]);
+					const num2 = parseInt(sizeMatch[2]);
+
+					// The format is usually "width x height" in the display
+					// For portrait: smaller x larger (e.g., 30 x 40)
+					// For landscape: larger x smaller (e.g., 40 x 30)
+					// So we use the numbers as-is
+					config.print.width = num1;
+					config.print.height = num2;
+
+					console.log(`Parsed size: ${num1} x ${num2} cm`);
+				} else {
+					console.warn('Could not parse size:', selectedSize);
+				}
+			}
+
+			// Collect map data based on layout type
+			if (isTripleMapLayout) {
+				// Triple map layout
+				const maps = [
+					{ map: map1Triple, marker: currentMarker1Triple, titleId: 'triple-map1-title', subtitleId: 'triple-map1-subtitle', markerId: 'triple-1' },
+					{ map: map2Triple, marker: currentMarker2Triple, titleId: 'triple-map2-title', subtitleId: 'triple-map2-subtitle', markerId: 'triple-2' },
+					{ map: map3Triple, marker: currentMarker3Triple, titleId: 'triple-map3-title', subtitleId: 'triple-map3-subtitle', markerId: 'triple-3' }
+				];
+
+				maps.forEach((mapData) => {
+					if (mapData.map) {
+						const center = mapData.map.getCenter();
+						const mapConfig = {
+							center: [center.lng, center.lat],
+							zoom: mapData.map.getZoom(),
+							markers: [],
+							title: {
+								enabled: true,
+								largeText: document.getElementById(mapData.titleId)?.value || '',
+								smallText: document.getElementById(mapData.subtitleId)?.value || '',
+								font: currentFont || 'Poppins'
+							}
+						};
+
+						// Add marker if exists
+						if (mapData.marker) {
+							const markerCoords = mapData.marker.getLngLat();
+							const markerElement = mapData.marker.getElement();
+
+							mapConfig.markers.push({
+								coordinates: [markerCoords.lng, markerCoords.lat],
+								icon: (markerData[mapData.markerId] && markerData[mapData.markerId].iconElement)
+									? markerData[mapData.markerId].iconElement.outerHTML
+									: markerElement.innerHTML || '',
+								color: (markerData[mapData.markerId] && markerData[mapData.markerId].color)
+									? markerData[mapData.markerId].color
+									: currentMarkerColor
+							});
+						}
+
+						config.maps.push(mapConfig);
+					}
+				});
+			} else if (isDoubleMapLayout) {
+				// Double map layout
+				const maps = [
+					{ map: map1, marker: currentMarker1, titleId: 'double-map1-title', subtitleId: 'double-map1-subtitle', markerId: 'double-1' },
+					{ map: map2, marker: currentMarker2, titleId: 'double-map2-title', subtitleId: 'double-map2-subtitle', markerId: 'double-2' }
+				];
+
+				maps.forEach((mapData) => {
+					if (mapData.map) {
+						const center = mapData.map.getCenter();
+						const mapConfig = {
+							center: [center.lng, center.lat],
+							zoom: mapData.map.getZoom(),
+							markers: [],
+							title: {
+								enabled: true,
+								largeText: document.getElementById(mapData.titleId)?.value || '',
+								smallText: document.getElementById(mapData.subtitleId)?.value || '',
+								font: currentFont || 'Poppins'
+							}
+						};
+
+						// Add marker if exists
+						if (mapData.marker) {
+							const markerCoords = mapData.marker.getLngLat();
+							const markerElement = mapData.marker.getElement();
+
+							mapConfig.markers.push({
+								coordinates: [markerCoords.lng, markerCoords.lat],
+								icon: (markerData[mapData.markerId] && markerData[mapData.markerId].iconElement)
+									? markerData[mapData.markerId].iconElement.outerHTML
+									: markerElement.innerHTML || '',
+								color: (markerData[mapData.markerId] && markerData[mapData.markerId].color)
+									? markerData[mapData.markerId].color
+									: currentMarkerColor
+							});
+						}
+
+						config.maps.push(mapConfig);
+					}
+				});
+			} else {
+				// Single map layout
+				if (map) {
+					const center = map.getCenter();
+					const mapConfig = {
+						center: [center.lng, center.lat],
+						zoom: map.getZoom(),
+						markers: [],
+						title: {
+							enabled: true,
+							largeText: document.getElementById('preview-title')?.textContent || '',
+							smallText: document.getElementById('preview-subtitle')?.textContent || '',
+							font: currentFont || 'Poppins'
+						}
+					};
+
+					// Add marker if exists
+					if (currentMarker) {
+						const markerCoords = currentMarker.getLngLat();
+						const markerElement = currentMarker.getElement();
+
+						mapConfig.markers.push({
+							coordinates: [markerCoords.lng, markerCoords.lat],
+							icon: currentMarkerIcon || markerElement.innerHTML || '',
+							color: currentMarkerColor
+						});
+
+						console.log('Marker added to config:', {
+							coords: [markerCoords.lng, markerCoords.lat],
+							hasIcon: !!currentMarkerIcon,
+							color: currentMarkerColor
+						});
+					}
+
+					config.maps.push(mapConfig);
+				}
+			}
+
+			console.log('Sending configuration to backend:', config);
+
+			// Send to backend
+			const response = await fetch('http://localhost:3000/api/generate-poster', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(config)
+			});
+
+			if (!response.ok) {
+				throw new Error(`Backend error: ${response.status} ${response.statusText}`);
+			}
+
+			const result = await response.json();
+
+			if (result.success) {
+				console.log('Poster generated successfully!');
+				console.log('Image metadata:', result.metadata);
+
+				// Download the generated image
+				const link = document.createElement('a');
+				link.href = result.image; // Base64 data URL from backend
+				link.download = `poster-${config.print.width}x${config.print.height}cm-${Date.now()}.png`;
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+
+				const sizeInMB = result.metadata.sizeInMB;
+				const dimensions = `${result.metadata.width}x${result.metadata.height}px`;
+				alert(`Poster generated successfully!\n\nDimensions: ${dimensions}\nSize: ${sizeInMB} MB\nDPI: ${result.metadata.dpi}\n\nThe high-resolution image is being downloaded.`);
+			} else {
+				throw new Error(result.error || 'Failed to generate poster');
+			}
+
+		} catch (error) {
+			console.error('Error generating poster:', error);
+			alert('Error generating poster: ' + error.message);
+		} finally {
+			// Restore button
+			cartBtn.textContent = originalText;
+			cartBtn.style.pointerEvents = 'auto';
+		}
+	};
+
 });
+// Print Mode Support - Load configuration from query params and hide UI
+if (isPrintMode && configData) {
+	// Parse configuration from base64
+	try {
+		const config = JSON.parse(atob(configData));
+
+		// Hide all UI elements for clean print
+		document.addEventListener('DOMContentLoaded', function() {
+			// Hide sidebar and controls
+			document.querySelectorAll('.main__switcher, .details__body, .sidebar, .controls, .navbar, .marker-instruction').forEach(el => {
+				el.style.display = 'none';
+			});
+
+			// Set body to print dimensions
+			document.body.style.width = printWidth + 'px';
+			document.body.style.height = printHeight + 'px';
+			document.body.style.margin = '0';
+			document.body.style.padding = '0';
+			document.body.style.overflow = 'hidden';
+
+			document.body.classList.add('print-mode');
+
+			// Set map container to full size
+			const mapContainer = document.querySelector('.canvas__wrapper');
+			if (mapContainer) {
+				mapContainer.style.width = '100%';
+				mapContainer.style.height = '100%';
+				mapContainer.style.top = '0';
+				mapContainer.style.left = '0';
+			}
+
+			// Set high DPI for Mapbox
+			if (window.devicePixelRatio !== (printDPI / 96)) {
+				window.devicePixelRatio = printDPI / 96;
+			}
+
+			// Wait for map to initialize then apply configuration
+			setTimeout(() => {
+				if (config.maps && config.maps[0]) {
+					const mapConfig = config.maps[0];
+
+					// Apply map settings
+					if (map) {
+						map.setCenter(mapConfig.center);
+						map.setZoom(mapConfig.zoom);
+						map.setBearing(mapConfig.bearing || 0);
+						map.setPitch(mapConfig.pitch || 0);
+
+						// Apply style
+						if (config.style) {
+							map.setStyle(config.style);
+						}
+
+						// Add markers after style loads
+						map.on('style.load', () => {
+							if (mapConfig.markers) {
+								mapConfig.markers.forEach(marker => {
+									// Use the same marker creation logic as frontend
+									const el = document.createElement('div');
+									el.style.width = '40px';
+									el.style.height = '40px';
+
+									// Add marker icon if specified
+									if (marker.icon === 'heart') {
+										el.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="35.908" height="32.946" viewBox="0 0 35.908 32.946">
+											<path fill="${marker.color || '#1B1B1B'}" d="M19.954,35.946l-2.6-2.37C8.1,25.191,2,19.661,2,12.875A9.779,9.779,0,0,1,11.875,3a10.752,10.752,0,0,1,8.079,3.752A10.752,10.752,0,0,1,28.033,3a9.779,9.779,0,0,1,9.875,9.875c0,6.787-6.1,12.316-15.351,20.719Z" transform="translate(-2 -3)"/>
+										</svg>`;
+									}
+
+									new mapboxgl.Marker(el)
+										.setLngLat(marker.coordinates)
+										.addTo(map);
+								});
+							}
+
+							// Add title if enabled
+							if (mapConfig.title && mapConfig.title.enabled) {
+								const titleDiv = document.createElement('div');
+								titleDiv.style.position = 'absolute';
+								titleDiv.style.bottom = '60px';
+								titleDiv.style.left = '50%';
+								titleDiv.style.transform = 'translateX(-50%)';
+								titleDiv.style.textAlign = 'center';
+								titleDiv.style.zIndex = '1000';
+								titleDiv.style.fontFamily = mapConfig.title.font || 'Poppins';
+
+								const largeText = document.createElement('div');
+								largeText.textContent = mapConfig.title.largeText || '';
+								largeText.style.fontSize = '42px';
+								largeText.style.fontWeight = '700';
+								largeText.style.letterSpacing = '3px';
+								largeText.style.textTransform = 'uppercase';
+								largeText.style.marginBottom = '8px';
+								largeText.style.color = '#1B1B1B';
+
+								const smallText = document.createElement('div');
+								smallText.textContent = mapConfig.title.smallText || '';
+								smallText.style.fontSize = '20px';
+								smallText.style.fontWeight = '400';
+								smallText.style.letterSpacing = '1.5px';
+								smallText.style.color = '#1B1B1B';
+
+								titleDiv.appendChild(largeText);
+								titleDiv.appendChild(smallText);
+								document.body.appendChild(titleDiv);
+							}
+
+							// Signal that map is ready for screenshot
+							window.mapRenderComplete = true;
+						});
+					}
+				}
+			}, 2000);
+		});
+	} catch (error) {
+		console.error('Error loading print configuration:', error);
+	}
+}
+
+
+// setInterval(() => {
+//         const mapEl = document.getElementById('map');
+//         if (mapEl) {
+//             const currentWidth = parseInt(mapEl.style.width);
+//             const currentHeight = parseInt(mapEl.style.height);
+// 			const titleHeight = document.querySelector('.map-preview-title').offsetHeight;
+//             if (currentWidth !== printWidth || currentHeight !== printHeight) {
+//                 console.log('Dimension change detected, forcing back to print size');
+//                 mapEl.style.cssText = `
+//                     width: ${printWidth}px !important;
+//                     height: ${printHeight-titleHeight}px !important;
+//                     max-width: none !important;
+//                     top: 0 !important;
+//                     left: 0 !important;
+//                     display: block !important;
+//                     visibility: visible !important;
+//                 `;
+
+//                 const mapInstance = window.map;
+//                 if (mapInstance && typeof mapInstance.resize === 'function') {
+//                     mapInstance.resize();
+
+//                     // Also restore zoom and center if we have them
+//                     if (targetZoom !== null && targetCenter !== null) {
+//                         setTimeout(() => {
+//                             mapInstance.jumpTo({
+//                                 center: targetCenter,
+//                                 zoom: targetZoom,
+//                                 duration: 0
+//                             });
+//                         }, 100);
+//                     }
+//                 }
+//             }
+//         }
+//     }, 500);

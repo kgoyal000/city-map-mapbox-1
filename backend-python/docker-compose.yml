@@ -1,0 +1,21 @@
+services:
+  poster-backend-python:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: map-poster-python
+    ports:
+      - "3000:3000"
+    environment:
+      - DOCKER_ENV=true
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./output:/app/output
+      - ./templates:/app/templates
+    shm_size: '2gb'  # Important for Chrome
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
