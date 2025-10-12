@@ -1,0 +1,42 @@
+{
+  "config": {
+    "layout": {
+      "type": "single",
+      "shape": "circle"
+    },
+    "maps": [
+      {
+        "center": [-80.1918, 25.7617],
+        "zoom": 15,
+        "bearing": 0,
+        "pitch": 0,
+        "style": "mapbox://styles/dodo791/cmfdyppfj009701s3egb640uv",
+        "containerWidth": 640,
+        "containerHeight": 640,
+        "markers": [
+          {
+            "coordinates": [-80.1918, 25.7617],
+            "icon": "heart",
+            "color": "rgb(211, 59, 62)"
+          }
+        ],
+        "title": {
+          "enabled": true,
+          "largeText": "MIAMI, UNITED STATES",
+          "smallText": "25.7617° N, 80.1918° W",
+          "font": "Poppins"
+        }
+      }
+    ],
+    "print": {
+      "widthCm": 80,
+      "heightCm": 60,
+      "dpi": 200,
+      "orientation": "landscape"
+    }
+  },
+  "options": {
+    "timeout": 120000,
+    "debug": true
+  }
+}

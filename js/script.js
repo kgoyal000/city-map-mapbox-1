@@ -5821,6 +5821,25 @@ $(document).ready(function(){
 		}
 	});
 
+	// Helper function to extract marker icon type from HTML
+	function extractMarkerIconType(markerHtml) {
+		// Default to 'heart' if no marker or invalid HTML
+		if (!markerHtml || typeof markerHtml !== 'string') {
+			return 'heart';
+		}
+
+		// Try to detect icon type from the SVG HTML
+		const lowerHtml = markerHtml.toLowerCase();
+
+		if (lowerHtml.includes('house') || lowerHtml.includes('home')) {
+			return 'house';
+		} else if (lowerHtml.includes('star')) {
+			return 'star';
+		} else {
+			return 'heart'; // Default
+		}
+	}
+
 	// Function to generate poster and add to cart
 	window.generatePosterAndAddToCart = async function(event) {
 		event.preventDefault();
@@ -5836,10 +5855,22 @@ $(document).ready(function(){
 			// Get the actual Mapbox style URL from mapStyles mapping
 			const styleUrl = mapStyles[currentStyle] || currentStyle;
 
+			// Map frontend layout to backend shape format
+			let shapeType = currentLayout || 'default';
+			// Convert 'default' to 'square' for backend
+			if (shapeType === 'default') {
+				shapeType = 'square';
+			}
+			// Ensure valid shape
+			const validShapes = ['circle', 'square', 'heart'];
+			if (!validShapes.includes(shapeType)) {
+				shapeType = 'square'; // Fallback to square
+			}
+
 			const config = {
 				layout: {
 					type: isTripleMapLayout ? 'triple' : (isDoubleMapLayout ? 'double' : 'single'),
-					shape: currentLayout || 'square'
+					shape: shapeType
 				},
 				style: styleUrl, // Send actual Mapbox URL (e.g., mapbox://styles/mapbox/streets-v12)
 				customColors: currentStyle === 'custom' ? customColors : null,
@@ -5968,14 +5999,26 @@ $(document).ready(function(){
 				// Single map layout
 				if (map) {
 					const center = map.getCenter();
+
+					// Get text from the displayed preview (map-preview-title) - this reflects what user sees
+					// Fallback to textarea inputs if preview is empty
+					const previewTitleEl = document.getElementById('preview-title');
+					const previewSubtitleEl = document.getElementById('preview-subtitle');
+					const titleTextareas = document.querySelectorAll('.map__title .content textarea');
+
+					const largeText = previewTitleEl?.textContent || titleTextareas[0]?.value || '';
+					const smallText = previewSubtitleEl?.textContent || titleTextareas[1]?.value || '';
+
 					const mapConfig = {
 						center: [center.lng, center.lat],
 						zoom: map.getZoom(),
+						containerWidth: 640, // Frontend container width for zoom calculation
+						containerHeight: 640,
 						markers: [],
 						title: {
 							enabled: true,
-							largeText: document.getElementById('preview-title')?.textContent || '',
-							smallText: document.getElementById('preview-subtitle')?.textContent || '',
+							largeText: largeText,
+							smallText: smallText,
 							font: currentFont || 'Poppins'
 						}
 					};
@@ -6004,8 +6047,67 @@ $(document).ready(function(){
 
 			console.log('Configuration prepared:', config);
 
-			// For GitHub Pages deployment, use browser screenshot instead of backend
-			alert('This feature requires a local backend server. Please use the browser\'s screenshot/print feature instead:\n\n1. Press Ctrl+P (or Cmd+P on Mac)\n2. Select "Save as PDF" or use browser screenshot tools\n\nFor high-resolution posters, run the backend server locally.');
+			// Transform config to match backend V2 API format
+			const backendConfig = {
+				config: {
+					layout: config.layout,
+					maps: config.maps.map(m => ({
+						center: m.center,
+						zoom: m.zoom,
+						bearing: 0,
+						pitch: 0,
+						style: config.style,
+						containerWidth: 640, // Frontend container width
+						containerHeight: 640,
+						markers: m.markers.map(marker => ({
+							coordinates: marker.coordinates,
+							icon: extractMarkerIconType(marker.icon), // Extract icon type
+							color: marker.color
+						})),
+						title: m.title
+					})),
+					print: {
+						widthCm: config.print.width,
+						heightCm: config.print.height,
+						dpi: config.print.dpi,
+						orientation: config.print.orientation
+					}
+				},
+				options: {
+					timeout: 180000,
+					debug: false
+				}
+			};
+
+			console.log('Sending to backend:', backendConfig);
+
+			// Call backend API
+			const response = await fetch('http://localhost:3001/api/v2/generate', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(backendConfig)
+			});
+
+			if (!response.ok) {
+				const error = await response.json();
+				throw new Error(error.error || 'Failed to generate poster');
+			}
+
+			const result = await response.json();
+			console.log('Poster generated!', result.metadata);
+
+			// Download the generated poster
+			const link = document.createElement('a');
+			link.href = result.image; // Base64 data URL
+			link.download = `map-poster-${result.jobId}.png`;
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+
+			// Show success message
+			alert(`✅ Poster generated successfully!\n\nSize: ${result.metadata.sizeInMB} MB\nDimensions: ${result.metadata.width}×${result.metadata.height}px\nTime: ${(result.metadata.renderTimeMs / 1000).toFixed(1)}s\n\nDownloading now...`);
 
 		} catch (error) {
 			console.error('Error generating poster:', error);

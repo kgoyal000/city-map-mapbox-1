@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Poster Print Renderer</title>
+
+    <!-- Mapbox GL JS - Same version as frontend -->
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js'></script>
+
+    <!-- Google Fonts - Same as frontend -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700;900&family=Bebas+Neue&family=Dancing+Script:wght@400;500;600;700&family=Pacifico&family=Great+Vibes&family=Sacramento&family=Allura&family=Satisfy&family=Lobster&family=Righteous&family=Amatic+SC:wght@400;700&family=Permanent+Marker&family=Caveat:wght@400;500;600;700&family=Indie+Flower&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100%; /* Will be overridden by JS if title section exists */
+            display: flex;
+            background: #ffffff;
+            box-sizing: border-box;
+        }
+
+        /* Single map layout */
+        .layout-single #container {
+            display: block;
+        }
+
+        .layout-single .map-wrapper {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Double map layout */
+        .layout-double #container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .layout-double .map-wrapper {
+            width: 50%;
+            height: 100%;
+        }
+
+        /* Triple map layout */
+        .layout-triple #container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .layout-triple .map-wrapper {
+            width: 33.333%;
+            height: 100%;
+        }
+
+        .map-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Shape overlays */
+        .shape-circle .map-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, transparent 45%, white 45%);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .shape-heart .map-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            clip-path: path('M 50,15 C 35,0 10,5 10,25 C 10,45 30,65 50,85 C 70,65 90,45 90,25 C 90,5 65,0 50,15 Z');
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Title section - separate white area below map */
+        #title-section {
+            width: 100%;
+            background-color: #fff;
+            text-align: center;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .title-large {
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            color: #16212c;
+            text-transform: uppercase;
+            /* font-family set via inline style from config */
+        }
+
+        .title-small {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            color: #666;
+            /* font-family set via inline style from config */
+        }
+
+        /* Marker styles */
+        .custom-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+        }
+
+        .custom-marker svg {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+
+    <script>
+        // Mapbox access token - same as frontend
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZG9kbzc5MSIsImEiOiJjbWZianUyejEwNDNsMmpxdzBjZmZnbndtIn0.t5a9KzottI8eUYz396kfbQ';
+
+        // Global state
+        window.mapRenderComplete = false;
+        const maps = [];
+
+        /**
+         * Initialize map(s) for print rendering
+         * This function is called by the renderer with the complete configuration
+         */
+        window.initializeMapForPrint = async function(config) {
+            console.log('=== PRINT RENDERER STARTING ===');
+            console.log('Config:', JSON.stringify(config, null, 2));
+
+            try {
+                const container = document.getElementById('container');
+                const body = document.body;
+
+                // Set layout classes
+                body.className = `layout-${config.layout.type} shape-${config.layout.shape}`;
+
+                // Add padding to container (top, left, right)
+                const dimensions = config.maps[0]?.dimensions;
+                if (dimensions) {
+                    const basePadding = 20; // Base padding in pixels
+                    const padding = Math.round(basePadding * dimensions.render.scale);
+                    container.style.paddingTop = `${padding}px`;
+                    container.style.paddingLeft = `${padding}px`;
+                    container.style.paddingRight = `${padding}px`;
+                    console.log(`Applied container padding: ${padding}px (top, left, right)`);
+                }
+
+                const numMaps = config.maps.length;
+                console.log(`Rendering ${numMaps} map(s) in ${config.layout.type} layout with ${config.layout.shape} shape`);
+
+                // Create map containers
+                for (let i = 0; i < numMaps; i++) {
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'map-wrapper';
+                    wrapper.id = `map-wrapper-${i}`;
+
+                    const mapDiv = document.createElement('div');
+                    mapDiv.className = 'map';
+                    mapDiv.id = `map-${i}`;
+
+                    wrapper.appendChild(mapDiv);
+                    container.appendChild(wrapper);
+                }
+
+                // Initialize all maps
+                const mapPromises = config.maps.map((mapConfig, index) => {
+                    return initializeMap(index, mapConfig, config);
+                });
+
+                await Promise.all(mapPromises);
+                console.log('All maps initialized successfully');
+
+                // Add title section at the bottom (if first map has title enabled)
+                if (config.maps[0] && config.maps[0].title && config.maps[0].title.enabled) {
+                    const dimensions = config.maps[0].dimensions;
+                    const titleHeight = addTitleSection(config.maps[0].title, dimensions);
+
+                    // Adjust container height to account for title section
+                    const containerHeight = `calc(100% - ${titleHeight}px)`;
+                    container.style.height = containerHeight;
+                    console.log(`Title section added with height: ${titleHeight}px, container height: ${containerHeight}`);
+                }
+
+                // Wait for tiles to load
+                console.log('Waiting for tiles to load...');
+                await new Promise(resolve => setTimeout(resolve, 5000));
+
+                window.mapRenderComplete = true;
+                console.log('=== PRINT RENDERING COMPLETE ===');
+
+            } catch (error) {
+                console.error('Error in initializeMapForPrint:', error);
+                throw error;
+            }
+        };
+
+        /**
+         * Initialize a single map instance
+         */
+        async function initializeMap(index, mapConfig, globalConfig) {
+            return new Promise((resolve, reject) => {
+                try {
+                    console.log(`Initializing map ${index}:`, {
+                        center: mapConfig.center,
+                        zoom: mapConfig.zoom,
+                        style: mapConfig.style,
+                        dimensions: mapConfig.dimensions
+                    });
+
+                    const dimensions = mapConfig.dimensions;
+
+                    // CRITICAL ZOOM CALCULATION:
+                    // Frontend shows map in a small container (e.g., 640px)
+                    // Backend renders in a large canvas (e.g., 4724px)
+                    // At the SAME zoom level, larger canvas shows MORE area
+                    // Solution: Increase zoom to compensate for larger canvas
+
+                    // Calculate zoom adjustment based on canvas size ratio
+                    const frontendWidth = mapConfig.containerWidth || 640;
+                    const backendWidth = dimensions.render.widthPx;
+                    const sizeRatio = backendWidth / frontendWidth;
+
+                    // Each zoom level doubles the scale, so zoom adjustment = log2(ratio)
+                    const zoomAdjustment = Math.log2(sizeRatio);
+                    const adjustedZoom = mapConfig.zoom + zoomAdjustment;
+
+                    // Calculate pixel ratio to match frontend
+                    const dpi = globalConfig.print.dpi || 200;
+                    const pixelRatio = Math.min((dpi / 96) * 1.5, 3);
+
+                    console.log(`Map ${index} zoom calculation:`, {
+                        frontendZoom: mapConfig.zoom,
+                        frontendWidth: frontendWidth,
+                        backendWidth: backendWidth,
+                        sizeRatio: sizeRatio.toFixed(2),
+                        zoomAdjustment: zoomAdjustment.toFixed(2),
+                        finalZoom: adjustedZoom.toFixed(2),
+                        pixelRatio: pixelRatio
+                    });
+
+                    // Create map with EXACT same settings as frontend
+                    const map = new mapboxgl.Map({
+                        container: `map-${index}`,
+                        style: mapConfig.style,
+                        center: mapConfig.center,
+                        zoom: adjustedZoom, // Adjusted zoom for larger canvas
+                        bearing: mapConfig.bearing || 0,
+                        pitch: mapConfig.pitch || 0,
+                        // Quality settings matching frontend
+                        pixelRatio: pixelRatio,
+                        maxZoom: 22,
+                        minZoom: 10,
+                        antialias: true,
+                        optimizeForTerrain: false,
+                        renderWorldCopies: false,
+                        fadeDuration: 0,
+                        crossSourceCollisions: false,
+                        // Rendering settings
+                        preserveDrawingBuffer: true,
+                        interactive: false,
+                        attributionControl: false
+                    });
+
+                    maps.push(map);
+
+                    map.on('load', async function() {
+                        console.log(`Map ${index} loaded`);
+
+                        // Add markers with scaled sizes
+                        if (mapConfig.markers && mapConfig.markers.length > 0) {
+                            const markerScale = dimensions.render.scale;
+                            mapConfig.markers.forEach(marker => {
+                                addMarker(map, marker, markerScale);
+                            });
+                        }
+
+                        // Wait a bit for tiles
+                        await new Promise(r => setTimeout(r, 2000));
+
+                        resolve();
+                    });
+
+                    map.on('error', (e) => {
+                        console.error(`Map ${index} error:`, e);
+                        reject(e);
+                    });
+
+                } catch (error) {
+                    console.error(`Error initializing map ${index}:`, error);
+                    reject(error);
+                }
+            });
+        }
+
+        /**
+         * Add marker to map with proper scaling
+         */
+        function addMarker(map, markerConfig, scale) {
+            const baseSize = 35; // Base marker size from frontend
+            const scaledSize = Math.round(baseSize * scale);
+
+            const el = document.createElement('div');
+            el.className = 'custom-marker';
+            el.innerHTML = getMarkerSVG(markerConfig.icon, markerConfig.color, scaledSize);
+
+            new mapboxgl.Marker({ element: el, anchor: 'bottom' })
+                .setLngLat(markerConfig.coordinates)
+                .addTo(map);
+        }
+
+        /**
+         * Get marker SVG with proper size
+         */
+        function getMarkerSVG(icon, color, size) {
+            const svgs = {
+                heart: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 35.908 32.946">
+                    <path fill="${color}" d="M19.954,35.946l-2.6-2.37C8.1,25.191,2,19.661,2,12.875A9.779,9.779,0,0,1,11.875,3a10.752,10.752,0,0,1,8.079,3.752A10.752,10.752,0,0,1,28.033,3a9.779,9.779,0,0,1,9.875,9.875c0,6.787-6.1,12.316-15.351,20.719Z" transform="translate(-2 -3)"/>
+                </svg>`,
+                house: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 35.908 30.522">
+                    <path fill="${color}" d="M30.5,18.1v13.1h-8.9v-9.3h-7.4v9.3H5.4V18.1L18,6.1L30.5,18.1z M18,3.9l-15,14.3c-1.6,1.6-4-0.9-2.4-2.5L16.8,0.5c0.7-0.6,1.7-0.6,2.4,0l7.6,7.2V4.3c0-0.4,0.4-0.8,0.8-0.8h2.2c0.4,0,0.8,0.4,0.8,0.8v6.9l4.8,4.5c1.7,1.6-0.7,4.1-2.4,2.5C28,13.4,23,8.7,18,3.9L18,3.9z"/>
+                </svg>`,
+                star: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24">
+                    <path fill="${color}" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>`
+            };
+
+            return svgs[icon] || svgs.heart;
+        }
+
+        /**
+         * Add title section below the map (separate white background area)
+         * Returns the calculated height of the title section
+         */
+        function addTitleSection(titleConfig, dimensions) {
+            // Create title section at the bottom
+            const titleSection = document.createElement('div');
+            titleSection.id = 'title-section';
+
+            // Calculate padding and font sizes based on poster dimensions
+            // Frontend uses 20px padding for small preview, scale it up
+            const scale = dimensions.render.scale;
+            const basePadding = 20;
+            const padding = Math.round(basePadding * scale);
+            titleSection.style.padding = `${padding}px`;
+
+            // Apply selected font
+            const fontFamily = titleConfig.font || 'Poppins';
+            titleSection.style.fontFamily = fontFamily;
+
+            // Calculate title section height
+            let titleHeight = padding * 2; // Top and bottom padding
+
+            if (titleConfig.largeText) {
+                const large = document.createElement('div');
+                large.className = 'title-large';
+                large.textContent = titleConfig.largeText;
+                // Base 18px from frontend normal preview mode (not print mode)
+                const fontSize = Math.round(18 * scale);
+                const lineHeight = Math.round(24 * scale);
+                const marginBottom = Math.round(8 * scale);
+                large.style.fontSize = fontSize + 'px';
+                large.style.lineHeight = lineHeight + 'px';
+                large.style.margin = `0 0 ${marginBottom}px 0`;
+                large.style.fontFamily = fontFamily; // Apply selected font
+                titleSection.appendChild(large);
+
+                // Add to total height
+                titleHeight += lineHeight + marginBottom;
+            }
+
+            if (titleConfig.smallText) {
+                const small = document.createElement('div');
+                small.className = 'title-small';
+                small.textContent = titleConfig.smallText;
+                // Base 14px from frontend normal preview mode (not print mode)
+                const fontSize = Math.round(14 * scale);
+                const lineHeight = Math.round(20 * scale);
+                small.style.fontSize = fontSize + 'px';
+                small.style.lineHeight = lineHeight + 'px';
+                small.style.margin = '0';
+                small.style.fontFamily = fontFamily; // Apply selected font
+                titleSection.appendChild(small);
+
+                // Add to total height
+                titleHeight += lineHeight;
+            }
+
+            // Append to body (after container)
+            document.body.appendChild(titleSection);
+
+            // Return the calculated height
+            return titleHeight;
+        }
+
+        // Log when script is ready
+        console.log('Print renderer script loaded and ready');
+    </script>
+</body>
+</html>

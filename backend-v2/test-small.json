@@ -1,0 +1,36 @@
+{
+  "config": {
+    "layout": {
+      "type": "single",
+      "shape": "square"
+    },
+    "maps": [
+      {
+        "center": [-80.1918, 25.7617],
+        "zoom": 14,
+        "bearing": 0,
+        "pitch": 0,
+        "style": "mapbox://styles/mapbox/streets-v12",
+        "containerWidth": 400,
+        "containerHeight": 400,
+        "markers": [
+          {
+            "coordinates": [-80.1918, 25.7617],
+            "icon": "heart",
+            "color": "rgb(211, 59, 62)"
+          }
+        ]
+      }
+    ],
+    "print": {
+      "widthCm": 20,
+      "heightCm": 20,
+      "dpi": 150,
+      "orientation": "landscape"
+    }
+  },
+  "options": {
+    "timeout": 180000,
+    "debug": true
+  }
+}
