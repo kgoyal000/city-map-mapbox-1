@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Miami Building Visibility Test</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        #map { position: absolute; top: 50px; bottom: 0; width: 100%; }
+        #controls {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: white;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        #zoom-display {
+            font-weight: bold;
+            background: #f0f0f0;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        button {
+            padding: 5px 15px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background: white;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #f0f0f0;
+        }
+        select {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <span>Style:</span>
+        <select id="style-selector">
+            <option value="minimal">Minimal</option>
+            <option value="carbon">Carbon</option>
+            <option value="beachglass">Beachglass</option>
+            <option value="vintage">Vintage</option>
+            <option value="green">Green</option>
+            <option value="classic">Classic</option>
+            <option value="pink">Pink</option>
+            <option value="black">Black</option>
+            <option value="intense">Intense</option>
+            <option value="atlas">Atlas</option>
+        </select>
+        <button onclick="setZoom(11)">Zoom 11</button>
+        <button onclick="setZoom(12)">Zoom 12</button>
+        <button onclick="setZoom(13)">Zoom 13</button>
+        <button onclick="setZoom(14)">Zoom 14</button>
+        <button onclick="setZoom(15)">Zoom 15</button>
+        <div id="zoom-display">Current Zoom: -</div>
+    </div>
+    <div id="map"></div>
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZG9kbzc5MSIsImEiOiJjbWZianUyejEwNDNsMmpxdzBjZmZnbndtIn0.t5a9KzottI8eUYz396kfbQ';
+
+        // Miami coordinates
+        const MIAMI = [-80.1918, 25.7617];
+
+        let map = new mapboxgl.Map({
+            container: 'map',
+            style: '/map-styles/minimal.json',
+            center: MIAMI,
+            zoom: 12,
+            pixelRatio: 4, // High resolution
+            preserveDrawingBuffer: true
+        });
+
+        // Update zoom display
+        function updateZoomDisplay() {
+            const zoom = map.getZoom();
+            document.getElementById('zoom-display').textContent = `Current Zoom: ${zoom.toFixed(2)}`;
+        }
+
+        // Set zoom level
+        function setZoom(level) {
+            map.setZoom(level);
+        }
+
+        // Style selector
+        document.getElementById('style-selector').addEventListener('change', (e) => {
+            const style = e.target.value;
+            map.setStyle(`/map-styles/${style}.json`);
+        });
+
+        // Map events
+        map.on('load', () => {
+            console.log('Map loaded successfully');
+            updateZoomDisplay();
+
+            // Log layer information
+            const layers = map.getStyle().layers;
+            const buildingLayers = layers.filter(l =>
+                l.id.includes('building') ||
+                l.id.includes('urban') ||
+                l.id.includes('density')
+            );
+            console.log('Building-related layers:', buildingLayers.map(l => ({
+                id: l.id,
+                minzoom: l.minzoom,
+                maxzoom: l.maxzoom,
+                type: l.type
+            })));
+        });
+
+        map.on('zoom', updateZoomDisplay);
+        map.on('zoomend', () => {
+            const zoom = map.getZoom();
+            console.log(`Zoom level: ${zoom.toFixed(2)}`);
+        });
+    </script>
+</body>
+</html>

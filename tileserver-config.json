@@ -1,0 +1,17 @@
+{
+  "options": {
+    "paths": {
+      "root": ".",
+      "fonts": "fonts/noto-sans",
+      "sprites": "sprites"
+    },
+    "serveAllFonts": true,
+    "serveStaticMaps": true,
+    "frontPage": false
+  },
+  "data": {
+    "v3": {
+      "mbtiles": "tiles/maptiler-osm-2020-02-10-v3.11-planet.mbtiles"
+    }
+  }
+}

@@ -32,7 +32,8 @@
     "sources": {
         "openmaptiles": {
             "type": "vector",
-            "url": "mapbox://mapbox.mapbox-streets-v8"
+            "url": "http://localhost:8080/data/v3.json",
+            "tileSize": 512
         }
     },
     "glyphs": "https://api.mapbox.com/fonts/mapbox/{fontstack}/{range}.pbf",
@@ -254,16 +255,203 @@
             }
         },
         {
-            "id": "buildings",
+            "id": "building-density-8-10",
             "type": "fill",
             "source": "openmaptiles",
-            "source-layer": "building",
-            "minzoom": 11,
+            "source-layer": "landcover",
+            "minzoom": 8,
+            "maxzoom": 10,
+            "filter": [
+                "all",
+                [
+                    "!=",
+                    "class",
+                    "forest"
+                ],
+                [
+                    "!=",
+                    "class",
+                    "wood"
+                ],
+                [
+                    "!=",
+                    "class",
+                    "grass"
+                ],
+                [
+                    "!=",
+                    "class",
+                    "farmland"
+                ]
+            ],
             "layout": {
                 "visibility": "visible"
             },
             "paint": {
-                "fill-color": "rgba(228, 217, 206, 1)",
+                "fill-color": "rgba(240, 240, 240, 1)",
+                "fill-opacity": [
+                    "interpolate",
+                    [
+                        "linear"
+                    ],
+                    [
+                        "zoom"
+                    ],
+                    8,
+                    0.3,
+                    9,
+                    0.5,
+                    10,
+                    0.7
+                ]
+            }
+        },
+        {
+            "id": "urban-areas-11-13",
+            "type": "fill",
+            "source": "openmaptiles",
+            "source-layer": "landuse",
+            "minzoom": 8,
+            "maxzoom": 14,
+            "filter": [
+                "any",
+                [
+                    "in",
+                    "class",
+                    "residential",
+                    "commercial",
+                    "industrial",
+                    "retail"
+                ],
+                [
+                    "==",
+                    "class",
+                    "railway"
+                ],
+                [
+                    "==",
+                    "class",
+                    "cemetery"
+                ],
+                [
+                    "==",
+                    "class",
+                    "hospital"
+                ],
+                [
+                    "==",
+                    "class",
+                    "school"
+                ],
+                [
+                    "==",
+                    "class",
+                    "stadium"
+                ],
+                [
+                    "==",
+                    "class",
+                    "pitch"
+                ],
+                [
+                    "==",
+                    "class",
+                    "park"
+                ],
+                [
+                    "==",
+                    "class",
+                    "parking"
+                ]
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "fill-color": [
+                    "match",
+                    [
+                        "get",
+                        "class"
+                    ],
+                    [
+                        "residential",
+                        "commercial",
+                        "industrial",
+                        "retail"
+                    ],
+                    "rgba(235, 235, 235, 1)",
+                    [
+                        "railway",
+                        "parking"
+                    ],
+                    "rgba(238, 238, 238, 1)",
+                    [
+                        "hospital",
+                        "school",
+                        "stadium"
+                    ],
+                    "rgba(237, 237, 237, 1)",
+                    [
+                        "cemetery",
+                        "park",
+                        "pitch"
+                    ],
+                    "rgba(240, 240, 240, 1)",
+                    "rgba(235, 235, 235, 1)"
+                ],
+                "fill-opacity": [
+                    "interpolate",
+                    [
+                        "linear"
+                    ],
+                    [
+                        "zoom"
+                    ],
+                    8,
+                    0.6,
+                    10,
+                    0.8,
+                    12,
+                    1
+                ]
+            }
+        },
+        {
+            "id": "urban-areas-outline-11-13",
+            "type": "line",
+            "source": "openmaptiles",
+            "source-layer": "landuse",
+            "minzoom": 10,
+            "maxzoom": 14,
+            "filter": [
+                "in",
+                "class",
+                "residential",
+                "commercial",
+                "industrial",
+                "retail"
+            ],
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "line-color": "rgba(0, 0, 0, 1)",
+                "line-width": 0.5,
+                "line-opacity": 1
+            }
+        },
+        {
+            "id": "buildings",
+            "type": "fill",
+            "source": "openmaptiles",
+            "source-layer": "building",
+            "minzoom": 12,
+            "layout": {
+                "visibility": "visible"
+            },
+            "paint": {
+                "fill-color": "rgba(220, 220, 220, 1)",
                 "fill-opacity": 1
             }
         },
@@ -272,38 +460,37 @@
             "type": "line",
             "source": "openmaptiles",
             "source-layer": "building",
+            "minzoom": 12,
+            "layout": {
+                "visibility": "visible",
+                "line-cap": "butt"
+            },
             "paint": {
-                "line-color": "rgba(168, 162, 156, 1)",
+                "line-color": "rgba(0, 0, 0, 1)",
                 "line-width": [
                     "interpolate",
                     [
                         "exponential",
-                        2
+                        1.4
                     ],
                     [
                         "zoom"
                     ],
-                    12,
-                    [
-                        "*",
-                        2,
-                        [
-                            "^",
-                            2,
-                            -4
-                        ]
-                    ],
-                    24,
-                    [
-                        "*",
-                        2,
-                        [
-                            "^",
-                            2,
-                            8
-                        ]
-                    ]
-                ]
+                    13,
+                    0.5,
+                    14,
+                    0.8,
+                    15,
+                    1.2,
+                    16,
+                    1.5,
+                    18,
+                    2,
+                    22,
+                    3
+                ],
+                "line-opacity": 1,
+                "line-blur": 0
             }
         },
         {

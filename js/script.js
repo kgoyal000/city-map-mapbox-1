@@ -97,17 +97,17 @@ async function loadMapStyle(styleName) {
 }
 
 let mapStyles = {
-	'minimal': 'mapbox://styles/dodo791/cmfdyppfj009701s3egb640uv', // Light/Minimal style
-	'beachglass': 'mapbox://styles/dodo791/cmfe0avw9009q01sj85ode2tl', // Outdoor/Beach style
-	'carbon': 'mapbox://styles/dodo791/cmfe0rz5f009s01sjg82u8423', // Dark/Carbon style
-	'black': 'mapbox://styles/dodo791/cmfe0ftfe009e01sd8xttebxl', // Black/Dark style
-	'vintage': 'mapbox://styles/dodo791/cmfe0vz4u003k01r9aom052eo', // Vintage/Classic streets
-	'classic': 'mapbox://styles/dodo791/cmfdp6i9l001801s3flgs3y3x', // Classic streets
-	'pink': 'mapbox://styles/dodo791/cmfe0u9i4003i01r974l02y1x', // Light/Pink style
-	'green': 'mapbox://styles/dodo791/cmfdyq8q3002401s3hjc83tr6', // Green/Outdoor style
-	'intense': 'mapbox://styles/dodo791/cmfdp49us008a01s9h5zib2cp', // Intense/Satellite
-	'atlas': 'mapbox://styles/dodo791/cmfdp5bbt008v01qwculaabga', // Atlas/Streets
-	'custom': 'mapbox://styles/mapbox/streets-v12' // Customizable
+	'minimal': 'minimal', // Light/Minimal style - uses local tiles
+	'beachglass': 'beachglass', // Outdoor/Beach style - uses local tiles
+	'carbon': 'carbon', // Dark/Carbon style - uses local tiles
+	'black': 'black', // Black/Dark style - uses local tiles
+	'vintage': 'vintage', // Vintage/Classic streets - uses local tiles
+	'classic': 'classic', // Classic streets - uses local tiles
+	'pink': 'pink', // Light/Pink style - uses local tiles
+	'green': 'green', // Green/Outdoor style - uses local tiles
+	'intense': 'intense', // Intense/Satellite - uses local tiles
+	'atlas': 'atlas', // Atlas/Streets - uses local tiles
+	'custom': 'minimal' // Customizable - defaults to minimal
 };
 
 // Mapbox access token - Get yours from https://account.mapbox.com/access-tokens/
@@ -123,10 +123,15 @@ For production use, you may need to:
 The styles are loaded dynamically from JSON files in the map-styles/ directory.
 */
 
+// ZOOM OFFSET FIX: Compensates for tileSize: 512 not working properly
+// This makes our zoom 12 show zoom 13 data (where buildings exist)
+const ZOOM_OFFSET = 1;
+
 async function initializeMap() {
 	console.log('Initializing map...');
 	console.log('Mapbox token:', mapboxgl.accessToken ? 'Token exists' : 'No token');
 	console.log('Map container:', document.getElementById('map'));
+	console.log('ZOOM OFFSET APPLIED:', ZOOM_OFFSET, '(to match PositivePrints behavior)');
 
 	// Check if container exists
 	const mapContainer = document.getElementById('map');
@@ -138,23 +143,28 @@ async function initializeMap() {
 	// Remove loading state
 	mapContainer.classList.remove('map-loading');
 
-	// Use Mapbox style directly (no JSON loading needed)
-	const styleToUse = mapStyles['minimal'] || 'mapbox://styles/mapbox/streets-v12';
+	// Clear any existing content in map container (fixes Mapbox GL warning)
+	mapContainer.innerHTML = '';
+
+	// Load local JSON style instead of Mapbox URL
+	const styleName = mapStyles['minimal'] || 'minimal';
+	const styleToUse = await loadMapStyle(styleName);
 
 	try {
 		map = new mapboxgl.Map({
 			container: 'map',
 			style: styleToUse,
 			center: [-80.1918, 25.7617], // Miami coordinates
-			zoom: 15, // Even higher zoom for maximum detail and clarity
-			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3), // Boost pixel ratio for ultra-sharp rendering (max 3x)
+			zoom: 12 + ZOOM_OFFSET, // Apply zoom offset to show buildings at lower display zoom
+			pixelRatio: 4, // Maximum pixel ratio for ultra-high resolution like Positive Prints
 			maxZoom: 22, // Allow maximum zoom for detailed views
-			minZoom: 10, // Prevent zooming too far out
+			minZoom: 4, // Allow zooming out to see buildings from zoom 5
 			antialias: true, // Enable antialiasing for smoother edges
 			optimizeForTerrain: false, // Disable terrain optimization for sharper vector tiles
 			renderWorldCopies: false, // Optimize performance
 			fadeDuration: 0, // Disable fade for immediate tile rendering
-			crossSourceCollisions: false // Improve label clarity
+			crossSourceCollisions: false, // Improve label clarity
+			preserveDrawingBuffer: true // Better screenshot quality
 		});
 
 		console.log('Map object created:', map);
@@ -255,14 +265,8 @@ async function initializeDoubleMaps() {
 	// Load the current style (or fallback to Minimal)
 	const styleKey = currentStyle || 'minimal';
 	const styleConfig = mapStyles[styleKey] || mapStyles['minimal'];
-	let styleToUse;
-
-	if (typeof styleConfig === 'string' && styleConfig.includes('mapbox://')) {
-		styleToUse = styleConfig;
-	} else {
-		const loadedStyle = await loadMapStyle(styleConfig);
-		styleToUse = loadedStyle || 'mapbox://styles/mapbox/streets-v12';
-	}
+	// Load local JSON style
+	const styleToUse = await loadMapStyle(styleConfig) || await loadMapStyle('minimal');
 
 	try {
 		// Initialize first map (e.g., Sophia's location)
@@ -270,10 +274,10 @@ async function initializeDoubleMaps() {
 			container: 'map1',
 			style: styleToUse,
 			center: [-80.1918, 25.7617], // Default: Miami
-			zoom: 15,
-			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3),
+			zoom: 12,
+			pixelRatio: Math.min(window.devicePixelRatio * 2, 4),
 			maxZoom: 22,
-			minZoom: 10,
+			minZoom: 8,
 			antialias: true,
 			optimizeForTerrain: false,
 			renderWorldCopies: false,
@@ -286,10 +290,10 @@ async function initializeDoubleMaps() {
 			container: 'map2',
 			style: styleToUse,
 			center: [-0.1276, 51.5074], // Default: London
-			zoom: 15,
-			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3),
+			zoom: 12,
+			pixelRatio: Math.min(window.devicePixelRatio * 2, 4),
 			maxZoom: 22,
-			minZoom: 10,
+			minZoom: 8,
 			antialias: true,
 			optimizeForTerrain: false,
 			renderWorldCopies: false,
@@ -364,14 +368,8 @@ async function initializeTripleMaps() {
 	// Load the current style (or fallback to Minimal)
 	const styleKey = currentStyle || 'minimal';
 	const styleConfig = mapStyles[styleKey] || mapStyles['minimal'];
-	let styleToUse;
-
-	if (typeof styleConfig === 'string' && styleConfig.includes('mapbox://')) {
-		styleToUse = styleConfig;
-	} else {
-		const loadedStyle = await loadMapStyle(styleConfig);
-		styleToUse = loadedStyle || 'mapbox://styles/mapbox/streets-v12';
-	}
+	// Load local JSON style
+	const styleToUse = await loadMapStyle(styleConfig) || await loadMapStyle('minimal');
 
 	try {
 		// Initialize first map
@@ -379,10 +377,10 @@ async function initializeTripleMaps() {
 			container: 'map1-triple',
 			style: styleToUse,
 			center: [-80.1918, 25.7617], // Default: Miami
-			zoom: 15,
-			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3),
+			zoom: 12,
+			pixelRatio: Math.min(window.devicePixelRatio * 2, 4),
 			maxZoom: 22,
-			minZoom: 10,
+			minZoom: 8,
 			antialias: true,
 			optimizeForTerrain: false,
 			renderWorldCopies: false,
@@ -395,10 +393,10 @@ async function initializeTripleMaps() {
 			container: 'map2-triple',
 			style: styleToUse,
 			center: [-0.1276, 51.5074], // Default: London
-			zoom: 15,
-			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3),
+			zoom: 12,
+			pixelRatio: Math.min(window.devicePixelRatio * 2, 4),
 			maxZoom: 22,
-			minZoom: 10,
+			minZoom: 8,
 			antialias: true,
 			optimizeForTerrain: false,
 			renderWorldCopies: false,
@@ -411,10 +409,10 @@ async function initializeTripleMaps() {
 			container: 'map3-triple',
 			style: styleToUse,
 			center: [139.6917, 35.6895], // Default: Tokyo
-			zoom: 15,
-			pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3),
+			zoom: 12,
+			pixelRatio: Math.min(window.devicePixelRatio * 2, 4),
 			maxZoom: 22,
-			minZoom: 10,
+			minZoom: 8,
 			antialias: true,
 			optimizeForTerrain: false,
 			renderWorldCopies: false,
@@ -880,9 +878,9 @@ async function reinitializeMap() {
 				style: styleToUse,
 				center: savedState.center,
 				zoom: savedState.zoom,
-				pixelRatio: Math.min(window.devicePixelRatio * 1.5, 3), // Boost pixel ratio for ultra-sharp rendering (max 3x)
+				pixelRatio: Math.min(window.devicePixelRatio * 2, 4), // Boost pixel ratio for ultra-sharp rendering (max 3x)
 				maxZoom: 22, // Allow maximum zoom for detailed views
-				minZoom: 10, // Prevent zooming too far out
+				minZoom: 8, // Prevent zooming too far out
 				antialias: true, // Enable antialiasing for smoother edges
 				optimizeForTerrain: false, // Disable terrain optimization for sharper vector tiles
 				renderWorldCopies: false,
@@ -1640,19 +1638,16 @@ async function changeMapStyle(styleKey) {
 	const applyStyleToMap = async (mapInstance) => {
 		if (!mapInstance) return;
 
-		// Check if it's a style name to load from JSON or a URL
-		if (typeof styleConfig === 'string' && styleConfig.includes('mapbox://')) {
-			// It's a Mapbox URL
-			mapInstance.setStyle(styleConfig);
+		// Load style from local JSON file
+		const styleData = await loadMapStyle(styleConfig);
+		if (styleData) {
+			mapInstance.setStyle(styleData);
 		} else {
-			// It's a style name, load from JSON file
-			const styleData = await loadMapStyle(styleConfig);
-			if (styleData) {
-				mapInstance.setStyle(styleData);
-			} else {
-				console.error(`Failed to load style: ${styleConfig}`);
-				// Fallback to default Mapbox style
-				mapInstance.setStyle('mapbox://styles/mapbox/streets-v12');
+			console.error(`Failed to load style: ${styleConfig}`);
+			// Fallback to minimal style
+			const fallbackStyle = await loadMapStyle('minimal');
+			if (fallbackStyle) {
+				mapInstance.setStyle(fallbackStyle);
 			}
 		}
 
